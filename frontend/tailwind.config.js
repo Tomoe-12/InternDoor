@@ -4,9 +4,15 @@ export default {
   theme: {
 
     extend: {
-      height: {
-        'bannerHeight': '550px'
+      rounded: {
+        '3xl': '100px'
       },
+      height: {
+        'bannerHeight': '100vh',
+        'height5px' :'500px',
+        'width35px' :'350px',
+      },
+     
       colors: {
         'cyan': ' #00FFFF',
         'violet': '#EE82EE',

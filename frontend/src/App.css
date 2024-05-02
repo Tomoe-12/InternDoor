@@ -3,6 +3,7 @@
   padding: 0;
   margin: 0;
 }
+
 header {
   z-index: 10001 !important;
 }
@@ -21,3 +22,8 @@ header {
 .test {
    border : 1px solid red ;
 }
+
+.4xl{
+  border-radius : 100px;
+}
+

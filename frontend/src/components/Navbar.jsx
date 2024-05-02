@@ -5,11 +5,8 @@ import { useEffect, useState } from "react"
 const Navbar = () => {
 
     const navItems = <>
-        <li className="md:hidden lg:hidden">
-           
-        </li>
         <li>Home</li>
-        <li>Borswe</li>
+        <li>Browse</li>
         <li>Contact</li>
     </>
 
@@ -44,7 +41,7 @@ const Navbar = () => {
                             {navItems}
                         </ul>
                     </div>
-                    <button className="font-semibold text-xl uppercase  ml-3 ">InternDoor</button>
+                    <button className="font-semibold text-2xl uppercase  ml-3 ">InternDoor</button>
                 </div>
                 <div className="navbar-center  ">
                     <div className="  hidden md:flex lg:flex justify-end">
@@ -55,9 +52,9 @@ const Navbar = () => {
                     </div>
 
                 </div>
-                <div className="navbar-end  gap-14">
+                <div className="navbar-end  lg:gap-14 md:gap-10 ">
                     <div className="  hidden lg:flex justify-end">
-                        <ul className="menu gap-8 menu-horizontal px-1 ">
+                        <ul className="menu gap-5   menu-horizontal px-1 ">
                             {navItems}
                         </ul>
                     </div>

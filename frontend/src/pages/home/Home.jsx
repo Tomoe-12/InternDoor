@@ -1,9 +1,13 @@
-import Banner from '../../components/banner.jsx'
+import Banner from './banner.jsx'
 import '../../assets/css/home.css'
+import AboutUs from './aboutUs.jsx'
 const Home = () => {
   return (
-    <div className="section-container " >
-    <Banner/>
+    <div className="" >
+
+      <Banner />
+      <AboutUs/>
+
     </div>
   )
 }

@@ -1,16 +1,16 @@
-import laptopGirl from '../assets/images/HomeImg/girl_laptop.png'
+import laptopGirl from '../../assets/images/HomeImg/girl_laptop.png'
+
 const banner = () => {
     return (
-        <div className="overflow-x-visible  md:h-bannerHeight h-lvh max-w-screen-2xl container mx-auto py-14 p-0 bg-gradient-to-r from-0% from-[#FAFAFA] to-[#FCFCFC] to-100%">
+        <div className=" h-bannerHeight max-w-screen-2xl container mx-auto md:py-44 py-14 p-0  ">
 
-            <div className='baner'></div>
-            <div className=' py-14 flex flex-col md:flex-row-reverse justify-center items-center md:gap-0 gap-16'>
+            <div className= 'py-10 flex flex-col md:flex-row-reverse justify-center items-center gap-20 lg:gap-9 overflow-x-clip '>
 
                 {/* image */}
-                <div className="md:w-1/2 z-10 flex align-middle justify-center" >
-                    <div className='image p-1'>
+                <div className="w-lvw md:w-1/2 flex align-middle justify-center  " >
+                    <div className='image md:p-4 md:pt-12 pt-1  ' >
 
-                        <img className='object-contain md:h-96 md:w-96 w-54 h-72' src={laptopGirl} alt=""></img>
+                        <img className='object-cover' src={laptopGirl} alt=""></img>
                         
                     </div>
 
@@ -26,7 +26,7 @@ const banner = () => {
                     </button>
                 </div>
             </div>
-           
+
         </div>
 
     )

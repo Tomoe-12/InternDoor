@@ -1,7 +1,7 @@
 
 .image {
   border: 1px solid grey;
-  @apply relative md:max-w-72 md:h-96 rounded-3xl bg-gradient-to-b from-cyan to-violet after:bg-primary;
+  @apply relative md:w-80 md:h-height5px w-60 h-80 rounded-3xl bg-gradient-to-b from-cyan to-violet after:bg-primary;
 }
 
 .image::after {
@@ -20,7 +20,7 @@
 .image::before {
   z-index: -1;
   border-radius: 30px;
-  content: "hello";
+  content: "";
   position: absolute;
   transform: rotate(17deg);
   top: 8%;
@@ -31,6 +31,20 @@
   background-color: white;
 }
 
+ul li {
+  @apply text-base
+}
+
 ul  li:hover{
   cursor:pointer;
+}
+.textLeftDesign{
+  position:relative;
+}
+.textLeftDesign:before{
+  @apply absolute content-[''] top-0 left-0 w-1 h-full rounded-full bg-gradient-to-b from-cyan to-violet
+}
+
+.btnHover:hover {
+  @apply rounded-full border-none
 }
