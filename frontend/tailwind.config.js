@@ -8,7 +8,6 @@ export default {
         '3xl': '100px'
       },
       height: {
-        'bannerHeight': '100vh',
         'height5px' :'500px',
         'width35px' :'350px',
       },
@@ -16,8 +15,12 @@ export default {
       colors: {
         'cyan': ' #00FFFF',
         'violet': '#EE82EE',
+        'kindablack' : '#3f3d56',
         'primary': '#3498db',
       },
+      borderRadius: {
+        '3xl' :'100px'
+      }
     },
   },
   daisyui: {
