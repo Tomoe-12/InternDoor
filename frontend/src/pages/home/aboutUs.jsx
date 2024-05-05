@@ -4,9 +4,10 @@ import arrowWhite from '../../assets/images/HomeImg/arrowWhite.svg'
 import phone from '../../assets/images/phone.svg'
 const aboutUs = () => {
     return (
-        <div className="max-w-screen-2xl container  mx-auto md:py-3 py-14 p-0 bg-gradient-to-r from-0% from-[#FAFAFA] to-[#FCFCFC] to-100%">
+        <div className="overflow-hidden max-w-screen-2xl container  mx-auto xl:py-44 md:py-3  py-14 p-0 bg-gradient-to-r from-0% from-[#FAFAFA] to-[#FCFCFC] to-100%">
+           
             <div className='md:py-10  flex flex-col-reverse xl:flex-row-reverse justify-center items-center   gap-20 lg:gap-9 overflow-x-clip '>
-
+ 
 
                 {/* text */}
                 <div className='w-lw xl:w-1/2  md:px-28 px-8 space-y-2 md:text-start text-center '>
@@ -14,7 +15,7 @@ const aboutUs = () => {
                     <h2 className='lg:text-5xl  md:text-4xl text-3xl font-bold md:leading-snug leading-snug'>Choose what you Desire  </h2>
 
                     <div className='textLeftDesign pl-5 py-2'>
-                        <p className="text-[#4A4A4A] lg:text-xl md:text-lg text-base md:p-0 px-2 ">INTERNDOOR is to empower aspiring professionals by offering hands-on internships that bridge the gap between academic learning and real-world challenges. We strive to foster a culture of innovation, growth, and inclusivity.</p>
+                        <p className="text-[#4A4A4A] xl:text-base lg:text-xl md:text-lg text-base md:p-0 px-2 ">INTERNDOOR is to empower aspiring professionals by offering hands-on internships that bridge the gap between academic learning and real-world challenges. We strive to foster a culture of innovation, growth, and inclusivity.</p>
                     </div>
                     <br /><hr /><br />
 

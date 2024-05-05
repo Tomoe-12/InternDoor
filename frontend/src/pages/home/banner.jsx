@@ -4,7 +4,7 @@ const banner = () => {
     return (
 
         < >
-            <div className=" h-bannerHeight max-w-screen-2xl container mx-auto md:py-44 py-14 p-0 ">
+            <div className="overflow-hidden h-bannerHeight max-w-screen-2xl container mx-auto md:py-44 py-14 p-0 ">
 
                 <div className='py-10 flex flex-col md:flex-row-reverse justify-center items-center gap-20 lg:gap-9 overflow-x-clip '>
 

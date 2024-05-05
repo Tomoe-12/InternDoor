@@ -42,7 +42,7 @@ ul  li:hover{
 
 /* service jsx */
 .serviceBox{
-  @apply relative xl:space-y-5 lg:space-y-7 md:space-y-8 space-y-6  xl:w-72 xl:h-64 w-full h-80   bg-white pt-9  drop-shadow-2xl  
+  @apply relative xl:space-y-5 lg:space-y-7 md:space-y-8 space-y-5  xl:w-72 xl:h-64 w-full h-80  bg-white   shadow-3xl  pt-9
 }
 
 .serviceBox > .eachServiceIcon {
@@ -60,3 +60,6 @@ ul  li:hover{
 .serviceBox .serviceText{
   @apply text-[#4A4A4A] text-base xl:text-xs md:text-xl  lg:px-9 px-4 pt-1 lg:tracking-wider
 }
+
+
+/* categories jsx */

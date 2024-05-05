@@ -6,7 +6,7 @@ import img4 from '../../assets/images/HomeImg/industryinsightsandtrends.svg'
 
 const service = () => {
     return (
-        <div className=" max-w-screen-2xl container mx-auto md:py-3 py-14  p-0 bg-gradient-to-r from-0% from-[#FAFAFA] to-[#FCFCFC] to-100%">
+        <div className="overflow-hidden max-w-screen-2xl container mx-auto md:py-3 py-14  p-0 bg-gradient-to-r from-0% from-[#FAFAFA] to-[#FCFCFC] to-100%">
             
             <div className='md:py-10 flex flex-col xl:flex-row-reverse justify-center items-center gap-20 xl:gap-9 overflow-x-clip '>
 
@@ -18,11 +18,11 @@ const service = () => {
                 </div>
 
                 {/* text */}
-                <div className=' w-lvw xl:w-1/2 xl:px-28 lg:px-48 md:px-32 px-12 space-y-2  text-center'>
+                <div className=' w-lvw xl:w-1/2 2xl:px-28 xl:px-8 lg:px-48 md:px-32 px-12 space-y-2  text-center'>
 
-                    <div className='grid xl:grid-rows-2 xl:grid-cols-2 xl:gap-15 gap-20 justify-center text-center '>
+                    <div className='grid xl:grid-rows-2 xl:grid-cols-2 xl:gap-15  gap-20 justify-center text-center '>
                         <div className='serviceBox xl:rounded-tl-3xl rounded-xl '>
-                            <div className='eachServiceIcon'>  <img src={img1} alt="" /></div>
+                            <div className='eachServiceIcon '>  <img src={img1} alt="" /></div>
                             <h1 className='header' >Customized Matching</h1>
                             <hr className='hrLine' />
                             <p className='serviceText'> Utilizing advanced algorithms to match students with internship opportunities that align with their skills, interests, and career goals.</p>

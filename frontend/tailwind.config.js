@@ -8,18 +8,20 @@ export default {
         '3xl': '100px'
       },
       height: {
-        'height5px' :'500px',
-        'width35px' :'350px',
+        'height5px': '500px',
+        'width35px': '350px',
       },
-     
+
       colors: {
         'cyan': ' #00FFFF',
         'violet': '#EE82EE',
-        'kindablack' : '#3f3d56',
+        'kindablack': '#3f3d56',
         'primary': '#3498db',
       },
       borderRadius: {
-        '3xl' :'100px'
+        '3xl': '100px'
+      },boxShadow:{
+        '3xl' : 'rgba(0, 0, 0, 0.24) 0px 3px 8px'
       }
     },
   },
@@ -27,6 +29,17 @@ export default {
     darkTheme: "white", // name of one of the included themes for dark mode
 
   },
-  plugins: [require("daisyui")],
+  plugins: [
+    require("daisyui"),
+    function ({ addUtilities}){
+      const newUtilities = {
+        ".no-scrollbar::-webkit-scrollbar":{
+          display: 'none'
+        }
+      }
+      addUtilities(newUtilities)
+    }
+    
+  ],
 }
 

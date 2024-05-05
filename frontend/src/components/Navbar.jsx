@@ -1,8 +1,15 @@
 import { useEffect, useState } from "react"
-
+import { useNavigate } from "react-router-dom"
+import logo from '../assets/logo.png'
 
 
 const Navbar = () => {
+    let navigate = useNavigate()
+
+    let clickHandler = ()=> {
+        navigate('/home')
+        console.log('click')
+    }
 
     const navItems = <>
         <li>Home</li>
@@ -41,7 +48,7 @@ const Navbar = () => {
                             {navItems}
                         </ul>
                     </div>
-                    <button className="font-semibold text-2xl uppercase  ml-3 ">InternDoor</button>
+                    <button onClick={clickHandler} className="font-semibold text-2xl uppercase  ml-3 "><img src={logo} className="lg:w-32 lg:h-16 w-24 h-12" alt="InternDoor" /></button>
                 </div>
                 <div className="navbar-center  ">
                     <div className="  hidden md:flex lg:flex justify-end">
