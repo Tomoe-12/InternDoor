@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
@@ -20,8 +21,8 @@ export default {
       },
       borderRadius: {
         '3xl': '100px'
-      },boxShadow:{
-        '3xl' : 'rgba(0, 0, 0, 0.24) 0px 3px 8px'
+      }, boxShadow: {
+        '3xl': 'rgba(0, 0, 0, 0.24) 0px 3px 8px'
       }
     },
   },
@@ -31,15 +32,15 @@ export default {
   },
   plugins: [
     require("daisyui"),
-    function ({ addUtilities}){
+    function ({ addUtilities }) {
       const newUtilities = {
-        ".no-scrollbar::-webkit-scrollbar":{
+        ".no-scrollbar::-webkit-scrollbar": {
           display: 'none'
         }
       }
       addUtilities(newUtilities)
     }
-    
+
   ],
 }
 

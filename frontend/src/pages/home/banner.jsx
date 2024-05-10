@@ -1,5 +1,4 @@
 import laptopGirl from '../../assets/images/HomeImg/girl_laptop.png'
-
 const banner = () => {
     return (
 
@@ -26,6 +25,7 @@ const banner = () => {
                         <button className='font-semibold btn text-base uppercase text-white px-8 py-2 rounded-full bg-primary'>
                             Browse All
                         </button>
+                       
                     </div>
                 </div>
 

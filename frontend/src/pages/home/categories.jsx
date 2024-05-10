@@ -63,15 +63,14 @@ const Categories = () => {
         infinite: false,
         speed: 500,
         slidesToShow: 6,
-        slidesToScroll: 3,
-        initialSlide: 1,
+        slidesToScroll: 2,
+        initialSlide: 0,
         responsive: [
             {
                 breakpoint: 1300,
                 settings: {
                     slidesToShow: 4,
-                    slidesToScroll: 3,
-                    infinite: true,
+                    slidesToScroll: 4,
                     dots: true,
                 },
             },
@@ -80,7 +79,6 @@ const Categories = () => {
                 settings: {
                     slidesToShow: 3,
                     slidesToScroll: 3,
-                    infinite: true,
                     dots: true,
                 },
             },

@@ -1,20 +1,41 @@
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import logo from '../assets/logo.png'
 
 
 const Navbar = () => {
     let navigate = useNavigate()
 
-    let clickHandler = ()=> {
-        navigate('/home')
+    let clickHandler = () => {
+        navigate('/')
         console.log('click')
     }
 
     const navItems = <>
-        <li>Home</li>
-        <li>Browse</li>
-        <li>Contact</li>
+        {/* <li><Link  to="/">Home</Link></li>
+        <li><Link to="/browse">Browse</Link></li>
+        <li><Link to="/contact">Contact</Link></li> */}
+        <li>
+            <Link to='/'>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+                Home
+
+            </Link>
+        </li>
+        <li>
+            <Link to='/jobs'>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                jobs
+                <span className="badge badge-sm badge-warning">NEW</span>
+            </Link>
+        </li>
+        <li>
+            <Link to='/contactUs'>
+                Contact Us
+                <span className="badge badge-xs badge-info"></span>
+            </Link>
+        </li>
+
     </>
 
 
@@ -37,14 +58,14 @@ const Navbar = () => {
 
 
     return (
-        <header className=' max-w-screen  max-auto fixed top-0 left-0 right-0 transition-all duration-300 ease-in-out ' >
+        <header className='max-w-screen  max-auto fixed top-0 left-0 right-0 transition-all duration-300 ease-in-out ' >
             <div className={`navbar xl:px-23 ${isSticky ? 'shadow-md bg-base-100 transition-all duration-300 ease-in-out' : ''}`}>
                 <div className="navbar-start">
                     <div className="dropdown  ">
                         <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden  -ml-5">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 " fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" /></svg>
                         </div>
-                        <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                        <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52 space-y-3">
                             {navItems}
                         </ul>
                     </div>
@@ -65,7 +86,7 @@ const Navbar = () => {
                             {navItems}
                         </ul>
                     </div>
-                    <a className="btn">Login</a>
+                    <a className="btn rounded-2xl bg-gradient-to-br text-white from-cyan to-violet">Login</a>
                 </div>
             </div>
         </header>

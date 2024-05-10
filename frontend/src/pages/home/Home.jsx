@@ -4,9 +4,9 @@ import AboutUs from './aboutUs.jsx'
 import Service from './service.jsx'
 import Categories from './categories.jsx'
 const Home = () => {
+  window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   return (
     <div  >
-
       <Banner />
       <Categories />
       <AboutUs />

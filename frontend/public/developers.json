@@ -1,0 +1,52 @@
+[
+    {
+       
+        "name": "Mg Nyein Chan Oo",
+        "role": "Frontend",
+        "email": "nyeinchanoo123@angelfire.com",
+        "linkedin": "nyeinchanoo",
+        "github": "https://github.com/nyeinchanoo215",
+        "image" : "../src/assets/images/developer/nyeinchanoo.jpg"
+       
+    },
+    {
+    
+        "name": "Mg Zayar Lin Htun",
+        "role": "Frontend",
+        "email": "zayyarlinhtun124@gmail.com",
+        "linkedin": "zayyarlinthun",
+        "github": "https://github.com/zayar123455666",
+        "image" : "../src/assets/images/developer/zayyarlinthun.jpg"
+        
+    },
+    {
+       
+        "name": "Mg Zaw Lin Htun",
+        "role": "Lead Designer",
+        "email": "zawlinhtun123@gmail.com",
+        "linkedin": "zawlinhtun",
+        "github": "https://github.com/ZawLinHtun4444",
+        "image" : "../src/assets/images/developer/zawlinhtun.jpg"
+       
+    },
+    {
+      
+        "name": "Khun Thi Han",
+        "role": "Full Stack Developer",
+        "email": "khunthihan@123@gmail.com",
+        "linkedin": "khunthihan",
+        "github": "https://github.com/Tomoe-12",
+        "image" : "../src/assets/images/developer/khunthihan.jpg"
+      
+    },
+    {
+       
+        "name": "Mg Aung Myo Paing",
+        "role": "Full Stack Developer",
+        "email": "aungmyopaing123@gmail.com",
+        "linkedin": "aungmyopaing",
+        "github": "https://github.com/Aungpie01",
+        "image" : "../src/assets/images/developer/aungmyopaing.jpg"
+      
+    }
+]
