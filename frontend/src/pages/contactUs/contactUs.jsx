@@ -1,18 +1,22 @@
 import { useEffect, useState } from "react"
 import axios from 'axios'
-
 const ContactUs = () => {
 
   const [developers, setDevelopers] = useState([])
 
+
+
   useEffect(() => {
+
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
     const fetchData = async () => {
+
       try {
-        const response = await axios.get('../../../public/developers.json')
+        const response = await axios.get('../../../developers.json')
         const data = await response.data;
         setDevelopers(data)
-      console.log(data);
+
+
       } catch (e) {
         console.error('error fetching data at contact us page : ' + e)
       }
@@ -24,7 +28,7 @@ const ContactUs = () => {
     <div >
       <section className="bg-white xl:mt-28 mt-16 ">
         <div className="section-container py-20 mx-auto ">
-          <h1 className="text-3xl font-semibold text-center text-gray-800 capitalize lg:text-4xl ">
+          <h1 className="text-3xl font-semibold text-center text-gray-800 capitalize lg:text-4xl  ">
             Our Executive Team
           </h1>
           <p className="max-w-2xl mx-auto my-8 text-center text-gray-500 ">
@@ -35,7 +39,7 @@ const ContactUs = () => {
           <div className=" grid grid-cols-1 gap-8 mt-16 xl:mt-16 md:grid-cols-2 xl:grid-cols-5 md:px-0 px-12">
 
             {/* developers  */}
-            {!!developers && developers.map((dev,i) => (
+            {!!developers && developers.map((dev, i) => (
 
 
 
@@ -51,7 +55,7 @@ const ContactUs = () => {
 
                 {/* linkedin */}
                 <h1 className="mt-6 text-2xl font-semibold text-gray-700 capitalize  ">
-                  {dev.linkedin}
+                  {dev.name}
                 </h1>
 
                 {/* role */}

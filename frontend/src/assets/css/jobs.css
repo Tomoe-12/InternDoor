@@ -1,0 +1,32 @@
+.job-card {
+  @apply w-[340px] md:w-[350px] lg:w-[460px];
+}
+
+/* // job container  */
+.page_btn {
+  @apply outline-none text-base font-semibold  w-9 h-9 flex items-center justify-center  cursor-pointer bg-white  rounded-lg;
+}
+
+.page_btn:hover {
+  @apply border-b-4 border-b-cyan;
+}
+
+.page_btn:active {
+  @apply bg-none;
+}
+
+.active {
+  @apply bg-gradient-to-br from-cyan to-violet text-white;
+}
+
+.active:hover {
+  @apply border-b-0;
+}
+
+.arrowBtnContainer {
+  @apply inline-block bg-gradient-to-r from-cyan to-violet md:hover:text-white  p-[2px] cursor-grab min-w-24 max-w-24  border border-gray-100 justify-center rounded-2xl  bg-white  rtl:rotate-180;
+}
+
+.arrowBtn {
+  @apply flex items-center bg-white  px-4 py-2 rounded-xl ;
+}

@@ -2,9 +2,9 @@ import logo from '../assets/logo.png'
 const Footer = () => {
   return (
     <div className="md:text-start text-center">
-      <footer className="footer xl:px-24 py-10 px-4 text-base-content">
-        <aside > 
-          <div className='w-full flex  md:justify-start justify-center'><img src={logo} className=" w-32 h-20 justify-center " alt="" /></div>
+      <footer className="footer xl:px-24 py-10 px-4 text-base-content ">
+        <aside className=' sm:w-full  '> 
+          <div className='w-full flex  md:justify-start justify-center '><img src={logo} className=" w-32 h-20 justify-center " alt="" /></div>
           <p className="my-3 px-12 md:px-0 md:w-60  ">
             Throughout Heaven and Earth, I Alone Am The Honored One
           </p>

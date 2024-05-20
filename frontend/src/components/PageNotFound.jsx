@@ -14,7 +14,7 @@ const Page404 = () => {
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-6">
             <Link
-              to=""
+              to="/home"
               className="rounded-md bg-gradient-to-br from-cyan to-violet px-3.5 py-2.5 text-base font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               Go back home

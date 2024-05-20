@@ -21,8 +21,12 @@ export default {
       },
       borderRadius: {
         '3xl': '100px'
-      }, boxShadow: {
+      },
+      boxShadow: {
         '3xl': 'rgba(0, 0, 0, 0.24) 0px 3px 8px'
+      },
+      badge : {
+        'Cyan&Violet' : 'cyan'
       }
     },
   },

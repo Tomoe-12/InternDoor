@@ -1,0 +1,102 @@
+[
+  {
+    "id" : 1,
+    "category": "Software Development",
+    "icon": "../src/assets/images/JobCategoriesIcons/SoftwareDevelopment.svg"
+  },
+  {
+    "id" : 2,
+    "category": "Data Science and Analytics",
+    "icon": "../src/assets/images/JobCategoriesIcons/DataScienceAndAnalytics.svg"
+  },
+  {
+    "id" : 3,
+    "category": "Cybersecurity",
+    "icon": "../src/assets/images/JobCategoriesIcons/Cybersecurity.svg"
+  },
+  {
+    "id" : 4,
+    "category": "IT Support and Infrastructure",
+    "icon": "../src/assets/images/JobCategoriesIcons/ITSupportAndInfrastructure.svg"
+  },
+  {
+    "id" : 5,
+    "category": "Software Testing and Quality Assurance",
+    "icon": "../src/assets/images/JobCategoriesIcons/SoftwareTestingAndQualityAssurance.svg"
+  },
+  {
+    "id" : 6,
+    "category": "Database Management",
+    "icon": "../src/assets/images/JobCategoriesIcons/Database:Management.svg"
+  },
+  {
+    "id" : 7,
+    "category": "Computer Networking",
+    "icon": "../src/assets/images/JobCategoriesIcons/ComputerNetworking.svg"
+  },
+  {
+    "id" :8 ,
+    "category": "Game Development",
+    "icon": "../src/assets/images/JobCategoriesIcons/GameDevelopment.svg"
+  },
+  {
+    "id" :9 ,
+    "category": "UI/UX Design",
+    "icon": "../src/assets/images/JobCategoriesIcons/UIUXDesign.svg"
+  },
+  {
+    "id" : 10,
+    "category": "Research and Development",
+    "icon": "../src/assets/images/JobCategoriesIcons/ResearchAndDevelopment.svg"
+  },
+  {
+    "id" : 11,
+    "category": "Web Development",
+    "icon": "../src/assets/images/JobCategoriesIcons/webDevelopment.svg"
+  },
+  {
+    "id" : 12,
+    "category": "Mobile App Development",
+    "icon": "../src/assets/images/JobCategoriesIcons/mobileAppDevelopment.svg"
+  },
+  {
+    "id" : 13,
+    "category": "Cloud Computing",
+    "icon": "../src/assets/images/JobCategoriesIcons/cloudComputing.svg"
+  },
+  {
+    "id" :14 ,
+    "category": "Artificial Intelligence and Machine Learning",
+    "icon": "../src/assets/images/JobCategoriesIcons/ArtificialIntelligence.svg"
+  },
+  {
+    "id" :15,
+    "category": "DevOps and Continuous Integration/Continuous Deployment (CI/CD)",
+    "icon": "../src/assets/images/JobCategoriesIcons/DevOpsAndContinus(CiCD).svg"
+  },
+  {
+    "id" :16 ,
+    "category": "Embedded Systems",
+    "icon": "../src/assets/images/JobCategoriesIcons/embeddedSystems.svg"
+  },
+  {
+    "id" : 17,
+    "category": "Information Systems Management",
+    "icon": "../src/assets/images/JobCategoriesIcons/informationSystemsManagement.svg"
+  },
+  {
+    "id" : 18,
+    "category": "Information Technology Consulting",
+    "icon": "../src/assets/images/JobCategoriesIcons/informationTechnologyConsulting.svg"
+  },
+  {
+    "id" : 19,
+    "category": "Computer Graphics and Visualization",
+    "icon": "../src/assets/images/JobCategoriesIcons/computerGraphicsAndVisualization.svg"
+  },
+  {
+    "id" : 20,
+    "category": "Robotics and Automation",
+    "icon": "../src/assets/images/JobCategoriesIcons/roboticsAndAutomation.svg"
+  }
+]
