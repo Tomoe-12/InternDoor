@@ -5,6 +5,7 @@ export default {
   theme: {
 
     extend: {
+      
       rounded: {
         '3xl': '100px'
       },
@@ -25,8 +26,8 @@ export default {
       boxShadow: {
         '3xl': 'rgba(0, 0, 0, 0.24) 0px 3px 8px'
       },
-      badge : {
-        'Cyan&Violet' : 'cyan'
+      badge: {
+        'Cyan&Violet': 'cyan'
       }
     },
   },

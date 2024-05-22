@@ -1,12 +1,20 @@
-import { useEffect, useState } from "react"
-
+import { useEffect, useRef, useState } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
 
 const Pagination = ({ page, total, limit, setPage }) => {
+
+    let navigate = useNavigate()
+    const location = useLocation()
     const [currentPage, setCurrentPage] = useState(page)
 
+
     useEffect(() => {
-        setCurrentPage(page)
-    }, [page])
+        const currentUrlPage = parseInt(location.search.split("page=")[1])
+        if (currentUrlPage) {
+            setCurrentPage(currentUrlPage)
+        }
+        // setCurrentPage(page)
+    }, [location])
 
     const handlePageChange = (newPage) => {
 
@@ -23,6 +31,7 @@ const Pagination = ({ page, total, limit, setPage }) => {
         e.preventDefault()
         if (currentPage < totalPages) {
             handlePageChange(currentPage + 1)
+            navigate(`?page=${currentPage + 1}`)
         }
     }
 
@@ -31,16 +40,15 @@ const Pagination = ({ page, total, limit, setPage }) => {
         e.preventDefault()
         if (currentPage > 1) {
             handlePageChange(currentPage - 1)
+            navigate(`?page=${currentPage - 1}`)
         }
     }
+
 
 
     return (
         <>
             <div className="max-w-screen overflow-y-hidden flex items-center justify-center p-0 my-20 ` ">
-
-
-
                 <div className="inline-flex items-center justify-center gap-3">
                     <div onClick={(e) => PreviewPage(e)} className={`${currentPage === 1 ? 'opacity-30 ' : ''}  arrowBtnContainer  group `}>
                         <div className={`${currentPage === 1 ? 'group-hover:bg-white text-black' : 'md:group-hover:bg-transparent'} arrowBtn`}>
@@ -56,7 +64,7 @@ const Pagination = ({ page, total, limit, setPage }) => {
                     {/* medium and larger size button style */}
                     <div className="md:flex mx-7 hidden gap-5">
                         {totalPages > 0 && [...Array(totalPages)].map((val, index) => (
-                            <button className={currentPage === index + 1 ? `page_btn active` : `page_btn`} key={index} onClick={(e) => { e.preventDefault(); handlePageChange(index + 1) }}>
+                            <button className={currentPage == index + 1 ? `page_btn active` : `page_btn`} key={index} onClick={(e) => { e.preventDefault(); handlePageChange(index + 1); navigate(`?page=${index + 1}`) }}>
                                 <p >
                                     {index + 1}
                                 </p>

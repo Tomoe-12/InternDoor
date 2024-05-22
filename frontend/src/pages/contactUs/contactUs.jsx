@@ -12,9 +12,11 @@ const ContactUs = () => {
     const fetchData = async () => {
 
       try {
-        const response = await axios.get('../../../developers.json')
-        const data = await response.data;
+      fetch("../../../public/developers.json")
+      .then(response => response.json())
+      .then(data => {
         setDevelopers(data)
+      })
 
 
       } catch (e) {

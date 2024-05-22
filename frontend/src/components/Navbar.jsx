@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import logo from '../assets/logo.png'
-import SearchBar from './Search.jsx'
+
 
 const Navbar = () => {
     let navigate = useNavigate()
@@ -67,7 +67,7 @@ const Navbar = () => {
 
     return (
         <header className='max-w-screen  max-auto fixed top-0 left-0 right-0 transition-all duration-300 ease-in-out ' >
-            <div className={`navbar xl:px-23 ${isSticky ? 'shadow-md bg-base-100 transition-all duration-300 ease-in-out' : ''}`}>
+            <div className={`navbar xl:px-23 lg:px-16 ${isSticky ? 'shadow-md bg-base-100 transition-all duration-300 ease-in-out ' : ''}`}>
                 {/* logo and phone size navbar  */}
                 <div className="navbar-start">
                     <div className="dropdown  ">
@@ -91,13 +91,15 @@ const Navbar = () => {
 
                 </div> */}
                 {/* navbar for page search and login */}
-                <div className=" navbar-end lg:gap-16   md:gap-14 ">
-                    <div className="  hidden md:flex items-center justify-center   ">
+                <div className=" navbar-end lg:gap-14   md:gap-14 lg:pr-0 pr-6">
+                    <div className="hidden md:flex items-center justify-center   ">
                         <ul className="menu flex flex-nowrap gap-7  menu-horizontal ">
                             {navItems}
                         </ul>
                     </div>
-                    <a className="btn rounded-2xl bg-gradient-to-br text-white from-cyan to-violet">Login</a>
+                    <div className=" pl-10 md:border-l-2  border-black cursor-pointer ">
+                        <a className="font-semibold text-xl ">Login</a>
+                    </div>
                 </div>
             </div>
         </header>

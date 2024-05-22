@@ -45,7 +45,7 @@ const jobContainer = ({ jobs }) => {
         <>
             <div className='my-12 grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 w-fit mx-auto lg:gap-10 md:gap-7 gap-8 justify-center '>
 
-                {jobs.map((job) => (
+                {!!jobs.length && jobs.map((job) => (
                    
                     <div className='' key={job._id}>
 

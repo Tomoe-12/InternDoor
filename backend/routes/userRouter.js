@@ -3,7 +3,9 @@ const userControllers = require('../controllers/userController')
 const router = express.Router()
 
 
-router.get('/api/users',userControllers.getAllUsers)
+router.get('/',userControllers.getAllUsers)
+router.get('/login',userControllers.login)
+router.get('/register',userControllers.register)
 
 
 

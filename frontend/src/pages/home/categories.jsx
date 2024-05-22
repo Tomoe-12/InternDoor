@@ -40,9 +40,11 @@ const Categories = () => {
 
     useEffect(() => {
         let fetchData = async () => {
-
-            const response = await axios.get('../../../jobCategories.json')
-            setJobCategory(response.data.slice(0, 10))
+            fetch('../../../public/jobCategories.json')
+            .then(response => response.json())
+            .then(data => 
+              setJobCategory(data.slice(0,10))
+            )
         }
         fetchData()
     }, [])

@@ -147,18 +147,18 @@ const SortByCategory = ({ category, filterCategory, setFilterCategory }) => {
   return (
     <div >
 
-      {category.map((item, i) => (
-        <div key={i} className="my-5">
-          <div className="form-control  hover:outline hover:outline-1  p-1 rounded-full px-2">
+      {!!category.length && category.map((item, i) => (
+        <div key={i} className="mt-5 ">
+          <div className="form-control  hover:outline hover:outline-1  p-1  rounded-full px-2">
             <label className="cursor-pointer label  space-x-2 ">
               <img src={item.icon} className="w-7 h-7" alt="" />
               <span className="label-text ">{item.category}</span>
-              <input type="checkbox" value={item.category} onChange={onChange} checked={filterCategory.includes(item.category)} className="checkbox  checkbox-md" />
+              <input type="checkbox" id={item.category} value={item.category} onChange={onChange} checked={filterCategory.includes(item.category)} className="checkbox  checkbox-md" />
             </label>
           </div>
         </div>
       ))}
-     
+
 
     </div>
   )
