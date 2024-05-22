@@ -98,7 +98,7 @@ const Navbar = () => {
                         </ul>
                     </div>
                     <div className=" pl-10 md:border-l-2  border-black cursor-pointer ">
-                        <a className="font-semibold text-xl ">Login</a>
+                        <a className="font-semibold text-xl " onClick={(e) => { e.preventDefault(); navigate('/signup') }}>Login</a>
                     </div>
                 </div>
             </div>
