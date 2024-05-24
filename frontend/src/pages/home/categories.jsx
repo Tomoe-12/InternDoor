@@ -4,7 +4,6 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import right from '../../assets/images/right.svg'
 import left from '../../assets/images/left.svg'
-import axios from 'axios';
 
 
 
@@ -40,11 +39,11 @@ const Categories = () => {
 
     useEffect(() => {
         let fetchData = async () => {
-            fetch('../../../public/jobCategories.json')
-            .then(response => response.json())
-            .then(data => 
-              setJobCategory(data.slice(0,10))
-            )
+            fetch('../../../jobCategories.json')
+                .then(response => response.json())
+                .then(data =>
+                    setJobCategory(data.slice(0, 10))
+                )
         }
         fetchData()
     }, [])
@@ -109,8 +108,8 @@ const Categories = () => {
                     <p className="text-[#4A4A4A] xl:text-base lg:text-xl md:text-lg text-base">Search your opportunities with or categories</p>
                 </div>
                 <div className='hidden md:block  absolute right-0 top-3 mb-10 md:mr-24'>
-                    <button onClick={() => slider?.current?.slickPrev()} className='btn p-2 rounded-full ml-5'><img className=" h-8 w-8 p-1" src={left} alt="" /></button>
-                    <button onClick={() => slider?.current?.slickNext()} className='btn p-2 rounded-full ml-5 bg-gradient-to-br from-cyan to-violet'><img className=" h-8 w-8 p-1 " src={right} alt="" /></button>
+                    <button onClick={() => slider?.current?.slickPrev()} className='btn p-2 rounded-full ml-5 transition-colors duration-300 transform'><img className=" h-8 w-8 p-1" src={left} alt="" /></button>
+                    <button onClick={() => slider?.current?.slickNext()} className='btn p-2 rounded-full ml-5 bg-blue-500 hover:bg-blue-400 transition-colors duration-300 transform'><img className=" h-8 w-8 p-1 " src={right} alt="" /></button>
                 </div>
 
 
@@ -121,8 +120,8 @@ const Categories = () => {
                         <div key={i} className='pt-10 pb-8 xl:pb-16  px-10 xl:px-4 '>
                             <div className="shadow-3xl card  bg-base-100 xl:space-y-6 space-y-0 min-h-72 max-h-72 ">
                                 <figure className="px-5 xl:py-3 py-6 ">
-                                    <div className='xl:h-16 xl:w-16 w-20 h-20 p-4  overflow-visible rounded-2xl bg-gradient-to-br from-cyan to-violet '>
-                                        <img className=" overflow-auto icon-black" src={item.icon} alt={item.category} />
+                                    <div className='xl:h-16 xl:w-16 w-20 h-20 p-4  overflow-visible rounded-2xl bg-blue-500 '>
+                                        <img className=" overflow-auto icon-white" src={item.icon} alt={item.category} />
                                     </div>
 
                                 </figure>

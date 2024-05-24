@@ -1,7 +1,7 @@
 /* banner jsx */
 .image {
   border: 1px solid gray;
-  @apply relative md:w-80 md:h-height5px w-60 h-80 rounded-2xl bg-gradient-to-b from-cyan to-violet;
+  @apply relative md:w-80 md:h-height5px w-60 h-80 rounded-2xl
 }
 
 .image::after {
@@ -35,12 +35,9 @@ ul li:first-of-type label {
   position: relative;
 }
 .textLeftDesign:before {
-  @apply absolute content-[''] top-0 left-0 w-1 h-full rounded-full bg-gradient-to-b from-cyan to-violet;
+  @apply absolute content-[''] top-0 left-0 w-1 h-full rounded-full bg-blue-500
 }
 
-.btnHover:hover {
-  @apply rounded-full border-none;
-}
 
 /* service jsx */
 .serviceBox {
@@ -48,11 +45,11 @@ ul li:first-of-type label {
 }
 
 .serviceBox > .eachServiceIcon {
-  @apply absolute xl:w-16 xl:h-16 md:w-24 md:h-24 w-20 h-20 rounded-full p-4 border-none bg-gradient-to-br from-cyan to-violet top-0 right-1/2 translate-x-1/2 xl:-translate-y-8 md:-translate-y-12 -translate-y-9;
+  @apply absolute xl:w-16 xl:h-16 md:w-24 md:h-24 w-20 h-20 rounded-full p-4 border-none bg-blue-500 top-0 right-1/2 translate-x-1/2 xl:-translate-y-8 md:-translate-y-12 -translate-y-9;
 }
 
 .serviceBox .hrLine {
-  @apply w-2/5  mx-auto size-1 rounded-full border-none bg-gradient-to-r from-cyan to-violet;
+  @apply w-2/5  mx-auto size-1 rounded-full border-none bg-blue-500;
 }
 
 .serviceBox .header {

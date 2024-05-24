@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 
 const Pagination = ({ page, total, limit, setPage }) => {
@@ -21,7 +21,7 @@ const Pagination = ({ page, total, limit, setPage }) => {
         setPage(newPage)
         setCurrentPage(newPage)
     }
-    const totalPages = Math.ceil(total / limit)
+    const totalPages = Math.ceil(total / limit) || 1
     // console.log(totalPages);
 
 
@@ -51,14 +51,16 @@ const Pagination = ({ page, total, limit, setPage }) => {
             <div className="max-w-screen overflow-y-hidden flex items-center justify-center p-0 my-20 ` ">
                 <div className="inline-flex items-center justify-center gap-3">
                     <div onClick={(e) => PreviewPage(e)} className={`${currentPage === 1 ? 'opacity-30 ' : ''}  arrowBtnContainer  group `}>
-                        <div className={`${currentPage === 1 ? 'group-hover:bg-white text-black' : 'md:group-hover:bg-transparent'} arrowBtn`}>
-                            <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 mx-1 rtl:-scale-x-100" fill="none" viewBox="0 0 24 24" stroke="currentcolor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16l-4-4m0 0l4-4m-4 4h18" />
-                            </svg>
-                            <span className=" capitalize">
-                                pre
-                            </span>
-                        </div>
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 mr-1 " viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+
+                        <span className=" capitalize">
+                            prev
+                        </span>
+
                     </div>
 
                     {/* medium and larger size button style */}
@@ -81,15 +83,13 @@ const Pagination = ({ page, total, limit, setPage }) => {
                     </div>
 
 
-                    <div onClick={(e) => NextPage(e)} className={`${currentPage === totalPages ? 'opacity-30' : ''}  arrowBtnContainer  group`}>
-                        <div className={`${currentPage === totalPages ? 'group-hover:bg-white text-black' : 'md:group-hover:bg-transparent'} arrowBtn`}>
-                            <span className="capitalize">
-                                Next
-                            </span>
-                            <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 mx-1 rtl:-scale-x-100" fill="none" viewBox="0 0 24 24" stroke="currentcolor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                            </svg>
-                        </div>
+                    <div onClick={(e) => NextPage(e)} className={`${currentPage === totalPages ? 'opacity-30' : ''}  arrowBtnContainer  `}>
+                        <span className="capitalize">
+                            Next
+                        </span>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 ml-1" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                        </svg>
                     </div>
                 </div>
 

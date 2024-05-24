@@ -12,7 +12,7 @@ const ContactUs = () => {
     const fetchData = async () => {
 
       try {
-      fetch("../../../public/developers.json")
+      fetch("../../../developers.json")
       .then(response => response.json())
       .then(data => {
         setDevelopers(data)

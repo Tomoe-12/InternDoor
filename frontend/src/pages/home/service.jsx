@@ -22,7 +22,7 @@ const service = () => {
 
                     <div className='grid xl:grid-rows-2 xl:grid-cols-2 xl:gap-15  gap-20 justify-center text-center '>
                         <div className='serviceBox xl:rounded-tl-3xl rounded-xl '>
-                            <div className='eachServiceIcon '>  <img src={img1} alt="" /></div>
+                            <div className='eachServiceIcon'>  <img src={img1} alt="" /></div>
                             <h1 className='header' >Customized Matching</h1>
                             <hr className='hrLine' />
                             <p className='serviceText'> Utilizing advanced algorithms to match students with internship opportunities that align with their skills, interests, and career goals.</p>

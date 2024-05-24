@@ -8,7 +8,7 @@
 }
 
 .page_btn:hover {
-  @apply border-b-4 border-b-cyan;
+  @apply  outline-blue-500;
 }
 
 .page_btn:active {
@@ -16,17 +16,17 @@
 }
 
 .active {
-  @apply bg-gradient-to-br from-cyan to-violet text-white;
+  @apply bg-blue-500 text-white;
 }
 
 .active:hover {
-  @apply border-b-0;
+  @apply outline-0;
 }
 
 .arrowBtnContainer {
-  @apply inline-block bg-gradient-to-r from-cyan to-violet md:hover:text-white  p-[2px] cursor-grab min-w-24 max-w-24  border border-gray-100 justify-center rounded-2xl  bg-white  rtl:rotate-180;
+  @apply flex items-center px-3  py-2 border border-blue-500 text-blue-500 font-semibold cursor-pointer  min-w-24 max-w-24 justify-center rounded-lg  bg-white  rtl:rotate-180;
 }
 
 .arrowBtn {
-  @apply flex items-center bg-white  px-4 py-2 rounded-xl ;
+  @apply flex items-center bg-white  px-4 py-2 rounded-xl;
 }

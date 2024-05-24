@@ -63,7 +63,7 @@ const Jobs = () => {
 
   useEffect(() => {
     getAllJobs();
-    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    // window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   }, [getAllJobs, page]);
 
 
@@ -115,13 +115,13 @@ const Jobs = () => {
                     <div className="grid grid-cols-2 gap-2 ">
                       <div className="form-control   h-fit xl:pr-16 md:pr-16 pr-10 ">
                         <label className="label  cursor-pointer  ">
-                          <input type="radio" name="radio-10" className="  radio checked:bg-cyan" defaultChecked />
+                          <input type="radio" name="radio-10" className="  radio checked:bg-blue-500" defaultChecked />
                           <span className="label-text text-sm ">Most Recent</span>
                         </label>
                       </div>
                       <div className="form-control   h-fit xl:pr-16 md:pr-16 pr-12 ">
                         <label className="label  cursor-pointer  ">
-                          <input type="radio" name="radio-10" className=" radio checked:bg-cyan" />
+                          <input type="radio" name="radio-10" className=" radio checked:bg-blue-500" />
                           <span className="label-text text-sm">Most Apply</span>
                         </label>
                       </div>

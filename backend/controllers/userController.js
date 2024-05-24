@@ -1,4 +1,4 @@
-const User = require('../models/User')
+const { User, Company } = require('../models/User')
 
 const getAllUsers = (req, res) => {
    return res.json({ msg: 'get all users' })

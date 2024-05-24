@@ -15,8 +15,6 @@ export default {
       },
 
       colors: {
-        'cyan': ' #00FFFF',
-        'violet': '#EE82EE',
         'kindablack': '#3f3d56',
         'primary': '#3498db',
       },

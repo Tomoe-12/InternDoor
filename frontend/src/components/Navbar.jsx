@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom"
 import logo from '../assets/logo.png'
 
 
+
 const Navbar = () => {
     let navigate = useNavigate()
 
@@ -98,7 +99,7 @@ const Navbar = () => {
                         </ul>
                     </div>
                     <div className=" pl-10 md:border-l-2  border-black cursor-pointer ">
-                        <a className="font-semibold text-xl " onClick={(e) => { e.preventDefault(); navigate('/signup') }}>Login</a>
+                        <a className="font-semibold text-xl hover:text-blue-500" onClick={(e) => { e.preventDefault(); navigate('/login') }}>Login</a>
                     </div>
                 </div>
             </div>
