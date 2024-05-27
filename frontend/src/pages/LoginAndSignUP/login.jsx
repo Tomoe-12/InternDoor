@@ -1,7 +1,62 @@
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import Logo from '../../assets/logo.png'
+import { useForm } from 'react-hook-form'
+import { useContext, useState } from "react";
+import { AuthContext } from "../../contexts/AuthProvider";
 const Login = () => {
-    let navigate = useNavigate();
+
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors }
+    } = useForm()
+
+
+    const { signUpWithGmail, login } = useContext(AuthContext)
+    const [errorMessage, setErrorMessage] = useState('')
+
+    // redirecting to home page or specifice page
+    const location = useLocation()
+    let navigate = useNavigate()
+    const from = location.state?.from?.pathname || '/'
+
+    console.log(from);
+
+    const onSubmit = (data) => {
+        let email = data.email
+        let password = data.pass
+        console.log(email, password);
+        login(email, password)
+            .then((result) => {
+                const user = result.user
+
+                alert('login sucessfully')
+                navigate(from, { replace: true })
+            }).catch((error) => {
+                const errorMessage = error.errorMessage
+                console.log(errorMessage);
+                setErrorMessage('Provide a correct email and password')
+            })
+    }
+
+    // google sign in
+    const handleGoogleSignUp = async () => {
+        signUpWithGmail()
+            .then((result) => {
+                const user = result.user
+                console.log(user);
+                alert('login sucessfully')
+                navigate('/')
+            }).catch((error) => {
+                console.log(error);
+                alert('something went wrong try again')
+                navigate('/login')
+            })
+    };
+
+
+
     return (
         <>
             <section className="bg-white w-full h-lvh overflow-y-hidden flex items-center " >
@@ -19,25 +74,32 @@ const Login = () => {
                             </h1>
                         </div>
                         <div className="mt-8 lg:w-1/2 lg:mt-0">
-                            <form className="w-full lg:max-w-xl">
+                            <form className="w-full lg:max-w-xl" onSubmit={handleSubmit(onSubmit)}>
+                                {/* email */}
                                 <div className="relative flex items-center">
                                     <span className="absolute">
                                         <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 mx-3 text-gray-300 " fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                         </svg>
                                     </span>
-                                    <input type="email" className="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11    focus:border-blue-400  focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40" placeholder="Email address" />
+                                    <input {...register('email', { required: true })} autoComplete="true" type="email" className="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11    focus:border-blue-400  focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40" placeholder="Email address" />
                                 </div>
+                                {/* password */}
                                 <div className="relative flex items-center mt-4">
                                     <span className="absolute">
                                         <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 mx-3 text-gray-300 " fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                                         </svg>
                                     </span>
-                                    <input type="password" className="block w-full px-10 py-3 text-gray-700 bg-white border rounded-lg    focus:border-blue-400  focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40" placeholder="Password" />
+                                    <input {...register('pass', { required: true })} autoComplete="true" type="password" className="block w-full px-10 py-3 text-gray-700 bg-white border rounded-lg    focus:border-blue-400  focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40" placeholder="Password" />
+                                </div>
+                                {/* error */}
+                                <div>
+                                    {errorMessage ? <p className="text-red-500 text-end mt-1  -mb-3">{errorMessage}</p> : ''}
+
                                 </div>
                                 <div className="mt-8 md:flex md:items-center ">
-                                    <button className="w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg md:w-1/2 hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50">
+                                    <button type="submit" className="w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg md:w-1/2 hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50">
                                         Sign in
                                     </button>
                                     <a href="#" className=" block mt-4 md:text-center text-end text-blue-500 md:mt-0 md:mx-6 hover:underline ">
@@ -84,9 +146,8 @@ const Login = () => {
                             </div>
                         </div> */}
                         <div className="flex items-center justify-center gap-x-7">
-                            <a className=" relative w-11 h-11 rounded-full transition-all duration-500 flex justify-center items-center bg-gray-700  hover:bg-blue-500">
+                            <a onClick={handleGoogleSignUp} className=" relative w-11 h-11 rounded-full transition-all duration-500 flex justify-center items-center bg-gray-700  hover:bg-blue-500">
                                 <svg className="w-[1rem] h-[1rem] text-white" fill="#ffffff" height="200px" width="200px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 210 210" xmlSpace="preserve"><g id="SVGRepo_bgCarrier" strokeWidth={0} /><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round" /><g id="SVGRepo_iconCarrier"> <path d="M0,105C0,47.103,47.103,0,105,0c23.383,0,45.515,7.523,64.004,21.756l-24.4,31.696C133.172,44.652,119.477,40,105,40 c-35.841,0-65,29.159-65,65s29.159,65,65,65c28.867,0,53.398-18.913,61.852-45H105V85h105v20c0,57.897-47.103,105-105,105 S0,162.897,0,105z" /> </g></svg>
-
                             </a>
                             <a className="relative w-11 h-11 rounded-full transition-all duration-500 flex justify-center items-center bg-gray-700  hover:bg-blue-500">
                                 <svg className="w-[1rem] h-[1rem] text-white" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">

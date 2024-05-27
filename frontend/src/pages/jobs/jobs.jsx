@@ -8,6 +8,7 @@ import { useLocation } from 'react-router-dom'
 // import FilterAndSort from '../../components/Filter&SortBy.jsx'
 import { useMediaQuery } from 'react-responsive'
 import SortByCategory from './sortByCategory.jsx'
+import Filter from '../../assets/images/jobImg&icon/filter.svg'
 const Jobs = () => {
 
   const isMobile = useMediaQuery({ query: '(max-width: 767px)' });
@@ -21,7 +22,6 @@ const Jobs = () => {
   const [filterCategory, setFilterCategory] = useState([])
   const [page, setPage] = useState(searchQuery.get('page') || 1)
   const [search, setSearch] = useState("")
-
 
 
   // let page = searchQuery.get('page') || 1
@@ -81,7 +81,7 @@ const Jobs = () => {
             <h3 className="text-xl font-semibold text-center text-gray-500 capitalize lg:text-2xl ">Showing <span className='text-black'>{limit}</span> jobs</h3>
             <label htmlFor="my-drawer-4" className="drawer-button ">
               <div className=' flex text-center items-center px-7 py-1 tracking-wide rounded-full gap-3  shadow-3xl'>
-                {/* <img src={Filter} className='w-5 h-5' alt="" /> */}
+                <img src={Filter} className='w-5 h-5' alt="" />
                 <h1 className='text-lg'>Filters</h1>
               </div>
             </label>

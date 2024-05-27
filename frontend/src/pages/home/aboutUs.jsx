@@ -24,7 +24,7 @@ const AboutUs = () => {
                     {/* contact us btn and phone number*/}
                     <div className='flex lg:flex-row flex-col gap-10 '>
 
-                        <button onClick={(e) => { e.preventDefault(); navigate('/contactUs') }} className='font-extrabold lg:font-semibold btn text-xl lg:text-base border-none  rounded-full text-white px-8 lg:py-2 btnHover bg-blue-500 hover:bg-blue-400 transition-color ease-in-out duration-300 transform'>
+                        <button onClick={(e) => { e.preventDefault(); navigate('/contactUs') }} className='font-extrabold lg:font-semibold btn text-xl lg:text-base border-none  rounded-lg text-white px-8 lg:py-2 btnHover bg-blue-500 hover:bg-blue-400 transition-color ease-in-out duration-300 transform'>
                             Contact Us <img className='inline w-5 ml-1 ' src={arrowWhite} alt="" />
                         </button>
 

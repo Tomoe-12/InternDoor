@@ -5,7 +5,7 @@ const router = express.Router()
 
 router.get('/',userControllers.getAllUsers)
 router.get('/login',userControllers.login)
-router.get('/register',userControllers.register)
+router.get('/register',userControllers.createUser)
 
 
 

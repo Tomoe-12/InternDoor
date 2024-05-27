@@ -1,54 +1,103 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { useForm } from "react-hook-form";
+import { AuthContext } from "../../contexts/AuthProvider";
 const StudentSignUpForm = () => {
     let navigate = useNavigate()
-    let [name, setName] = useState('');
-    let [rollno, setRollno] = useState('');
-    let [phone, setPhone] = useState('');
-    let [email, setEmail] = useState('');
-    let [address, setAddress] = useState('');
-    let [pass, setPass] = useState('');
-    let [conPass, setConPass] = useState('');
+
+    const {
+        register,
+        handleSubmit,
+        watch,
+        formState: { errors },
+    } = useForm()
+
+    const { createUser, login, signUpWithGmail } = useContext(AuthContext)
+
+    const onSubmit = (data) => {
+        let name = data.name
+        let rollno = data.rollno
+        let phone = data.phone
+        let email = data.email
+        let address = data.address
+        let password = data.pass
+
+        // register new user
+        createUser(email, password)
+            .then((result) => {
+                const user = result.user
+                console.log(user);
+                alert('Registering sucessfully')
+                navigate('/')
+            }).catch((error) => {
+                console.log(error);
+                alert('something went wrong ! Try again')
+                navigate('/signup')
+            })
+
+    }
+
+
+    // google sign up
+    const handleGoogleSignUp = async () => {
+        signUpWithGmail()
+            .then((result) => {
+                const user = result.user
+            }).catch((error) => {
+
+            })
+    }
+
+
+
+
+
+
     return (
         <>
 
 
             {/* form  */}
-            < form className="grid gap-6 mt-8 md:grid-cols-2 grid-cols-1 ">
+            < form className="grid gap-6 mt-8 md:grid-cols-2 grid-cols-1 " onSubmit={handleSubmit(onSubmit)}>
                 <div className="col-span-2 sm:col-span-1 " >
                     <label className="block mb-2 text-sm text-gray-600 ">Name</label>
-                    <input value={name} onChange={e => setName(e.target.value)} type="text" placeholder="John" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                    <input {...register('name', { require: true })} type="text" placeholder="John" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
                 </div>
 
                 <div className="col-span-2 sm:col-span-1 " >
                     <label className="block mb-2 text-sm text-gray-600 ">Roll NO</label>
-                    <input value={rollno} onChange={e => setRollno(e.target.value)} type="text" placeholder="5CS-4" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                    <input {...register('rollno', { require: true })} type="text" placeholder="5CS-4" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
                 </div>
                 <div className="col-span-2 sm:col-span-1" >
                     <label className="block mb-2 text-sm text-gray-600 ">Phone number</label>
-                    <input value={phone} onChange={e => setPhone(e.target.value)} type="number" placeholder="XXX-XX-XXXX-XXX" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                    <input {...register('phone', { require: true })} type="tel" maxLength={12} placeholder="XXX-XX-XXXX-XXX" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
                 </div>
 
                 <div className="col-span-2 sm:col-span-1" >
                     <label className="block mb-2 text-sm text-gray-600 ">Email address</label>
-                    <input value={email} onChange={e => setEmail(e.target.value)} type="email" placeholder="johnsnow@ucstgi.com" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                    <input {...register('email', { require: true })} type="email" placeholder="johnsnow@ucstgi.com" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
                 </div>
                 <div className='col-span-2'>
                     <label className="block mb-2 text-sm text-gray-600 ">Address</label>
-                    <input value={address} onChange={e => setAddress(e.target.value)} type="text" placeholder="Address" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                    <input {...register('address', { require: true })} type="text" placeholder="Address" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
                 </div>
                 <div className="col-span-2 sm:col-span-1" >
                     <label className="block mb-2 text-sm text-gray-600 ">Password</label>
-                    <input value={pass} onChange={e => setPass(e.target.value)} type="password" placeholder="Enter your password" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                    <input {...register('pass', { require: true })} type="password" autoComplete="false" placeholder="Enter your password" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
                 </div>
-                <div className="col-span-2 sm:col-span-1" >
+                <div className="col-span-2 sm:col-span-1 " >
                     <label className="block mb-2 text-sm text-gray-600 ">Confirm password</label>
-                    <input value={conPass} onChange={e => setConPass(e.target.value)} type="password" placeholder="Enter your password" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                    <input {...register('conpass', {
+                        require: true,
+                        validate: (value) => value == watch('pass') || 'Passwords do not match'
+                    })} type="password" autoComplete="false" placeholder="Enter your password" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" required />
                 </div>
+                {errors.conpass && <div className="col-span-2">
+                    <p className="text-red-500 text-end   -my-3 ">{errors.conpass.message}</p>
+                </div>}
 
                 <div>
-                    <button className=" flex items-center justify-between w-32  md:w-full px-6 py-3 text-sm tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50">
+                    <button type="submit" className=" flex items-center justify-between w-32  md:w-full px-6 py-3 text-sm tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50">
                         <span>Sign Up </span>
                         <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 rtl:-scale-x-100" viewBox="0 0 20 20" fill="currentColor">
                             <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
@@ -67,7 +116,7 @@ const StudentSignUpForm = () => {
             </div>
             {/* sign up button  */}
             <div className="flex items-center justify-center gap-x-7">
-                <a className="relative w-11 h-11 rounded-full transition-all duration-500 flex justify-center items-center bg-gray-700  hover:bg-blue-500">
+                <a onClick={handleGoogleSignUp} className="relative w-11 h-11 rounded-full transition-all duration-500 flex justify-center items-center bg-gray-700  hover:bg-blue-500">
                     <svg className="w-[1rem] h-[1rem] text-white" fill="#ffffff" height="200px" width="200px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 210 210" xmlSpace="preserve"><g id="SVGRepo_bgCarrier" strokeWidth={0} /><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round" /><g id="SVGRepo_iconCarrier"> <path d="M0,105C0,47.103,47.103,0,105,0c23.383,0,45.515,7.523,64.004,21.756l-24.4,31.696C133.172,44.652,119.477,40,105,40 c-35.841,0-65,29.159-65,65s29.159,65,65,65c28.867,0,53.398-18.913,61.852-45H105V85h105v20c0,57.897-47.103,105-105,105 S0,162.897,0,105z" /> </g></svg>
 
                 </a>

@@ -108,12 +108,9 @@ const Categories = () => {
                     <p className="text-[#4A4A4A] xl:text-base lg:text-xl md:text-lg text-base">Search your opportunities with or categories</p>
                 </div>
                 <div className='hidden md:block  absolute right-0 top-3 mb-10 md:mr-24'>
-                    <button onClick={() => slider?.current?.slickPrev()} className='btn p-2 rounded-full ml-5 transition-colors duration-300 transform'><img className=" h-8 w-8 p-1" src={left} alt="" /></button>
-                    <button onClick={() => slider?.current?.slickNext()} className='btn p-2 rounded-full ml-5 bg-blue-500 hover:bg-blue-400 transition-colors duration-300 transform'><img className=" h-8 w-8 p-1 " src={right} alt="" /></button>
+                    <button onClick={() => slider?.current?.slickPrev()} className=' p-2 rounded-full ml-5 bg-white hover:bg-gray-100  border border-blue-500 transition-colors duration-300 '><img className=" h-8 w-8 p-1 icon-blue" src={left} alt="" /></button>
+                    <button onClick={() => slider?.current?.slickNext()} className='btn p-2 rounded-full ml-5 bg-blue-500 border border-blue-500 hover:bg-blue-400 hover:border-blue-400  transition-colors duration-300 transform'><img className=" h-8 w-8 p-1 " src={right} alt="" /></button>
                 </div>
-
-
-
                 <Slider ref={slider} {...settings} className="mt-5 min-h-96 max-h-96   justify-around items-center   ">
 
                     {!!jobCategory.length && jobCategory.map((item, i) => (
@@ -133,7 +130,6 @@ const Categories = () => {
                             </div>
                         </div>
                     ))}
-
                 </Slider>
             </div>
         </div>
