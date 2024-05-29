@@ -38,7 +38,7 @@ const Testimonial = () => {
                 <div className="mt-2 md:mx-6">
                   <div>
                     <p className="text-xl font-medium tracking-tight text-white">Ryomen Sukuna</p>
-                    <p className="text-blue-200 ">King of Curse (The Strongest in history ) </p>
+                    <p className="text-blue-200 ">King of Curse (The Strongest in History) </p>
                   </div>
                   <p className="mt-4 text-lg leading-relaxed text-white md:text-lg"> “Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tempore quibusdam ducimus libero ad tempora doloribus expedita laborum saepe voluptas perferendis delectus assumenda”.</p>
                   <div className="flex items-center justify-between mt-6 md:justify-start">

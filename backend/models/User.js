@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt')
+
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
@@ -9,33 +11,32 @@ const userSchema = new Schema({
         minlength: 3
     },
     photoURL: String,
+    phoneNumber: String,
+    password : {
+        type : String ,
+        required : true 
+    },
     role: {
         type: String,
-        enum: ['admin', 'company', 'tudent'],
-        default: 'tudent'
+        enum: ['admin', 'company', 'student'],
+        default: 'student'
     },
     studentInfo: {
         rollno: String,
-        university: String,
         address: String,
-        phoneNumber: String
     },
     companyInfo: {
-        type: Schema.Types.ObjectId,
-        ref: 'CompanyInfo'
+        slogan: String,
+        location : String ,
+        companySize: String,
+        companyDescription: String,
+        website: String,
+        industry: String,
+        foundingYear: Number
     }
 });
 
-const CompanyInfo = new Schema({
-    slogan: String,
-    companySize: String,
-    companyDescription: String,
-    website: String,
-    industry: String,
-    foundingYear: Number
-});
 
 const User = mongoose.model('User', userSchema);
-const Company = mongoose.model('CompanyInfo', CompanyInfo);
 
-module.exports = { User, Company };
+module.exports =  User 

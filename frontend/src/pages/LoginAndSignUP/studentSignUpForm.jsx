@@ -2,7 +2,11 @@ import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { AuthContext } from "../../contexts/AuthProvider";
+import axios from 'axios'
+import Swal from 'sweetalert2'
+import Validation from '../../hook/validation'
 const StudentSignUpForm = () => {
+    const { validateRollno, validatePhoneNumber, validateEmail, validatePassword, validateRequired } = Validation
     let navigate = useNavigate()
 
     const {
@@ -12,26 +16,56 @@ const StudentSignUpForm = () => {
         formState: { errors },
     } = useForm()
 
-    const { createUser, login, signUpWithGmail } = useContext(AuthContext)
+    const { createUser, signUpWithGmail } = useContext(AuthContext)
+    const [errorMessage, setErrorMessage] = useState('')
 
     const onSubmit = (data) => {
-        let name = data.name
-        let rollno = data.rollno
-        let phone = data.phone
-        let email = data.email
-        let address = data.address
-        let password = data.pass
+        let { name, email, pass, rollno, address, phone } = data
 
         // register new user
-        createUser(email, password)
+        createUser(email, pass)
             .then((result) => {
                 const user = result.user
-                console.log(user);
-                alert('Registering sucessfully')
-                navigate('/')
+                const studentData = {
+                    name,
+                    email,
+                    photoURL: '',
+                    role: 'student',
+                    password: pass,
+                    phoneNumber: phone,
+                    studentInfo: {
+                        rollno,
+                        address,
+                    }
+                };
+                console.log(studentData);
+                // save user to the database 
+                axios.post('/api/users/studentRegister', studentData, {
+                    withCredentials: true,
+                }).then((res) => {
+                    if (res.status === 200) {
+                        Swal.fire({
+                            position: "top-end",
+                            icon: "success",
+                            title: "Register Successfully ! ",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        navigate('/')
+                    }
+                })
+
             }).catch((error) => {
-                console.log(error);
-                alert('something went wrong ! Try again')
+                console.error(error)
+                const errorCode = error.code;
+                if (errorCode == 'auth/email-already-in-use') setErrorMessage('Email address is already in use')
+                else { setErrorMessage('') }
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Email address is already in use"
+
+                });
                 navigate('/signup')
             })
 
@@ -43,58 +77,85 @@ const StudentSignUpForm = () => {
         signUpWithGmail()
             .then((result) => {
                 const user = result.user
+                console.log(user);
             }).catch((error) => {
-
+                console.log(error);
             })
     }
-
-
-
-
-
-
     return (
         <>
 
 
             {/* form  */}
             < form className="grid gap-6 mt-8 md:grid-cols-2 grid-cols-1 " onSubmit={handleSubmit(onSubmit)}>
-                <div className="col-span-2 sm:col-span-1 " >
+                <div className='col-span-2 sm:col-span-1 ' >
                     <label className="block mb-2 text-sm text-gray-600 ">Name</label>
-                    <input {...register('name', { require: true })} type="text" placeholder="John" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                    <input {...register('name', { validate: validateRequired || validateRequired })} type="text" placeholder="John" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                    {errors.name && <div className="col-span-2 mt-5">
+                        <p className="text-red-500 text-end  -my-3 ">{errors.name.message}</p>
+                    </div>}
                 </div>
+
 
                 <div className="col-span-2 sm:col-span-1 " >
                     <label className="block mb-2 text-sm text-gray-600 ">Roll NO</label>
-                    <input {...register('rollno', { require: true })} type="text" placeholder="5CS-4" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                    <input {...register('rollno', { validate: (value) => validateRequired(value) || validateRollno(value) })} type="text" placeholder="5CS-4" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                    {errors.rollno && <div className="col-span-2 mt-5">
+                        <p className="text-red-500 text-end  -my-3 ">{errors.rollno.message}</p>
+                    </div>}
                 </div>
+
+
                 <div className="col-span-2 sm:col-span-1" >
                     <label className="block mb-2 text-sm text-gray-600 ">Phone number</label>
-                    <input {...register('phone', { require: true })} type="tel" maxLength={12} placeholder="XXX-XX-XXXX-XXX" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                    <input {...register('phone', { validate: (value) => validateRequired(value) || validatePhoneNumber(value) })} type="tel" maxLength={11} placeholder="XX-XXX-XXXX-XXX" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                    {errors.phone && <div className="col-span-2 mt-5">
+                        <p className="text-red-500 text-end  -my-3 ">{errors.phone.message}</p>
+                    </div>}
                 </div>
+
 
                 <div className="col-span-2 sm:col-span-1" >
                     <label className="block mb-2 text-sm text-gray-600 ">Email address</label>
-                    <input {...register('email', { require: true })} type="email" placeholder="johnsnow@ucstgi.com" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                    <input {...register('email', { validate: (value) => validateRequired(value) || validateEmail(value) })} type="email" placeholder="johnsnow@ucstgi.com" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                    {errors.email && <div className="col-span-2 mt-5">
+                        <p className="text-red-500 text-end  -my-3 ">{errors.email.message}</p>
+                    </div>}
                 </div>
+
+
                 <div className='col-span-2'>
                     <label className="block mb-2 text-sm text-gray-600 ">Address</label>
-                    <input {...register('address', { require: true })} type="text" placeholder="Address" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                    <input {...register('address', { validate: validateRequired })} type="text" placeholder="Address" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                    {errors.address && <div className="col-span-2 mt-5">
+                        <p className="text-red-500 text-end  -my-3 ">{errors.address.message}</p>
+                    </div>}
                 </div>
+
+
                 <div className="col-span-2 sm:col-span-1" >
                     <label className="block mb-2 text-sm text-gray-600 ">Password</label>
-                    <input {...register('pass', { require: true })} type="password" autoComplete="false" placeholder="Enter your password" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                    <input {...register('pass', {
+                        validate: (value) => validateRequired(value) || validatePassword(value)
+                    })} type="password" autoComplete="false" placeholder="Enter your password" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                    {errors.pass && <div className="col-span-2 mt-5">
+                        <p className="text-red-500 text-end   -my-3 ">{errors.pass.message}</p>
+                    </div>}
                 </div>
+
                 <div className="col-span-2 sm:col-span-1 " >
                     <label className="block mb-2 text-sm text-gray-600 ">Confirm password</label>
                     <input {...register('conpass', {
-                        require: true,
+                        minLength: {
+                            value: 6, message: 'Password must be at least 6 characters long'
+                        },
                         validate: (value) => value == watch('pass') || 'Passwords do not match'
-                    })} type="password" autoComplete="false" placeholder="Enter your password" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" required />
+                    })} type="password" autoComplete="false" placeholder="Enter your password" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+                    {errors.conpass && <div className="col-span-2 mt-5">
+                        <p className="text-red-500 text-end   -my-3 ">{errors.conpass.message}</p>
+                    </div>}
                 </div>
-                {errors.conpass && <div className="col-span-2">
-                    <p className="text-red-500 text-end   -my-3 ">{errors.conpass.message}</p>
-                </div>}
+
 
                 <div>
                     <button type="submit" className=" flex items-center justify-between w-32  md:w-full px-6 py-3 text-sm tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50">

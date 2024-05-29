@@ -3,8 +3,11 @@ import Logo from '../../assets/logo.png'
 import { useForm } from 'react-hook-form'
 import { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/AuthProvider";
+import axios from "axios";
+import Swal from 'sweetalert2'
+import Validation from '../../hook/validation'
 const Login = () => {
-
+    const { validateEmail, validatePassword, validateRequired } = Validation
 
     const {
         register,
@@ -21,22 +24,36 @@ const Login = () => {
     let navigate = useNavigate()
     const from = location.state?.from?.pathname || '/'
 
-    console.log(from);
+    const onSubmit = async (data, e) => {
+        e.preventDefault()
+        let { email, password } = data
 
-    const onSubmit = (data) => {
-        let email = data.email
-        let password = data.pass
-        console.log(email, password);
         login(email, password)
             .then((result) => {
-                const user = result.user
-
-                alert('login sucessfully')
-                navigate(from, { replace: true })
-            }).catch((error) => {
-                const errorMessage = error.errorMessage
+                const userInfor = {
+                    email,
+                    password,
+                }
+                axios.post('/api/users/login', userInfor, { withCredentials: true ,})
+                    .then((res) => {
+                        console.log(res);
+                        if (res.status === 200) {
+                            Swal.fire({
+                                position: "top-end",
+                                icon: "success",
+                                title: "Login Successfully !",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            navigate(from, { replace: true })
+                        }
+                    })
+            }).catch((e) => {
+                console.log(e.code);
+                if (e.code == "auth/invalid-credential") { setErrorMessage('Provide a correct email and password') }
+                else setErrorMessage('')
                 console.log(errorMessage);
-                setErrorMessage('Provide a correct email and password')
+
             })
     }
 
@@ -46,7 +63,13 @@ const Login = () => {
             .then((result) => {
                 const user = result.user
                 console.log(user);
-                alert('login sucessfully')
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: "Login Successfully",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
                 navigate('/')
             }).catch((error) => {
                 console.log(error);
@@ -82,8 +105,11 @@ const Login = () => {
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                         </svg>
                                     </span>
-                                    <input {...register('email', { required: true })} autoComplete="true" type="email" className="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11    focus:border-blue-400  focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40" placeholder="Email address" />
+                                    <input {...register('email', { validate: (value) => validateRequired(value) || validateEmail(value) })} autoComplete="true" type="email" className="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11    focus:border-blue-400  focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40" placeholder="Email address" />
                                 </div>
+                                {errors.email && <div className="col-span-2 mt-5">
+                                    <p className="text-red-500 text-end  -my-3 ">{errors.email.message}</p>
+                                </div>}
                                 {/* password */}
                                 <div className="relative flex items-center mt-4">
                                     <span className="absolute">
@@ -91,13 +117,15 @@ const Login = () => {
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                                         </svg>
                                     </span>
-                                    <input {...register('pass', { required: true })} autoComplete="true" type="password" className="block w-full px-10 py-3 text-gray-700 bg-white border rounded-lg    focus:border-blue-400  focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40" placeholder="Password" />
-                                </div>
-                                {/* error */}
-                                <div>
-                                    {errorMessage ? <p className="text-red-500 text-end mt-1  -mb-3">{errorMessage}</p> : ''}
+                                    <input {...register('password', { validate: (value) => validateRequired(value) || validatePassword(value) })} autoComplete="true" type="password" className="block w-full px-10 py-3 text-gray-700 bg-white border rounded-lg    focus:border-blue-400  focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40" placeholder="Password" />
 
                                 </div>
+                                {errors.password && <div className="col-span-2 mt-5">
+                                    <p className="text-red-500 text-end   -my-3 ">{errors.password.message}</p>
+                                </div>}
+                                {!errors.password && errorMessage && <div className="col-span-2 mt-5">
+                                    <p className="text-red-500 text-end   -my-3 ">{errorMessage}</p>
+                                </div>}
                                 <div className="mt-8 md:flex md:items-center ">
                                     <button type="submit" className="w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg md:w-1/2 hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50">
                                         Sign in

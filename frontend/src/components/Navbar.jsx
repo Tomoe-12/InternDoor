@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import logo from '../assets/logo.png'
 import { AuthContext } from "../contexts/AuthProvider"
-
+import axios from 'axios'
 
 
 const Navbar = () => {
@@ -17,11 +17,17 @@ const Navbar = () => {
         console.log('click')
     }
 
-    let handleLogout = () => {
+    let handleLogout = async () => {
         logout().then((result) => {
-            alert('log out successfully ')
-            console.log(result);
-            navigate('/')
+            axios.post('/api/users/logout').then((res) => {
+                if (res.status === 200) {
+                    alert('log out successfully ')
+                    console.log(result);
+                    navigate('/')
+                }
+
+            })
+
         }).catch((error) => {
             console.log(error);
         })
