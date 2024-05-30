@@ -113,7 +113,7 @@ const CompanySignUp = () => {
                 </div>
                 <div className="col-span-2 sm:col-span-1 " >
                     <label className="block mb-2 text-sm text-gray-600 ">Phone number</label>
-                    <input {...register('phone', { validate: (value) => validateRequired(value) || validatePhoneNumber(value) })} type="tel" placeholder="XX-XXX-XXXX-XXX" maxLength={12} className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"  />
+                    <input {...register('phone', { validate: (value) => validateRequired(value) || validatePhoneNumber(value) })} type="tel" placeholder="XX-XXX-XXXX-XXX" maxLength={11} className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"  />
                     {errors.phone && <div className="col-span-2 mt-5">
                         <p className="text-red-500 text-end  -my-3 ">{errors.phone.message}</p>
                     </div>}
@@ -142,7 +142,7 @@ const CompanySignUp = () => {
                 </div>
                 <div className='col-span-2'>
                     <label className="block mb-2 text-sm text-gray-600 ">Company Description</label>
-                    <textarea {...register('description', { validate: validateRequired })} rows={5} name="" id="" placeholder='Description' className="max-h-96 block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" ></textarea>
+                    <textarea  required rows={5} name="" id="" placeholder='Description' className="max-h-96 block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" ></textarea>
                     {errors.description && <div className="col-span-2 mt-5">
                         <p className="text-red-500 text-end  -my-3 ">{errors.description.message}</p>
                     </div>}

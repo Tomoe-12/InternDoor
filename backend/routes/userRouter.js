@@ -5,7 +5,6 @@ const handleErrorMessage = require('../middleware/handleErrorMessage')
 const { body } = require('express-validator')
 
 router.get('/', userControllers.getAllUsers)
-
 router.post('/login', [
     body('email').notEmpty().isEmail(),
     body('password').notEmpty(),
@@ -38,7 +37,7 @@ router.post('/companyRegister', [
 ], handleErrorMessage, userControllers.companyRegister)
 
 
-router.get('/logout', userControllers.logout)
+router.post('/logout', userControllers.logout)
 
 
 

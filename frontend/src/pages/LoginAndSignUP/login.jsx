@@ -16,7 +16,7 @@ const Login = () => {
     } = useForm()
 
 
-    const { signUpWithGmail, login } = useContext(AuthContext)
+    const { signUpWithGmail, login, dispatch } = useContext(AuthContext)
     const [errorMessage, setErrorMessage] = useState('')
 
     // redirecting to home page or specifice page
@@ -34,10 +34,11 @@ const Login = () => {
                     email,
                     password,
                 }
-                axios.post('/api/users/login', userInfor, { withCredentials: true ,})
+                axios.post('/api/users/login', userInfor, { withCredentials: true, })
                     .then((res) => {
                         console.log(res);
                         if (res.status === 200) {
+                            dispatch({ type: "LOGIN", payload: res.data.user })
                             Swal.fire({
                                 position: "top-end",
                                 icon: "success",
@@ -61,6 +62,7 @@ const Login = () => {
     const handleGoogleSignUp = async () => {
         signUpWithGmail()
             .then((result) => {
+                dispatch({ type: "LOGIN", payload: result.user })
                 const user = result.user
                 console.log(user);
                 Swal.fire({

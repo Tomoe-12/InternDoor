@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from 'react'
+import { createContext, useEffect, useReducer } from 'react'
 import { GoogleAuthProvider, createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from "firebase/auth";
 import app from '../firebase/firebase.config';
 import axios from 'axios';
@@ -7,11 +7,30 @@ export const AuthContext = createContext()
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 
-
+let AuthReducer = (state, action) => {
+    switch (action.type) {
+        case 'LOGIN':
+            localStorage.setItem("user", action.payload)
+            return { user: action.payload }
+        case 'LOGOUT':
+            localStorage.removeItem('user')
+            return { user: null }
+        default:
+            return state
+    }
+}
 
 const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null)
-    const [loading, setLoading] = useState(true)
+
+    const [state, dispatch] = useReducer(AuthReducer, { user: null, loading:true})
+
+     // Check if user is stored in localStorage
+     useEffect(() => {
+        const storedUser = localStorage.getItem("user")
+        if (storedUser) {
+            dispatch({ type: 'LOGIN', payload: storedUser })
+        }
+    }, [])
 
     // create an account 
     const createUser = (email, password) => {
@@ -43,20 +62,14 @@ const AuthProvider = ({ children }) => {
     // signed-in user
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, currentUser => {
-            setUser(currentUser)
+            console.log(currentUser);
             if (currentUser) {
-                const userInfo = { email: currentUser.email }
-                axios.post('/jwt', userInfo)
-                    .then((response) => {
-                        if (response.data.token) {
-                            localStorage.setItem("access-token", response.data.token)
-                        }
-                    })
-
+                dispatch({ type: 'LOGIN', payload: currentUser })
             } else {
-                localStorage.removeItem('access-token')
+              
+                dispatch({ type: 'LOGOUT' })
             }
-            setLoading(false)
+
         });
         return () => {
             return unsubscribe()
@@ -64,14 +77,17 @@ const AuthProvider = ({ children }) => {
     }, [])
 
     const authInfo = {
-        user,
+        user: state.user,
         createUser,
         signUpWithGmail,
         login,
         logout,
         updateUserProfile,
-        loading,
+        loading: state.loading,
+        dispatch,
     }
+
+
     return (
         <AuthContext.Provider value={authInfo}>
             {children}

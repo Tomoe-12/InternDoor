@@ -9,7 +9,6 @@ const ValidationProperty = {
   validatePhoneNumber: (value) => {
     const phoneRegex = /^09\d{9}$/; // Regular expression for "09" followed by 9 digits
     if (!phoneRegex.test(value)) {
-
       return 'Invalid Phone Number format ! '
     }
     return undefined
@@ -40,13 +39,17 @@ const ValidationProperty = {
 
   validateFoundingYear: (value) => {
     const yearRegex = /^\d{4}$/;
-    if (yearRegex.test(value)) {
+    if (!yearRegex.test(value)) {
       const year = parseInt(value);
+      console.log( year);
       if (year < 1500 || year > 2024) {
-        return 'Founding year must be between 1500 and 2024 ! ';
+        return 'Must be between 1500 and 2024 ! ';
       }
-    }
-    return 'Founding year must be a 4-digit number ! ';
+      return 'Founding year must be a 4-digit number ! ';
+    }else
+      return undefined
+    
+   
 
   }
 

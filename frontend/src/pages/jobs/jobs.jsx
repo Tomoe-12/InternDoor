@@ -51,6 +51,7 @@ const Jobs = () => {
   // }, [])
 
   const getAllJobs = useCallback(async () => {
+   
     try {
 
       const { data } = await axios(`/api/jobs?page=${page}&limit=${limit}&sort=${sort.sort},${sort.order}&category=${filterCategory.toString()}&search=${search}`)
