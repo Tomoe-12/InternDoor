@@ -1,4 +1,4 @@
-import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Home from '../pages/home/Home.jsx';
 import App from "../App.jsx";
 import NotFound from '../components/PageNotFound.jsx'
@@ -31,10 +31,10 @@ export default function Index() {
                     element: < ContactUs />
                 }, {
                     path: '/internships',
-                    element: user ? <Internships /> : <Navigate to={'/login'} />
+                    element: user ? <Internships /> : <Home />
                 }, {
                     path: '/profile',
-                    element: user ? <Profile /> : <Navigate to={'/login'} />
+                    element: user ? <Profile /> : <Home />
                 }, {
                     path: '*',
                     element: <NotFound />
@@ -43,10 +43,10 @@ export default function Index() {
         },
         {
             path: '/signup',
-            element: !user ? <SignUp /> : <Navigate to={'/'} />
+            element: !user ? <SignUp /> : <Home />
         }, {
             path: '/login',
-            element: !user ? < Login /> : <Navigate to={'/'} />
+            element: !user ? < Login /> : <Home />
         }, {
             path: '*',
             element: <NotFound />
