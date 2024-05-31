@@ -1,0 +1,19 @@
+{
+    "projects": [
+      {
+        "src": "./frontend",
+        "use": "@vercel/static-build",
+        "config": {
+          "distDir": "build"
+        }
+      },
+      {
+        "src": "./backend",
+        "use": "@vercel/node",
+        "config": {
+          "output": "api" 
+        }
+      }
+    ]
+  }
+  
