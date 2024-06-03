@@ -1,4 +1,4 @@
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { Navigate, RouterProvider, createBrowserRouter } from "react-router-dom";
 import Home from '../pages/home/Home.jsx';
 import App from "../App.jsx";
 import NotFound from '../components/PageNotFound.jsx'
@@ -9,6 +9,7 @@ import Login from '../pages/LoginAndSignUP/login.jsx'
 import Profile from "../components/profile.jsx";
 import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthProvider.jsx";
+import PrivateRoute from "../PrivateRouter/PrivateRouter.jsx";
 
 
 export default function Index() {
@@ -31,10 +32,10 @@ export default function Index() {
                     element: < ContactUs />
                 }, {
                     path: '/internships',
-                    element: user ? <Internships /> : <Home />
+                    element: <PrivateRoute><Internships /></PrivateRoute>
                 }, {
                     path: '/profile',
-                    element: user ? <Profile /> : <Home />
+                    element: <PrivateRoute> <Profile /></PrivateRoute>
                 }, {
                     path: '*',
                     element: <NotFound />
@@ -43,10 +44,10 @@ export default function Index() {
         },
         {
             path: '/signup',
-            element: !user ? <SignUp /> : <Home />
+            element: <SignUp />
         }, {
             path: '/login',
-            element: !user ? < Login /> : <Home />
+            element: < Login />
         }, {
             path: '*',
             element: <NotFound />

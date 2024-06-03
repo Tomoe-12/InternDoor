@@ -24,7 +24,7 @@ const login = async (req, res) => {
       let isCorrect = await bcrypt.compare(password, user.password)
       if (isCorrect) {
          let token = createToken(user._id)
-         res.cookie(user.name + "'sjwt", token, { httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000 })
+         res.cookie('user', token, { httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000 })
          return res.json({ user, token })
       } else {
          throw new Error('password incorrect ! ')
@@ -62,7 +62,7 @@ const studentRegister = async (req, res) => {
       }
       const resultUser = await User.create(user)
       let token = createToken(resultUser._id)
-      res.cookie(user.name + "'sjwt", token, { httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000 })
+      res.cookie('user', token, { httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000 })
       return res.json({ resultUser, token })
    } catch (e) {
       return res.status(302).json({ error: e.message })
@@ -100,7 +100,7 @@ const companyRegister = async (req, res) => {
       }
       const resultUser = await User.create(user)
       let token = createToken(resultUser._id)
-      res.cookie(user.name + "'sjwt", token, { httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000 })
+      res.cookie('user', token, { httpOnly: true, maxAge: 3 * 24 * 60 * 60 * 1000 })
       res.status(200).json({ resultUser, token })
       return res.status(200).json({ message: { user } })
    } catch (e) {
@@ -109,7 +109,7 @@ const companyRegister = async (req, res) => {
 }
 
 const logout = async (req, res) => {
-   res.clearCookie('jwt', '', { maxAge: 1 })
+   res.clearCookie('user')
    return res.json({ message: 'logged out' })
 }
 

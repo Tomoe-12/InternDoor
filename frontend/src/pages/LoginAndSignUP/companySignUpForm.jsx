@@ -6,7 +6,7 @@ import axios from "axios"
 import Swal from 'sweetalert2'
 import Validation from '../../hook/validation'
 const CompanySignUp = () => {
-    const {  validatePhoneNumber, validateEmail, validatePassword, validateRequired, validateFoundingYear } = Validation
+    const { validatePhoneNumber, validateEmail, validatePassword, validateRequired, validateFoundingYear } = Validation
     let navigate = useNavigate()
 
     const {
@@ -19,62 +19,57 @@ const CompanySignUp = () => {
     const { createUser } = useContext(AuthContext)
     const [errorMessage, setErrorMessage] = useState('')
 
-    const onSubmit = (data) => {
+    const onSubmit = async (data) => {
         let { name, industry, email, slogan, phone, companySize, foundingYear, address, description, pass } = data
 
         // register new company
-        createUser(email, pass)
-            .then((result) => {
-                const user = result.user
-                const companyData = {
-                    name,
-                    email,
-                    photoURL: '',
-                    password: pass,
-                    role: 'company',
-                    phoneNumber: phone,
-                    companyInfo: {
-                        slogan,
-                        location: address,
-                        companySize,
-                        companyDescription: description,
-                        website: '',
-                        industry,
-                        foundingYear,
-                    }
+        try {
+            const companyData = {
+                name,
+                email,
+                photoURL: '',
+                password: pass,
+                role: 'company',
+                phoneNumber: phone,
+                companyInfo: {
+                    slogan,
+                    location: address,
+                    companySize,
+                    companyDescription: description,
+                    website: '',
+                    industry,
+                    foundingYear,
                 }
-                console.log(companyData);
+            }
 
-                axios.post('/api/users/companyRegister', companyData, {
-                    withCredentials: true
-                }).then((res) => {
-                    console.log(user);
-                    if (res.status === 200) {
-                        Swal.fire({
-                            position: "top-end",
-                            icon: "success",
-                            title: "Register Successfully ! ",
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                        navigate('/')
-                    }
-                })
-            }).catch((error) => {
-                console.error(error)
-                const errorCode = error.code;
-                console.log(errorCode);
-                if (errorCode == 'auth/email-already-in-use') setErrorMessage('Email address is already in use')
-                else { setErrorMessage(errorMessage) }
+            let res = await axios.post('/api/users/companyRegister', companyData, { withCredentials: true })
+            if (res.status === 200) {
+                await createUser(email, pass)
                 Swal.fire({
-                    icon: "error",
-                    title: "Oops...",
-                    text: "Email address is already in use"
-
+                    position: "top-end",
+                    icon: "success",
+                    title: "Register Successfully ! ",
+                    showConfirmButton: false,
+                    timer: 1500
                 });
-                navigate('/signup')
-            })
+                navigate('/')
+            }
 
+        } catch (error) {
+            console.error(error)
+            const errorCode = error.code;
+            console.log(errorCode);
+            if (errorCode == 'auth/email-already-in-use') setErrorMessage('Email address is already in use')
+            else { setErrorMessage(errorMessage) }
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Email address is already in use"
+
+            });
+            navigate('/signup')
+
+        }
     }
 
 
@@ -84,21 +79,21 @@ const CompanySignUp = () => {
             < form className="grid gap-6 mt-8 md:grid-cols-2 grid-cols-1 " onSubmit={handleSubmit(onSubmit)}>
                 <div className="col-span-2 sm:col-span-1 " >
                     <label className="block mb-2 text-sm text-gray-600 ">Company Name</label>
-                    <input {...register('name', { validate: validateRequired })} type="text" placeholder="John" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"  />
+                    <input {...register('name', { validate: validateRequired })} type="text" placeholder="John" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
                     {errors.name && <div className="col-span-2 mt-5">
                         <p className="text-red-500 text-end  -my-3 ">{errors.name.message}</p>
                     </div>}
                 </div>
                 <div className="col-span-2 sm:col-span-1 " >
                     <label className="block mb-2 text-sm text-gray-600 ">Industry</label>
-                    <input {...register('industry', { validate: validateRequired })} type="text" placeholder="industry" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"  />
+                    <input {...register('industry', { validate: validateRequired })} type="text" placeholder="industry" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
                     {errors.industry && <div className="col-span-2 mt-5">
                         <p className="text-red-500 text-end  -my-3 ">{errors.industry.message}</p>
                     </div>}
                 </div>
                 <div className="col-span-2 sm:col-span-1 " >
                     <label className="block mb-2 text-sm text-gray-600 ">Email</label>
-                    <input {...register('email', { validate: (value) => validateEmail(value) || validateRequired(value) })} type="text" placeholder="example.@example.com" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"  />
+                    <input {...register('email', { validate: (value) => validateEmail(value) || validateRequired(value) })} type="text" placeholder="example.@example.com" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
                     {errors.eamil && <div className="col-span-2 mt-5">
                         <p className="text-red-500 text-end  -my-3 ">{errors.email.message}</p>
                     </div>}
@@ -106,14 +101,14 @@ const CompanySignUp = () => {
 
                 <div className='col-span-2'>
                     <label className="block mb-2 text-sm text-gray-600 ">Slogan</label>
-                    <input {...register('slogan', { validate: validateRequired })} type="text" placeholder="Slogan" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"  />
+                    <input {...register('slogan', { validate: validateRequired })} type="text" placeholder="Slogan" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
                     {errors.slogan && <div className="col-span-2 mt-5">
                         <p className="text-red-500 text-end  -my-3 ">{errors.slogan.message}</p>
                     </div>}
                 </div>
                 <div className="col-span-2 sm:col-span-1 " >
                     <label className="block mb-2 text-sm text-gray-600 ">Phone number</label>
-                    <input {...register('phone', { validate: (value) => validateRequired(value) || validatePhoneNumber(value) })} type="tel" placeholder="XX-XXX-XXXX-XXX" maxLength={11} className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"  />
+                    <input {...register('phone', { validate: (value) => validateRequired(value) || validatePhoneNumber(value) })} type="tel" placeholder="XX-XXX-XXXX-XXX" maxLength={11} className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
                     {errors.phone && <div className="col-span-2 mt-5">
                         <p className="text-red-500 text-end  -my-3 ">{errors.phone.message}</p>
                     </div>}
@@ -121,28 +116,28 @@ const CompanySignUp = () => {
 
                 <div className="col-span-2 sm:col-span-1 " >
                     <label className="block mb-2 text-sm text-gray-600 ">Company Size</label>
-                    <input {...register('companySize', { validate: validateRequired })} type="text" placeholder="100-500 employees" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"  />
+                    <input {...register('companySize', { validate: validateRequired })} type="text" placeholder="100-500 employees" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
                     {errors.companySize && <div className="col-span-2 mt-5">
                         <p className="text-red-500 text-end  -my-3 ">{errors.companySize.message}</p>
                     </div>}
                 </div>
                 <div className="col-span-2 sm:col-span-1 " >
                     <label className="block mb-2 text-sm text-gray-600 ">Founding Year</label>
-                    <input {...register('foundingYear', { validate: (value) => validateRequired(value) || validateFoundingYear(value) })} type="text" placeholder="YYYY" min={1} max={4} maxLength={4} className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"  />
+                    <input {...register('foundingYear', { validate: (value) => validateRequired(value) || validateFoundingYear(value) })} type="text" placeholder="YYYY" min={1} max={4} maxLength={4} className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
                     {errors.foundingYear && <div className="col-span-2 mt-5">
                         <p className="text-red-500 text-end  -my-3 ">{errors.foundingYear.message}</p>
                     </div>}
                 </div>
                 <div className='col-span-2'>
                     <label className="block mb-2 text-sm text-gray-600 ">Location</label>
-                    <input {...register('address', { validate: validateRequired })} type="text" placeholder="Location" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"  />
+                    <input {...register('address', { validate: validateRequired })} type="text" placeholder="Location" className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
                     {errors.address && <div className="col-span-2 mt-5">
                         <p className="text-red-500 text-end  -my-3 ">{errors.address.message}</p>
                     </div>}
                 </div>
                 <div className='col-span-2'>
                     <label className="block mb-2 text-sm text-gray-600 ">Company Description</label>
-                    <textarea  required rows={5} name="" id="" placeholder='Description' className="max-h-96 block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" ></textarea>
+                    <textarea required rows={5} name="" id="" placeholder='Description' className="max-h-96 block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg     focus:border-blue-400  focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" ></textarea>
                     {errors.description && <div className="col-span-2 mt-5">
                         <p className="text-red-500 text-end  -my-3 ">{errors.description.message}</p>
                     </div>}

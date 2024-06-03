@@ -24,39 +24,66 @@ const Login = () => {
     let navigate = useNavigate()
     const from = location.state?.from?.pathname || '/'
 
-    const onSubmit = async (data, e) => {
-        e.preventDefault()
-        let { email, password } = data
+    const onSubmit = async (data) => {
+        let { email, password } = data;
+        try {
+            const userInfor = { email, password };
+            const res = await axios.post('/api/users/login', userInfor, { withCredentials: true });
 
-        login(email, password)
-            .then((result) => {
-                const userInfor = {
-                    email,
-                    password,
-                }
-                axios.post('/api/users/login', userInfor, { withCredentials: true, })
-                    .then((res) => {
-                        console.log(res);
-                        if (res.status === 200) {
-                            dispatch({ type: "LOGIN", payload: res.data.user })
-                            Swal.fire({
-                                position: "top-end",
-                                icon: "success",
-                                title: "Login Successfully !",
-                                showConfirmButton: false,
-                                timer: 1500
-                            });
-                            navigate(from, { replace: true })
-                        }
-                    })
-            }).catch((e) => {
-                console.log(e.code);
-                if (e.code == "auth/invalid-credential") { setErrorMessage('Provide a correct email and password') }
-                else setErrorMessage('')
-                console.log(errorMessage);
+            if (res.status === 200) {
+                await login(email, password);
+                dispatch({ type: "LOGIN", payload: res.data.user });
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: "Login Successfully !",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                navigate(from, { replace: true });
+            }
+        } catch (e) {
+            console.log(e.code);
+            if (e.code === "auth/invalid-credential") {
+                setErrorMessage('Provide a correct email and password');
+            } else {
+                setErrorMessage('');
+            }
+        }
+    };
+    // const onSubmit = async (data, e) => {
+    //     e.preventDefault()
+    //     let { email, password } = data
 
-            })
-    }
+    //     login(email, password)
+    //         .then((result) => {
+    //             const userInfor = {
+    //                 email,
+    //                 password,
+    //             }
+    //             axios.post('/api/users/login', userInfor, { withCredentials: true, })
+    //                 .then((res) => {
+    //                     console.log(res);
+    //                     if (res.status === 200) {
+    //                         dispatch({ type: "LOGIN", payload: res.data.user })
+    //                         Swal.fire({
+    //                             position: "top-end",
+    //                             icon: "success",
+    //                             title: "Login Successfully !",
+    //                             showConfirmButton: false,
+    //                             timer: 1500
+    //                         });
+    //                         navigate(from, { replace: true })
+    //                     }
+    //                 })
+    //         }).catch((e) => {
+    //             console.log(e.code);
+    //             if (e.code == "auth/invalid-credential") { setErrorMessage('Provide a correct email and password') }
+    //             else setErrorMessage('')
+    //             console.log(errorMessage);
+
+    //         })
+    // }
 
     // google sign in
     const handleGoogleSignUp = async () => {

@@ -19,56 +19,50 @@ const StudentSignUpForm = () => {
     const { createUser, signUpWithGmail } = useContext(AuthContext)
     const [errorMessage, setErrorMessage] = useState('')
 
-    const onSubmit = (data) => {
+    const onSubmit = async (data) => {
         let { name, email, pass, rollno, address, phone } = data
 
         // register new user
-        createUser(email, pass)
-            .then((result) => {
-                const user = result.user
-                const studentData = {
-                    name,
-                    email,
-                    photoURL: '',
-                    role: 'student',
-                    password: pass,
-                    phoneNumber: phone,
-                    studentInfo: {
-                        rollno,
-                        address,
-                    }
-                };
-                console.log(studentData);
-                // save user to the database 
-                axios.post('/api/users/studentRegister', studentData, {
-                    withCredentials: true,
-                }).then((res) => {
-                    if (res.status === 200) {
-                        Swal.fire({
-                            position: "top-end",
-                            icon: "success",
-                            title: "Register Successfully ! ",
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                        navigate('/')
-                    }
-                })
+        try {
 
-            }).catch((error) => {
-                console.error(error)
-                const errorCode = error.code;
-                if (errorCode == 'auth/email-already-in-use') setErrorMessage('Email address is already in use')
-                else { setErrorMessage('') }
+            const studentData = {
+                name,
+                email,
+                photoURL: '',
+                role: 'student',
+                password: pass,
+                phoneNumber: phone,
+                studentInfo: {
+                    rollno,
+                    address,
+                }
+            };
+            let res = await axios.post('/api/users/studentRegister', studentData, { withCredentials: true, })
+            if (res.status === 200) {
+                await createUser(email, pass)
                 Swal.fire({
-                    icon: "error",
-                    title: "Oops...",
-                    text: "Email address is already in use"
-
+                    position: "top-end",
+                    icon: "success",
+                    title: "Register Successfully! ",
+                    showConfirmButton: false,
+                    timer: 1500
                 });
-                navigate('/signup')
-            })
+                navigate('/')
+            }
 
+        } catch (error) {
+            console.error(error)
+            const errorCode = error.code;
+            if (errorCode == 'auth/email-already-in-use') setErrorMessage('Email address is already in use')
+            else { setErrorMessage('') }
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Email address is already in use"
+
+            });
+            navigate('/signup')
+        }
     }
 
 

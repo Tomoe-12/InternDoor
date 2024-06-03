@@ -17,9 +17,9 @@ const Banner = () => {
                             </p>
 
                             <div className="mt-8 flex flex-wrap justify-center gap-4">
-                                <button onClick={(e) => { e.preventDefault(); navigate('/jobs') }}
+                                <button onClick={(e) => { e.preventDefault(); navigate('/internships') }}
                                     className="block w-full rounded bg-blue-500 px-12 py-3 text-sm font-medium text-white shadow hover:bg-blue-400 focus:outline-none focus:ring sm:w-auto"
-                                    href="#"
+                                   
                                 >
                                     Get Started
                                 </button>

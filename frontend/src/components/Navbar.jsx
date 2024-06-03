@@ -110,7 +110,7 @@ const Navbar = () => {
                     </div>
 
                 </div> */}
-                {/* navbar for page search and login */}
+                {/* navbar for login */}
                 <div className=" navbar-end lg:gap-14   md:gap-14 lg:pr-0 pr-6">
                     <div className="hidden md:flex items-center justify-center   ">
                         <ul className="menu flex flex-nowrap gap-7  menu-horizontal ">
@@ -128,11 +128,7 @@ const Navbar = () => {
                                 </div>
                             </div> */}
                                 <div className="flex items-center  gap-2 ">
-                                    <div className="hidden mx-4 text-gray-600 transition-colors duration-300 transform lg:block dark:text-gray-200 hover:text-gray-700 dark:hover:text-gray-400 focus:text-gray-700 dark:focus:text-gray-400 focus:outline-none" aria-label="show notifications">
-                                        <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M15 17H20L18.5951 15.5951C18.2141 15.2141 18 14.6973 18 14.1585V11C18 8.38757 16.3304 6.16509 14 5.34142V5C14 3.89543 13.1046 3 12 3C10.8954 3 10 3.89543 10 5V5.34142C7.66962 6.16509 6 8.38757 6 11V14.1585C6 14.6973 5.78595 15.2141 5.40493 15.5951L4 17H9M15 17V18C15 19.6569 13.6569 21 12 21C10.3431 21 9 19.6569 9 18V17M15 17H9" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
-                                        </svg>
-                                    </div>
+                                    
                                     <div tabIndex={0} role="button" type="button" className=" flex items-center focus:outline-none" aria-label="toggle profile dropdown">
                                         <div className="w-10 h-10 overflow-hidden border-2 border-gray-400 rounded-full ">
                                             {
@@ -149,15 +145,21 @@ const Navbar = () => {
 
 
                                 <ul tabIndex={0} className="menu menu-sm dropdown-content gap-1 mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-                                    <li>
-                                        <Link to='/profile' className="justify-between">
-                                            Profile
-                                            <span className="badge">New</span>
-                                        </Link>
+                                    <li >
+                                        <Link to='/profile' className="min-h-8 max-h-9 flex justify-between items-center">Profile </Link>
                                     </li>
-                                    <li><Link>Settings</Link></li>
                                     <li>
-                                        <a onClick={handleLogout}>Logout</a>
+                                        
+                                        <Link to='/internships' className="min-h-8 max-h-9 flex justify-between">
+                                        Notifications
+                                            <svg className="w-5 h-5 " viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M15 17H20L18.5951 15.5951C18.2141 15.2141 18 14.6973 18 14.1585V11C18 8.38757 16.3304 6.16509 14 5.34142V5C14 3.89543 13.1046 3 12 3C10.8954 3 10 3.89543 10 5V5.34142C7.66962 6.16509 6 8.38757 6 11V14.1585C6 14.6973 5.78595 15.2141 5.40493 15.5951L4 17H9M15 17V18C15 19.6569 13.6569 21 12 21C10.3431 21 9 19.6569 9 18V17M15 17H9" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+                                            </svg>
+
+                                            {/* <span className="badge">New</span> */}
+                                        </Link></li>
+                                    <li>
+                                        <Link className="min-h-8 max-h-9 flex items-center  my-auto" onClick={handleLogout}>Logout</Link>
                                     </li>
                                 </ul>
                             </div>

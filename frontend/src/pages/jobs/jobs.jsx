@@ -23,11 +23,6 @@ const Jobs = () => {
   const [page, setPage] = useState(searchQuery.get('page') || 1)
   const [search, setSearch] = useState("")
 
-
-  // let page = searchQuery.get('page') || 1
-
-
-
   let limit = 12;
   if (isMobile) {
     limit = 8;
@@ -37,21 +32,10 @@ const Jobs = () => {
 
 
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await axios.get(`http://127.0.0.1:4003/api/jobs?`)
-  //       setJobs(response.data)
 
-  //     } catch (e) {
-  //       console.error('Error fetching data : ', e);
-  //     }
-  //   }
-  //   fetchData()
-  // }, [])
 
   const getAllJobs = useCallback(async () => {
-   
+
     try {
 
       const { data } = await axios(`/api/jobs?page=${page}&limit=${limit}&sort=${sort.sort},${sort.order}&category=${filterCategory.toString()}&search=${search}`)
@@ -61,6 +45,8 @@ const Jobs = () => {
       console.error('error fetching data : ', error);
     }
   }, [sort, filterCategory, page, search, limit]);
+
+
 
   useEffect(() => {
     getAllJobs();

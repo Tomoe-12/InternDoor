@@ -34,7 +34,7 @@ const userSchema = new Schema({
         industry: String,
         foundingYear: Number
     }
-});
+},{ timestamps: true });
 
 
 const User = mongoose.model('User', userSchema);

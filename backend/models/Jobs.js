@@ -3,10 +3,16 @@ const moment = require('moment');
 const { Schema } = mongoose
 
 const jobSchema = new Schema({
+
     title: {
         type: String,
         trim: true,
         minlength: 3,
+        required: true
+    },
+    company_id: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
         required: true
     },
     requireStudent: {
@@ -14,7 +20,7 @@ const jobSchema = new Schema({
         default: 1,
         required: true
     },
-    category : {
+    category: {
         type: String,
         enum: [
             'Software Development',
@@ -46,9 +52,9 @@ const jobSchema = new Schema({
         trim: true,
         required: true
     },
-    skills : {
-        type : [String] ,  // array string
-        required : true
+    skills: {
+        type: [String],  // array string
+        required: true
     },
     deadline: {
         type: Date,
@@ -57,12 +63,12 @@ const jobSchema = new Schema({
             return moment().add(2, 'months').toDate();
         },
     },
-    receiveApplicantEmail : {
-        type : String ,
-        trim : true ,
-        required : true 
+    receiveApplicantEmail: {
+        type: String,
+        trim: true,
+        required: true
     }
 
 }, { timestamps: true })
 
-module.exports =  mongoose.model('jobs',jobSchema)
+module.exports = mongoose.model('jobs', jobSchema)

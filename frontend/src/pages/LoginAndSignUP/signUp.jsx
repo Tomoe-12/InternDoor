@@ -4,7 +4,6 @@ import { useState } from 'react'
 import CompanySignUp from './companySignUpForm.jsx'
 import StudentSignUpForm from './studentSignUpForm.jsx'
 const SignUp = () => {
-
     let [accType, setAccType] = useState('student')
 
     console.log(accType);
