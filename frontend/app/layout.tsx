@@ -9,6 +9,7 @@ import {
   MantineProvider,
 } from "@mantine/core";
 import { ThemeProvider } from "@/components/theme-provider";
+import ServiceWorkerGuard from "@/components/ServiceWorkerGuard";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -32,6 +33,7 @@ export default function RootLayout({
         )}
       >
         <ThemeProvider>
+          <ServiceWorkerGuard />
           <MantineProvider>{children}</MantineProvider>
         </ThemeProvider>
       </body>

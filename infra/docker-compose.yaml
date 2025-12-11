@@ -4,10 +4,10 @@ services:
     restart: always
     container_name: database
     environment:
-      MYSQL_DATABASE: 'starter-kit-db'
+      MYSQL_DATABASE: 'InternDoor'
       MYSQL_USER: 'user'
       MYSQL_PASSWORD: 'password'
-      MYSQL_ROOT_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'root'
     ports:
       - "3307:3306"
     volumes:

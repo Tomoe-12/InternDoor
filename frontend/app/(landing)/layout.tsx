@@ -31,9 +31,9 @@ export default function layout({children}: {children: React.ReactNode}) {
         </Group>
       </AppShell.Header>
 
-      <AppShell.Navbar py="md" px={4}>
+      {/* <AppShell.Navbar py="md" px={4}>
         <Navbar className='w-full' orientation="vertical"/>
-      </AppShell.Navbar>
+      </AppShell.Navbar> */}
 
       <AppShell.Main>
         {children}
