@@ -83,6 +83,16 @@ export default function Navbar({ className, ...props }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  const gologin=()=>{
+    window.location.href="/auth/login"
+  }
+
+  // Unified click handler for CTA: closes mobile menu and navigates to login
+  const handleClick = () => {
+    setIsMobileMenuOpen(false)
+    gologin()
+  }
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
@@ -136,7 +146,7 @@ export default function Navbar({ className, ...props }: NavbarProps) {
             Log in
           </Link> */}
           <ModeToggle />
-          <Button size="sm" className="rounded-full px-5">
+          <Button onClick={handleClick} size="sm" className="rounded-full px-5">
             Get Started
           </Button>
         </div>
@@ -180,7 +190,7 @@ export default function Navbar({ className, ...props }: NavbarProps) {
           ))}
           <hr className="my-2 border-border" />
           {/* <ModeToggle /> */}
-          <Button className="rounded-full mt-2">Get Started</Button>
+          <Button onClick={handleClick} className="rounded-full mt-2">Get Started</Button>
         </div>
       </div>
     </nav>
