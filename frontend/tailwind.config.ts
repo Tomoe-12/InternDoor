@@ -1,14 +1,8 @@
 import type { Config } from "tailwindcss"
 const { fontFamily } = require("tailwindcss/defaultTheme")
-import pluginMantine from "@devoss/tailwind-plugin-mantine";
-import { createTheme } from "@mantine/core";
-
-export const theme = createTheme({
-  // Put your mantine theme override here
-});
-
 const config = {
-  darkMode: ["selector", '[data-mantine-color-scheme="dark"]', "class"],
+	// Use class-based dark mode for shadcn / tailwind
+	darkMode: "class",
   content: [
     './pages/**/*.{ts,tsx}',
     './components/**/*.{ts,tsx}',
@@ -67,7 +61,7 @@ const config = {
   		}
   	}
   },
-  plugins: [require("tailwindcss-animate"), pluginMantine(theme)],
+	plugins: [require("tailwindcss-animate")],
 } satisfies Config
 
 export default config

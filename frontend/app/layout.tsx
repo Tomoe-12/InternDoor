@@ -3,11 +3,6 @@
 import { Inter as FontSans } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import "@mantine/core/styles.css";
-import {
-  ColorSchemeScript,
-  MantineProvider,
-} from "@mantine/core";
 import { ThemeProvider } from "@/components/theme-provider";
 import ServiceWorkerGuard from "@/components/ServiceWorkerGuard";
 
@@ -23,9 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <ColorSchemeScript />
-      </head>
+      <head />
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
@@ -34,7 +27,7 @@ export default function RootLayout({
       >
         <ThemeProvider>
           <ServiceWorkerGuard />
-          <MantineProvider>{children}</MantineProvider>
+          {children}
         </ThemeProvider>
       </body>
     </html>

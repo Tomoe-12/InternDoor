@@ -1,27 +1,64 @@
 "use client"
- 
+
 import * as React from "react"
 import { Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
-import { ActionIcon, Button, Menu } from "@mantine/core"
- 
+import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+
 export default function ModeToggle() {
-  const { setTheme } = useTheme()
- 
+  const { setTheme, theme } = useTheme()
+  const [open, setOpen] = React.useState(false)
+
   return (
-    <Menu>
-      <Menu.Target>
-        <ActionIcon variant="transparent" radius={100} size="icon">
-          <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-          <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-          <span className="sr-only">Toggle theme</span>
-        </ActionIcon>
-      </Menu.Target>
-      <Menu.Dropdown>
-        <Menu.Item onClick={() => setTheme('light')}>Light</Menu.Item>
-        <Menu.Item onClick={() => setTheme('dark')}>Dark</Menu.Item>
-        <Menu.Item onClick={() => setTheme('system')}>System</Menu.Item>
-      </Menu.Dropdown>
-    </Menu>
+    <div className="relative inline-block">
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => setOpen((s) => !s)}
+        aria-expanded={open}
+        aria-haspopup="menu"
+        className="relative"
+      >
+        <Sun className={cn("h-[1.2rem] w-[1.2rem] transition-all", theme === "dark" ? "-rotate-90 scale-0" : "rotate-0 scale-100")} />
+        <Moon className={cn("absolute h-[1.2rem] w-[1.2rem] transition-all", theme === "dark" ? "rotate-0 scale-100" : "rotate-90 scale-0")} />
+        <span className="sr-only">Toggle theme</span>
+      </Button>
+
+      {open && (
+        <div
+          role="menu"
+          className="absolute right-0 mt-2 w-24 rounded-md border bg-popover text-popover-foreground shadow-lg z-50"
+        >
+          <button
+            className="w-full text-left px-3 py-2 text-sm hover:bg-accent"
+            onClick={() => {
+              setTheme("light")
+              setOpen(false)
+            }}
+          >
+            Light
+          </button>
+          <button
+            className="w-full text-left px-3 py-2 text-sm hover:bg-accent"
+            onClick={() => {
+              setTheme("dark")
+              setOpen(false)
+            }}
+          >
+            Dark
+          </button>
+          <button
+            className="w-full text-left px-3 py-2 text-sm hover:bg-accent"
+            onClick={() => {
+              setTheme("system")
+              setOpen(false)
+            }}
+          >
+            System
+          </button>
+        </div>
+      )}
+    </div>
   )
 }

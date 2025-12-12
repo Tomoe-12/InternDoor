@@ -3,41 +3,26 @@
 import Logo from '@/components/Logo';
 import Navbar from '@/components/Navbar';
 import { useSubscribeToPushNotifications } from '@/lib/hooks/useSubscribeToPushNotifications';
-import { AppShell, Burger, Button, Group } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
 import React, { useEffect } from 'react'
 
 export default function layout({children}: {children: React.ReactNode}) {
-  const [opened, { toggle}] = useDisclosure(false);
-
   const { subscribe, subscription } = useSubscribeToPushNotifications();
 
   useEffect(() => {
-    if (!subscription) {
-      subscribe()
-    }
+    if (!subscription) subscribe()
   }, [subscription])
 
   return (
-    <AppShell
-      header={{ height: 60 }}
-      navbar={{ width: 300, breakpoint: 'sm', collapsed: { desktop: true, mobile: !opened } }}
-      padding="md"
-    >
-      <AppShell.Header>
-        <Group h="100%" px="md" className='w-full max-w-screen-xl mx-auto'>
-          <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
+    <div className="min-h-screen bg-background text-foreground">
+      <header className="w-full">
+        <div className="w-full max-w-screen-xl mx-auto px-4 py-3">
           <Navbar className='w-full'/>
-        </Group>
-      </AppShell.Header>
+        </div>
+      </header>
 
-      {/* <AppShell.Navbar py="md" px={4}>
-        <Navbar className='w-full' orientation="vertical"/>
-      </AppShell.Navbar> */}
-
-      <AppShell.Main>
+      <main className="pt-20 px-4 max-w-screen-xl mx-auto">
         {children}
-      </AppShell.Main>
-    </AppShell>
+      </main>
+    </div>
   )
 }
