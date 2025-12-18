@@ -198,6 +198,8 @@ import { cn } from "@/lib/utils"
 import Link from "next/link"
 import ModeToggle from "@/components/ModeToggle"
 import { FcGoogle } from "react-icons/fc"
+import { restClient } from "@/lib/httpClient"
+import type { HttpErrorResponse } from "@/models/http/HttpErrorResponse"
 
 type UserRole = "company" | "student"
 
@@ -238,36 +240,50 @@ export function UserRegisterForm() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [isOAuthLoading, setIsOAuthLoading] = useState<"google" | "github" | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
+    setError(null)
+    setSuccess(null)
+
     if (password !== confirmPassword) {
-      alert("Passwords do not match!")
+      setError("Passwords do not match.")
       return
     }
 
     setIsLoading(true)
 
-    const registrationData = {
-      name,
-      email,
-      password,
-      role: selectedRole,
-      ...(selectedRole === "company" && {
-        companyName,
-        companyWebsite,
-        companyRegistrationNumber,
-        phoneNumber,
-        position,
-      }),
+    const [firstName, ...rest] = name.trim().split(/\s+/).filter(Boolean)
+    const lastName = rest.join(" ") || undefined
+
+    try {
+      await restClient.createUser({
+        email: email.trim(),
+        password,
+        passwordConfirmation: confirmPassword,
+        firstName,
+        lastName,
+      })
+      setSuccess("Account created. Check your email to verify.")
+      setName("")
+      setEmail("")
+      setPassword("")
+      setConfirmPassword("")
+      setCompanyName("")
+      setCompanyWebsite("")
+      setCompanyRegistrationNumber("")
+      setPhoneNumber("")
+      setPosition("")
+    } catch (err: any) {
+      const serverError = err?.response?.data as HttpErrorResponse | undefined
+      const detail = serverError?.message || serverError?.generalErrors?.[0]
+      setError(detail || "Registration failed. Please try again.")
+    } finally {
+      setIsLoading(false)
     }
-
-    console.log("Register attempt:", registrationData)
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-    setIsLoading(false)
   }
 
   const handleOAuthRegister = async (provider: "google" | "github") => {
@@ -550,6 +566,9 @@ export function UserRegisterForm() {
                     </button>
                   </div>
                 </div>
+
+                {error && <p className="text-sm text-destructive">{error}</p>}
+                {success && <p className="text-sm text-green-600">{success}</p>}
 
                 <Button
                   type="submit"

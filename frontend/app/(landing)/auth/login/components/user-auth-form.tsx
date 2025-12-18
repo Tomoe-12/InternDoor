@@ -11,6 +11,7 @@ import Link from "next/link";
 import { FaGithub, FaGoogle} from "react-icons/fa";
 import { Button, TextInput } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
+import { Role } from "@/models/user/UserResponse";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -22,7 +23,10 @@ const loginFormSchema = z.object({
 type Schema = z.infer<typeof loginFormSchema>;
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const {login} = useAuthGuard({middleware: 'guest', redirectIfAuthenticated: '/profile'});
+  const {login} = useAuthGuard({
+    middleware: 'guest',
+    redirectIfAuthenticated: (user) => user.role === Role.ADMIN ? '/admin' : '/profile',
+  });
   const [errors, setErrors] = React.useState<HttpErrorResponse | undefined>(undefined);
 
   async function onSubmit(data: Schema) {

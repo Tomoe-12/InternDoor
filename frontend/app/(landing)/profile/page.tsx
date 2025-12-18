@@ -9,7 +9,7 @@ import { format } from "date-fns";
 import Loading from "@/components/loading";
 import Container from "@/components/Container";
 import UpdateProfileImageForm from "./components/update-profile-image-form";
-import { Divider } from "@mantine/core";
+import { cn } from "@/lib/utils";
 
 export default function ProfilePage() {
   const { user } = useAuthGuard({ middleware: "auth" });
@@ -31,6 +31,10 @@ export default function ProfilePage() {
 
   if (!user) return <Loading />;
 
+  const Divider = ({ className }: { className?: string }) => (
+    <div className={cn("h-px w-full bg-border", className)} />
+  );
+
   return (
     <Container size="sm">
       <div className="flex flex-col gap-y-4">
@@ -48,7 +52,10 @@ export default function ProfilePage() {
         <h2 className="text-lg font-semibold mb-2">Connected Accounts</h2>
         <div className="flex flex-col gap-y-2">
           {user?.connectedAccounts.map((account) => (
-            <div className="flex w-full max-w-screen-sm justify-between">
+            <div
+              key={`${account.provider}-${account.connectedAt}`}
+              className="flex w-full max-w-screen-sm justify-between"
+            >
               <div className="flex items-center gap-x-2">
                 {getProviderIcon(account.provider)}
                 <span className="font-bold">{account.provider}</span>

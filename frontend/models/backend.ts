@@ -581,7 +581,7 @@ export type RequestEvent = "ONLOAD" | "USER_INTERACTION";
 
 export type DeniedReason = "NOT_SUPPORTED" | "NOT_GRANTED";
 
-export type Role = "USER" | "ADMIN";
+export type Role = "USER" | "COMPANY" | "ADMIN";
 
 /**
  * Values:

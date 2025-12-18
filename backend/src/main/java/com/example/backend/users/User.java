@@ -34,8 +34,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 public class User extends AbstractEntity implements UserDetails {
   private String email;
   private String password;
-  private String firstName;
-  private String lastName;
+  private String fullName;
   @Setter
   private boolean verified = false;
   @Setter
@@ -56,8 +55,7 @@ public class User extends AbstractEntity implements UserDetails {
     PasswordEncoder passwordEncoder = ApplicationContextProvider.bean(PasswordEncoder.class);
     this.email = data.getEmail();
     this.password = passwordEncoder.encode(data.getPassword());
-    this.firstName = data.getFirstName();
-    this.lastName = data.getLastName();
+    this.fullName = buildFullName(data.getFirstName(), data.getLastName());
     this.role = Role.USER;
   }
 
@@ -66,13 +64,7 @@ public class User extends AbstractEntity implements UserDetails {
     user.email = oAuth2User.getAttribute("email");
     String name = oAuth2User.getAttribute("name");
     if (name != null) {
-      List<String> names = List.of(name.split(" "));
-      if (names.size() > 1) {
-        user.firstName = names.get(0);
-        user.lastName = names.get(1);
-      } else {
-        user.firstName = names.getFirst();
-      }
+      user.fullName = name;
     }
     user.verified = true;
     user.role = Role.USER;
@@ -83,8 +75,7 @@ public class User extends AbstractEntity implements UserDetails {
   }
 
   public void update(UpdateUserRequest request) {
-    this.firstName = request.getFirstName();
-    this.lastName = request.getLastName();
+    this.fullName = request.getFullName();
   }
 
   public void updatePassword(String newPassword) {
@@ -122,5 +113,15 @@ public class User extends AbstractEntity implements UserDetails {
   @Override
   public boolean isEnabled() {
     return true;
+  }
+
+  private String buildFullName(String first, String last) {
+    if (first == null || first.isBlank()) return last;
+    if (last == null || last.isBlank()) return first;
+    return first + " " + last;
+  }
+
+  public void setFullName(String fullName) {
+    this.fullName = fullName;
   }
 }

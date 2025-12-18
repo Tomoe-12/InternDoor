@@ -1,9 +1,9 @@
 "use client";
 
 import FileUpload from "@/components/FileUpload";
+import { Label } from "@/components/ui/label";
 import { useAuthGuard } from "@/lib/auth/use-auth";
 import httpClient from "@/lib/httpClient";
-import { Avatar, InputLabel } from "@mantine/core";
 import React from "react";
 import { toast } from "sonner";
 
@@ -30,7 +30,7 @@ export default function UpdateProfileImageForm() {
 
   return (
     <div className="flex gap-4 flex-col">
-      <InputLabel>Logo</InputLabel>
+      <Label>Profile picture</Label>
       <FileUpload
         onFileSelect={(file) => handleLogoChange(file)}
         allowedTypes={["image/png", "image/jpg", "image/jpeg"]}
@@ -38,7 +38,20 @@ export default function UpdateProfileImageForm() {
           toast.error(err);
         }}
       >
-        <Avatar name={user?.firstName} src={user?.profileImageUrl} color="initials"></Avatar>
+        <div className="h-24 w-24 rounded-full bg-muted flex items-center justify-center overflow-hidden border border-border">
+          {user?.profileImageUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={user.profileImageUrl}
+              alt="Profile"
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <span className="text-xl font-semibold text-muted-foreground">
+              {(user?.firstName || user?.email || "U").charAt(0).toUpperCase()}
+            </span>
+          )}
+        </div>
       </FileUpload>
     </div>
   );

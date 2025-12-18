@@ -1,5 +1,5 @@
 import { useLocalStorage } from "@mantine/hooks";
-import { subscribeToNotifications } from "../utils";
+// import { subscribeToNotifications } from "../utils";
 import { restClient } from "../httpClient";
 
 export const useSubscribeToPushNotifications = () => {
@@ -27,7 +27,7 @@ export const useSubscribeToPushNotifications = () => {
           return;
         }
 
-        await subscribeToNotifications();
+        // await subscribeToNotifications();
         setSubscription(true);
       }
     } catch (error) {

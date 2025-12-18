@@ -1,7 +1,7 @@
 "use client";
 
-import Logo from "@/components/Logo";
-import Navbar from "@/components/Navbar";
+import Logo from "@/components/logo";
+import Navbar from "@/components/navbar";
 import { useSubscribeToPushNotifications } from "@/lib/hooks/useSubscribeToPushNotifications";
 import React, { useEffect } from "react";
 import { usePathname } from "next/navigation";
@@ -9,7 +9,7 @@ import { usePathname } from "next/navigation";
 export default function layout({ children }: { children: React.ReactNode }) {
   const { subscribe, subscription } = useSubscribeToPushNotifications();
   const pathname = usePathname();
-  const hideNavbar = pathname?.startsWith("/auth");
+  const hideNavbar = pathname?.startsWith("/auth" ) ;
 
   useEffect(() => {
     if (!subscription) subscribe();

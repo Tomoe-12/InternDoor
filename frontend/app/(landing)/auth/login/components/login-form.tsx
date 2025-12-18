@@ -233,6 +233,10 @@ import { Building2, GraduationCap, Eye, EyeOff, DoorOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { FcGoogle } from "react-icons/fc";
 import ModeToggle from "@/components/ModeToggle";
+import { useAuthGuard } from "@/lib/auth/use-auth";
+import { HttpErrorResponse } from "@/models/http/HttpErrorResponse";
+import ErrorFeedback from "@/components/error-feedback";
+import { Role } from "@/models/user/UserResponse";
 
 type UserRole = "company" | "student";
 
@@ -267,28 +271,44 @@ export function LoginForm() {
   const [isOAuthLoading, setIsOAuthLoading] = useState<
     "google" | "github" | null
   >(null);
+  const [errors, setErrors] = useState<HttpErrorResponse | undefined>();
+  const { login } = useAuthGuard({
+    middleware: "guest",
+    redirectIfAuthenticated: (user) =>
+      user.role === Role.ADMIN ? "/admin" : "/profile",
+  });
+
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setErrors(undefined);
 
-    // TODO: Implement actual authentication logic
-    console.log("Login attempt:", { email, password, role: selectedRole });
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    setIsLoading(false);
+    try {
+      await login({
+        onError: setErrors,
+        props: { email, password },
+      });
+    } catch (err) {
+      // errors are surfaced via onError; keep loading state handling in finally
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleOAuthLogin = async (provider: "google" | "github") => {
+    if (!baseUrl) {
+      setErrors({
+        message: "NEXT_PUBLIC_BASE_URL is not configured.",
+        status: 500,
+      });
+      return;
+    }
+
     setIsOAuthLoading(provider);
-
-    // TODO: Implement actual OAuth logic
-    console.log("OAuth login attempt:", { provider, role: selectedRole });
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    setIsOAuthLoading(null);
+    const oauthUrl = `${baseUrl}/oauth2/authorization/${provider}`;
+    window.location.href = oauthUrl;
   };
 
   const heroContent = {
@@ -434,7 +454,7 @@ export function LoginForm() {
                     Password
                   </Label>
                   <Link
-                    href="#"
+                    href="/auth/forgot-password"
                     className="text-xs text-primary hover:text-primary/80 transition-colors font-medium"
                   >
                     Forgot password?
@@ -467,6 +487,8 @@ export function LoginForm() {
                   </button>
                 </div>
               </div>
+
+              <ErrorFeedback data={errors} />
 
               <Button
                 type="submit"

@@ -8,7 +8,5 @@ import lombok.Data;
 @Client
 public class UpdateUserRequest {
   @NotBlank
-  private String firstName;
-  @NotBlank
-  private String lastName;
+  private String fullName;
 }

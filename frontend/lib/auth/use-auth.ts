@@ -8,7 +8,9 @@ import { LoginRequest } from "@/models/backend";
 
 interface AuthProps {
   middleware?: "auth" | "guest";
-  redirectIfAuthenticated?: string;
+  redirectIfAuthenticated?:
+    | string
+    | ((user: UserResponse) => string | undefined | null);
 }
 
 export const useAuthGuard = ({
@@ -33,13 +35,15 @@ export const useAuthGuard = ({
     props: LoginRequest;
   }) => {
     onError(undefined);
-    // await csrf();
-    restClient.login(props)
-      .then(() => mutate())
-      .catch((err) => {
-        const errors = err.response.data as HttpErrorResponse;
-        onError(errors);
-      });
+
+    try {
+      await restClient.login(props);
+      await mutate();
+    } catch (err: any) {
+      const errors = err?.response?.data as HttpErrorResponse | undefined;
+      onError(errors);
+      throw err;
+    }
   };
 
   // const csrf = async () => {
@@ -57,14 +61,21 @@ export const useAuthGuard = ({
   useEffect(() => {
     // If middleware is 'guest' and we have a user, redirect
     if (middleware === "guest" && redirectIfAuthenticated && user) {
-      router.push(redirectIfAuthenticated);
+      const redirectPath =
+        typeof redirectIfAuthenticated === "function"
+          ? redirectIfAuthenticated(user)
+          : redirectIfAuthenticated;
+
+      if (redirectPath) {
+        router.push(redirectPath);
+      }
     }
 
     // If middleware is 'auth' and we have an error, logout
     if (middleware === "auth" && error) {
       logout();
     }
-  }, [user, error]);
+  }, [user, error, redirectIfAuthenticated, router]);
 
   return {
     user,

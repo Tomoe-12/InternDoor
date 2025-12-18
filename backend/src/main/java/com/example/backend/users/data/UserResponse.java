@@ -29,8 +29,7 @@ public class UserResponse {
   public UserResponse(User user) {
     this.id = user.getId();
     this.role = user.getRole();
-    this.firstName = user.getFirstName();
-    this.lastName = user.getLastName();
+    setNamesFromFullName(user.getFullName());
     this.email = user.getEmail();
     this.profileImageUrl = user.getProfileImageUrl();
     user.getConnectedAccounts().forEach((provider) -> {
@@ -41,8 +40,7 @@ public class UserResponse {
   public UserResponse(User user, Collection<? extends GrantedAuthority> authorities) {
     this.id = user.getId();
     this.role = user.getRole();
-    this.firstName = user.getFirstName();
-    this.lastName = user.getLastName();
+    setNamesFromFullName(user.getFullName());
     this.email = user.getEmail();
     this.profileImageUrl = user.getProfileImageUrl();
     user.getConnectedAccounts().forEach((provider) -> {
@@ -51,6 +49,17 @@ public class UserResponse {
     authorities.forEach(authority -> {
       this.authorities.add(authority.getAuthority());
     });
+  }
+
+  private void setNamesFromFullName(String fullName) {
+    if (fullName == null || fullName.isBlank()) {
+      this.firstName = null;
+      this.lastName = null;
+      return;
+    }
+    String[] parts = fullName.trim().split(" ", 2);
+    this.firstName = parts[0];
+    this.lastName = parts.length > 1 ? parts[1] : null;
   }
 
   public record ConnectedAccountResponse(String provider, LocalDateTime connectedAt) {
