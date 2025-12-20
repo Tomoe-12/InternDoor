@@ -5,6 +5,10 @@ use Illuminate\Http\Request;
 
 define('LARAVEL_START', microtime(true));
 
+// Suppress warnings in HTTP responses for cleaner API output in dev
+@ini_set('display_errors', '0');
+@error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
+
 // Determine if the application is in maintenance mode...
 if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php')) {
     require $maintenance;

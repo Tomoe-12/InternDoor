@@ -32,7 +32,15 @@ class AuthController extends Controller
 
     public function me(Request $request)
     {
-        $user = Auth::user();
+        try {
+            $bearer = $request->bearerToken();
+            if (!$bearer) {
+                return response()->json(['error' => 'Unauthorized', 'message' => 'Missing bearer token'], 401);
+            }
+            $user = JWTAuth::setToken($bearer)->authenticate();
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Unauthorized', 'message' => $e->getMessage()], 401);
+        }
         return response()->json(new UserResource($user));
     }
 

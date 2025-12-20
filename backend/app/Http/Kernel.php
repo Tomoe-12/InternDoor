@@ -23,4 +23,9 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];
+
+    protected $routeMiddleware = [
+        // Use our API-friendly Authenticate middleware to avoid redirects
+        'auth' => \App\Http\Middleware\Authenticate::class,
+    ];
 }

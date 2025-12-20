@@ -145,10 +145,12 @@ import { useSidebar } from "./sidebar-provider"
 import { cn } from "@/lib/utils"
 import { LayoutDashboard, Users, Building2, BarChart3, Settings, HelpCircle, LogOut, Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useAuthGuard } from "@/lib/auth/use-auth"
 
 export function Sidebar() {
   const pathname = usePathname()
   const { isOpen, toggle } = useSidebar()
+  const { logout } = useAuthGuard()
 
   return (
     <>
@@ -229,19 +231,36 @@ export function Sidebar() {
                       </div>
                     </div>
                   ) : (
-                    <Link
-                      href={item.href}
-                      className={cn(
-                        "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
-                        pathname === item.href ? "bg-accent text-accent-foreground" : "text-muted-foreground",
-                      )}
-                    >
-                      <item.icon className="h-5 w-5" />
-                      <span>{item.name}</span>
-                      {item.description && (
-                        <span className="ml-auto text-xs text-muted-foreground">{item.description}</span>
-                      )}
-                    </Link>
+                    item.action === "logout" ? (
+                      <Button
+                        type="button"
+                        onClick={logout}
+                        className={cn(
+                          "flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm font-medium hover:bg-accent hover:text-accent-foreground",
+                          "text-muted-foreground",
+                        )}
+                      >
+                        <item.icon className="h-5 w-5" />
+                        <span>{item.name}</span>
+                        {item.description && (
+                          <span className="ml-auto text-xs text-muted-foreground">{item.description}</span>
+                        )}
+                      </Button>
+                    ) : (
+                      <Link
+                        href={item.href}
+                        className={cn(
+                          "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
+                          pathname === item.href ? "bg-accent text-accent-foreground" : "text-muted-foreground",
+                        )}
+                      >
+                        <item.icon className="h-5 w-5" />
+                        <span>{item.name}</span>
+                        {item.description && (
+                          <span className="ml-auto text-xs text-muted-foreground">{item.description}</span>
+                        )}
+                      </Link>
+                    )
                   )}
                 </div>
               ))}
@@ -273,5 +292,5 @@ const footerItems = [
     ],
   },
   { name: "Help", href: "/help", icon: HelpCircle, description: "Get support" },
-  { name: "Logout", href: "/logout", icon: LogOut, description: "Exit the app" },
+  { name: "Logout", href: "/auth/logout", icon: LogOut, description: "Exit the app", action: "logout" },
 ]

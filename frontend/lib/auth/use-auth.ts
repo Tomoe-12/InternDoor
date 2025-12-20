@@ -16,7 +16,7 @@ interface AuthProps {
 export const useAuthGuard = ({
   middleware,
   redirectIfAuthenticated,
-}: AuthProps) => {
+}: AuthProps = {}) => {
   const router = useRouter();
 
   const {
@@ -37,7 +37,11 @@ export const useAuthGuard = ({
     onError(undefined);
 
     try {
-      await restClient.login(props);
+      const loginRes = await restClient.login(props);
+      // Persist token defensively in case interceptors don't run
+      if (typeof window !== "undefined" && (loginRes as any)?.token) {
+        localStorage.setItem("auth_token", (loginRes as any).token);
+      }
       await mutate();
     } catch (err: any) {
       const errors = err?.response?.data as HttpErrorResponse | undefined;
@@ -53,6 +57,11 @@ export const useAuthGuard = ({
   const logout = async () => {
     if (!error) {
       await restClient.logout().then(() => mutate());
+    }
+
+    // Clear the stored token
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('auth_token')
     }
 
     window.location.pathname = "/auth/login";
