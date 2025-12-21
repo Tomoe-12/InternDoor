@@ -23,11 +23,14 @@ class UsersController extends Controller
             'email' => ['required','email','unique:users,email'],
             'password' => ['required','min:8','regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/'],
             'passwordConfirmation' => ['same:password'],
+            'fullName' => ['nullable','string'],
+            // Backward compatibility: accept optional first/last if sent
             'firstName' => ['nullable','string'],
             'lastName' => ['nullable','string'],
         ]);
-
-        $fullName = trim(($validated['firstName'] ?? '').' '.($validated['lastName'] ?? '')) ?: null;
+        $fullName = isset($validated['fullName'])
+            ? (trim($validated['fullName']) ?: null)
+            : (trim(($validated['firstName'] ?? '').' '.($validated['lastName'] ?? '')) ?: null);
         $user = User::create([
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),

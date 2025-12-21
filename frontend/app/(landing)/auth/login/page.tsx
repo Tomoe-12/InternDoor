@@ -2,6 +2,7 @@
 
 import { LoginForm } from "./components/login-form"
 import { Briefcase } from "lucide-react"
+import { Suspense } from "react"
 
 export default function LoginPage() {
   return (
@@ -15,7 +16,9 @@ export default function LoginPage() {
       </div> */}
 
       {/* Login Form */}
-      <LoginForm />
+      <Suspense fallback={<div>Loading...</div>}>
+        <LoginForm />
+      </Suspense>
 
       {/* Footer
       <p className="mt-8 text-xs text-muted-foreground">© 2025 InternDoor. All rights reserved.</p> */}

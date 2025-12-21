@@ -225,17 +225,18 @@
 
 import type React from "react";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Building2, GraduationCap, Eye, EyeOff, DoorOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { FcGoogle } from "react-icons/fc";
+import { toast } from "sonner";
 import ModeToggle from "@/components/ModeToggle";
 import { useAuthGuard } from "@/lib/auth/use-auth";
 import { HttpErrorResponse } from "@/models/http/HttpErrorResponse";
-import ErrorFeedback from "@/components/error-feedback";
 import { Role } from "@/models/user/UserResponse";
 
 type UserRole = "company" | "student";
@@ -263,6 +264,7 @@ const roles: RoleOption[] = [
 ];
 
 export function LoginForm() {
+  const searchParams = useSearchParams();
   const [selectedRole, setSelectedRole] = useState<UserRole>("student");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -271,7 +273,6 @@ export function LoginForm() {
   const [isOAuthLoading, setIsOAuthLoading] = useState<
     "google" | "github" | null
   >(null);
-  const [errors, setErrors] = useState<HttpErrorResponse | undefined>();
   const { login } = useAuthGuard({
     middleware: "guest",
     redirectIfAuthenticated: (user) =>
@@ -280,18 +281,36 @@ export function LoginForm() {
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
+  // Check for verification success or error
+  useEffect(() => {
+    const verified = searchParams.get("verified");
+    const error = searchParams.get("error");
+
+    if (verified === "true") {
+      toast.success("Email verified successfully! You can now log in.");
+    } else if (error) {
+      toast.error(error);
+    }
+  }, [searchParams]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setErrors(undefined);
 
     try {
       await login({
-        onError: setErrors,
+        onError: (error: any) => {
+          if (error) {
+            const errorMessage = error?.message || error?.generalErrors?.[0] || "Login failed. Please try again.";
+            toast.error(errorMessage);
+          }
+        },
         props: { email, password },
       });
+     
+      toast.success("Login successful! Redirecting...");
     } catch (err) {
-      // errors are surfaced via onError; keep loading state handling in finally
+      // errors are surfaced via onError callback
     } finally {
       setIsLoading(false);
     }
@@ -299,10 +318,7 @@ export function LoginForm() {
 
   const handleOAuthLogin = async (provider: "google" | "github") => {
     if (!baseUrl) {
-      setErrors({
-        message: "NEXT_PUBLIC_BASE_URL is not configured.",
-        status: 500,
-      });
+      toast.error("NEXT_PUBLIC_BASE_URL is not configured.");
       return;
     }
 
@@ -487,8 +503,6 @@ export function LoginForm() {
                   </button>
                 </div>
               </div>
-
-              <ErrorFeedback data={errors} />
 
               <Button
                 type="submit"

@@ -196,10 +196,12 @@ import { Label } from "@/components/ui/label"
 import { Building2, GraduationCap, Eye, EyeOff, DoorOpen } from "lucide-react"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
+import { toast } from "sonner"
 import ModeToggle from "@/components/ModeToggle"
 import { FcGoogle } from "react-icons/fc"
 import { restClient } from "@/lib/httpClient"
 import type { HttpErrorResponse } from "@/models/http/HttpErrorResponse"
+import { useRouter } from "next/navigation"
 
 type UserRole = "company" | "student"
 
@@ -226,6 +228,7 @@ const roles: RoleOption[] = [
 ]
 
 export function UserRegisterForm() {
+  const router = useRouter()
   const [selectedRole, setSelectedRole] = useState<UserRole>("student")
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
@@ -240,17 +243,12 @@ export function UserRegisterForm() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [isOAuthLoading, setIsOAuthLoading] = useState<"google" | "github" | null>(null)
-  const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    setError(null)
-    setSuccess(null)
-
     if (password !== confirmPassword) {
-      setError("Passwords do not match.")
+      toast.error("Passwords do not match.")
       return
     }
 
@@ -267,7 +265,7 @@ export function UserRegisterForm() {
         firstName,
         lastName,
       })
-      setSuccess("Account created. Check your email to verify.")
+      toast.success("Account created successfully! Check your email to verify.")
       setName("")
       setEmail("")
       setPassword("")
@@ -280,7 +278,7 @@ export function UserRegisterForm() {
     } catch (err: any) {
       const serverError = err?.response?.data as HttpErrorResponse | undefined
       const detail = serverError?.message || serverError?.generalErrors?.[0]
-      setError(detail || "Registration failed. Please try again.")
+      toast.error(detail || "Registration failed. Please try again.")
     } finally {
       setIsLoading(false)
     }
@@ -566,9 +564,6 @@ export function UserRegisterForm() {
                     </button>
                   </div>
                 </div>
-
-                {error && <p className="text-sm text-destructive">{error}</p>}
-                {success && <p className="text-sm text-green-600">{success}</p>}
 
                 <Button
                   type="submit"

@@ -5,6 +5,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import ServiceWorkerGuard from "@/components/ServiceWorkerGuard";
+import { Toaster } from "sonner";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -28,6 +29,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <ServiceWorkerGuard />
           {children}
+          <Toaster position="top-right" richColors duration={5000} />
         </ThemeProvider>
       </body>
     </html>
