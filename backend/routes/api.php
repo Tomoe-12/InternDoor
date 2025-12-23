@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\AdminUsersController;
 use App\Http\Controllers\NotificationsController;
+use App\Http\Controllers\CompaniesController;
 
 // Auth
 Route::prefix('auth')->group(function () {
@@ -41,6 +42,11 @@ Route::prefix('notifications')->group(function () {
     Route::post('/delivery/{id}', [NotificationsController::class, 'delivery']);
     Route::get('/stats/delivery', [NotificationsController::class, 'deliveryStats'])->middleware(['jwt.auth', 'can:admin-only']);
     Route::get('/stats/subscriptions', [NotificationsController::class, 'subscriptionStats'])->middleware(['jwt.auth', 'can:admin-only']);
+});
+
+// Companies
+Route::prefix('companies')->group(function () {
+    Route::post('/', [CompaniesController::class, 'store']);
 });
 
 // Debug: echo headers to verify Authorization is received (temporary)

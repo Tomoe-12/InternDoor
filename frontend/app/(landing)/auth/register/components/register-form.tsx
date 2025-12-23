@@ -199,7 +199,7 @@ import Link from "next/link"
 import { toast } from "sonner"
 import ModeToggle from "@/components/ModeToggle"
 import { FcGoogle } from "react-icons/fc"
-import { restClient } from "@/lib/httpClient"
+import httpClient, { restClient } from "@/lib/httpClient"
 import type { HttpErrorResponse } from "@/models/http/HttpErrorResponse"
 import { useRouter } from "next/navigation"
 
@@ -258,13 +258,25 @@ export function UserRegisterForm() {
     const lastName = rest.join(" ") || undefined
 
     try {
-      await restClient.createUser({
-        email: email.trim(),
-        password,
-        passwordConfirmation: confirmPassword,
-        firstName,
-        lastName,
-      })
+      if (selectedRole === "company") {
+        await httpClient.post("/api/companies", {
+          company_name: companyName.trim(),
+          website: companyWebsite.trim() || undefined,
+          phone_number: phoneNumber.trim(),
+          company_email: email.trim(),
+          password,
+          password_confirmation: confirmPassword,
+        })
+      } else {
+        await restClient.createUser({
+          email: email.trim(),
+          password,
+          passwordConfirmation: confirmPassword,
+          firstName,
+          lastName,
+        })
+      }
+
       toast.success("Account created successfully! Check your email to verify.")
       setName("")
       setEmail("")
@@ -395,21 +407,21 @@ export function UserRegisterForm() {
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name" className="text-sm font-medium">
-                    {selectedRole === "company" ? "Contact person name" : "Full name"}
-                  </Label>
-                  <Input
-                    id="name"
-                    type="text"
-                    placeholder="John Doe"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                    disabled={isLoading || isOAuthLoading !== null}
-                    className="h-11"
-                  />
-                </div>
+                {selectedRole !== "company" && (
+                  <div className="space-y-2">
+                    <Label htmlFor="name" className="text-sm font-medium">Full name</Label>
+                    <Input
+                      id="name"
+                      type="text"
+                      placeholder="John Doe"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      required
+                      disabled={isLoading || isOAuthLoading !== null}
+                      className="h-11"
+                    />
+                  </div>
+                )}
 
                 {selectedRole === "company" && (
                   <>
@@ -430,22 +442,6 @@ export function UserRegisterForm() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="companyRegistrationNumber" className="text-sm font-medium">
-                        Company registration number
-                      </Label>
-                      <Input
-                        id="companyRegistrationNumber"
-                        type="text"
-                        placeholder="12345678"
-                        value={companyRegistrationNumber}
-                        onChange={(e) => setCompanyRegistrationNumber(e.target.value)}
-                        required
-                        disabled={isLoading || isOAuthLoading !== null}
-                        className="h-11"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
                       <Label htmlFor="companyWebsite" className="text-sm font-medium">
                         Company website
                       </Label>
@@ -455,7 +451,6 @@ export function UserRegisterForm() {
                         placeholder="https://www.company.com"
                         value={companyWebsite}
                         onChange={(e) => setCompanyWebsite(e.target.value)}
-                        required
                         disabled={isLoading || isOAuthLoading !== null}
                         className="h-11"
                       />
@@ -477,27 +472,12 @@ export function UserRegisterForm() {
                       />
                     </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="position" className="text-sm font-medium">
-                        Your position
-                      </Label>
-                      <Input
-                        id="position"
-                        type="text"
-                        placeholder="HR Manager"
-                        value={position}
-                        onChange={(e) => setPosition(e.target.value)}
-                        required
-                        disabled={isLoading || isOAuthLoading !== null}
-                        className="h-11"
-                      />
-                    </div>
                   </>
                 )}
 
                 <div className="space-y-2">
                   <Label htmlFor="email" className="text-sm font-medium">
-                    Email address
+                    {selectedRole === "company" ? "Company email" : "Email address"}
                   </Label>
                   <Input
                     id="email"
