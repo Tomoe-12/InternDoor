@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Models\Company;
+use App\Http\Resources\CompanyResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -19,14 +21,19 @@ class AuthController extends Controller
             'password' => ['required']
         ]);
 
-        $user = User::where('email', $validated['email'])->first();
-        if (!$user || !Hash::check($validated['password'], $user->password)) {
+        $account = User::where('email', $validated['email'])->first();
+
+        if (!$account) {
+            $account = Company::where('company_email', $validated['email'])->first();
+        }
+
+        if (!$account || !Hash::check($validated['password'], $account->password)) {
             throw ValidationException::withMessages([
                 'email' => ['Invalid credentials.']
             ])->status(401);
         }
 
-        $token = JWTAuth::fromUser($user);
+        $token = JWTAuth::fromUser($account);
         return response()->json(['token' => $token]);
     }
 
@@ -40,6 +47,9 @@ class AuthController extends Controller
             $user = JWTAuth::setToken($bearer)->authenticate();
         } catch (\Exception $e) {
             return response()->json(['error' => 'Unauthorized', 'message' => $e->getMessage()], 401);
+        }
+        if ($user instanceof Company) {
+            return response()->json(new CompanyResource($user));
         }
         return response()->json(new UserResource($user));
     }

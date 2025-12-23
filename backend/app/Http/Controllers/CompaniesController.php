@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Models\VerificationCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class CompaniesController extends Controller
 {
@@ -27,7 +29,22 @@ class CompaniesController extends Controller
         $company->phone_number = $validated['phone_number'];
         $company->company_email = $validated['company_email'];
         $company->password = Hash::make($validated['password']);
+        $company->verified = false;
         $company->save();
+
+        $code = VerificationCode::create([
+            'company_id' => $company->id,
+            'code' => (string) random_int(100000, 999999),
+            'email_sent' => false,
+        ]);
+
+        Mail::raw(
+            'Welcome! Please verify your company account by visiting: '.config('app.url').'/api/users/verify-email?token='.$code->code,
+            function ($m) use ($company) {
+                $m->to($company->company_email)->subject('Verify your company account');
+            }
+        );
+        $code->email_sent = true; $code->save();
 
         return response()->json([
             'message' => 'Company created successfully',

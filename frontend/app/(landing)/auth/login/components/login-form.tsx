@@ -301,7 +301,8 @@ export function LoginForm() {
       await login({
         onError: (error: any) => {
           if (error) {
-            const errorMessage = error?.message || error?.generalErrors?.[0] || "Login failed. Please try again.";
+            const errorMessage =
+              error?.message || error?.generalErrors?.[0] || "Login failed. Please try again.";
             toast.error(errorMessage);
           }
         },
