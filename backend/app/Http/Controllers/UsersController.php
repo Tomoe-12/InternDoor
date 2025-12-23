@@ -66,8 +66,14 @@ class UsersController extends Controller
         if (!$code) {
             return response()->json(['message' => 'Invalid token'], 400);
         }
-        $user = $code->user;
-        $user->verified = true; $user->save();
+        if ($code->user) {
+            $user = $code->user;
+            $user->verified = true; $user->save();
+        } elseif ($code->company) {
+            $company = $code->company;
+            $company->verified = true; $company->save();
+        }
+
         $code->delete();
         return redirect()->to(env('LOGIN_PAGE_URL', config('app.url').'/auth/login'));
     }
