@@ -34,7 +34,19 @@ class AuthController extends Controller
         }
 
         $token = JWTAuth::fromUser($account);
-        return response()->json(['token' => $token]);
+        
+        // Return user/company data along with token
+        if ($account instanceof Company) {
+            return response()->json([
+                'token' => $token,
+                'user' => new CompanyResource($account)
+            ]);
+        }
+        
+        return response()->json([
+            'token' => $token,
+            'user' => new UserResource($account)
+        ]);
     }
 
     public function me(Request $request)

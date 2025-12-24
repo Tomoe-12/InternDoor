@@ -238,6 +238,7 @@ import ModeToggle from "@/components/ModeToggle";
 import { useAuthGuard } from "@/lib/auth/use-auth";
 import { HttpErrorResponse } from "@/models/http/HttpErrorResponse";
 import { Role } from "@/models/user/UserResponse";
+import httpClient from "@/lib/httpClient";
 
 type UserRole = "company" | "student";
 
@@ -298,20 +299,33 @@ export function LoginForm() {
     setIsLoading(true);
 
     try {
-      await login({
-        onError: (error: any) => {
-          if (error) {
-            const errorMessage =
-              error?.message || error?.generalErrors?.[0] || "Login failed. Please try again.";
-            toast.error(errorMessage);
-          }
-        },
-        props: { email, password },
+      const response = await httpClient.post("/api/auth/login", {
+        email: email.trim(),
+        password,
       });
-     
-      toast.success("Login successful! Redirecting...");
-    } catch (err) {
-      // errors are surfaced via onError callback
+
+      if (response.data.token) {
+        // Store the token
+        localStorage.setItem("token", response.data.token);
+        toast.success("Login successful! Redirecting...");
+
+        // Check the user type and redirect accordingly
+        const user = response.data.user;
+        if (user?.role === "admin") {
+          window.location.href = "/admin";
+        } else if (selectedRole === "company") {
+          window.location.href = "/company/dashboard";
+        } else {
+          window.location.href = "/profile";
+        }
+      }
+    } catch (err: any) {
+      const serverError = err?.response?.data as HttpErrorResponse | undefined;
+      const errorMessage =
+        serverError?.message ||
+        serverError?.generalErrors?.[0] ||
+        "Login failed. Please try again.";
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
