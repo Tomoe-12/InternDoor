@@ -7,6 +7,8 @@ use App\Models\PasswordResetToken;
 use App\Models\UploadedFile;
 use App\Models\User;
 use App\Models\VerificationCode;
+use App\Models\Company;
+use App\Traits\GeneratesSecureCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -17,10 +19,11 @@ use Illuminate\Validation\Rule;
 
 class UsersController extends Controller
 {
+    use GeneratesSecureCode;
     public function register(Request $request)
     {
         $validated = $request->validate([
-            'email' => ['required','email','unique:users,email'],
+            'email' => ['required','email'],
             'password' => ['required','min:8','regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/'],
             'passwordConfirmation' => ['same:password'],
             'fullName' => ['nullable','string'],
@@ -28,6 +31,71 @@ class UsersController extends Controller
             'firstName' => ['nullable','string'],
             'lastName' => ['nullable','string'],
         ]);
+
+        // Cross-table uniqueness: prevent using same email in company table
+        $companyEmailExists = Company::where('company_email', $validated['email'])->exists();
+        if ($companyEmailExists) {
+            return response()->json([
+                'message' => 'Email is already used by a company account',
+                'reason' => 'email_in_use_by_company'
+            ], 400);
+        }
+
+        // Check if email already exists
+        $existingUser = User::where('email', $validated['email'])->first();
+        if ($existingUser) {
+            if ($existingUser->verified) {
+                // Email exists and IS verified
+                return response()->json([
+                    'message' => 'Account already exists',
+                    'reason' => 'email_already_verified'
+                ], 400);
+            } else {
+                // Email exists but NOT verified
+                $latestCode = VerificationCode::where('user_id', $existingUser->id)
+                    ->orderBy('created_at', 'desc')
+                    ->first();
+
+                if ($latestCode && $latestCode->expires_at && $latestCode->expires_at > now()) {
+                    // Token NOT expired: reject and instruct to verify
+                    return response()->json([
+                        'message' => 'Account already exists. Verify your email first.',
+                        'reason' => 'verification_pending',
+                        'verificationLink' => config('app.url').'/api/users/verify-email?token='.$latestCode->code,
+                        'expiresAt' => $latestCode->expires_at,
+                        'email' => $existingUser->email,
+                    ], 400);
+                }
+
+                // Token expired or missing: delete old, issue new, send email, then reject
+                VerificationCode::where('user_id', $existingUser->id)->delete();
+
+                $newCodeStr = $this->generateSecureCode();
+                $newCode = VerificationCode::create([
+                    'user_id' => $existingUser->id,
+                    'code' => $newCodeStr,
+                    'email_sent' => false,
+                    'expires_at' => now()->addHours(1),
+                ]);
+
+                Mail::send('emails.welcome-email', [
+                    'user' => $existingUser,
+                    'verificationLink' => config('app.url').'/api/users/verify-email?token='.$newCode->code,
+                    'applicationName' => config('app.name'),
+                    'expiresAt' => $newCode->expires_at,
+                ], function($m) use ($existingUser) {
+                    $m->to($existingUser->email)->subject('Verify your email address');
+                });
+                $newCode->email_sent = true; $newCode->save();
+
+                return response()->json([
+                    'message' => 'Account already exists. Verify your email first.',
+                    'reason' => 'verification_sent',
+                    'email' => $existingUser->email,
+                ], 400);
+            }
+        }
+
         $fullName = isset($validated['fullName'])
             ? (trim($validated['fullName']) ?: null)
             : (trim(($validated['firstName'] ?? '').' '.($validated['lastName'] ?? '')) ?: null);
@@ -39,10 +107,12 @@ class UsersController extends Controller
             'verified' => false,
         ]);
 
+        $verificationCode = $this->generateSecureCode();
         $code = VerificationCode::create([
             'user_id' => $user->id,
-            'code' => (string) random_int(100000, 999999),
+            'code' => $verificationCode,
             'email_sent' => false,
+            'expires_at' => now()->addHours(1),
         ]);
 
         // Send welcome email (via Mailpit in local)
@@ -50,6 +120,7 @@ class UsersController extends Controller
             'user' => $user,
             'verificationLink' => config('app.url').'/api/users/verify-email?token='.$code->code,
             'applicationName' => config('app.name'),
+            'expiresAt' => $code->expires_at,
         ], function($m) use ($user) {
             $m->to($user->email)->subject('Welcome to our platform');
         });
@@ -65,6 +136,9 @@ class UsersController extends Controller
         $code = VerificationCode::where('code', $token)->first();
         if (!$code) {
             return response()->json(['message' => 'Invalid token'], 400);
+        }
+        if ($code->expires_at && $code->expires_at < now()) {
+            return response()->json(['message' => 'Verification code has expired'], 400);
         }
         if ($code->user) {
             $user = $code->user;
@@ -186,4 +260,49 @@ class UsersController extends Controller
         ]);
         return response()->json(new UserResource($user));
     }
+
+    public function resendVerificationCode(Request $request)
+    {
+        $validated = $request->validate([
+            'email' => ['required', 'email']
+        ]);
+
+        $user = User::where('email', $validated['email'])->first();
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        // If already verified, no need to resend
+        if ($user->verified) {
+            return response()->json(['message' => 'Email already verified'], 400);
+        }
+
+        // Delete old verification codes for this user
+        VerificationCode::where('user_id', $user->id)->delete();
+
+        // Create new verification code
+        $verificationCode = $this->generateSecureCode();
+        $code = VerificationCode::create([
+            'user_id' => $user->id,
+            'code' => $verificationCode,
+            'email_sent' => false,
+            'expires_at' => now()->addHours(1),
+        ]);
+
+        // Send email
+        Mail::send('emails.welcome-email', [
+            'user' => $user,
+            'verificationLink' => config('app.url').'/api/users/verify-email?token='.$code->code,
+            'applicationName' => config('app.name'),
+            'expiresAt' => $code->expires_at,
+        ], function($m) use ($user) {
+            $m->to($user->email)->subject('Verify your email address');
+        });
+
+        $code->email_sent = true;
+        $code->save();
+
+        return response()->json(['message' => 'Verification code sent successfully']);
+    }
+
 }

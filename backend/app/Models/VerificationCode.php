@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class VerificationCode extends Model
 {
-    protected $fillable = ['user_id','company_id','code','email_sent'];
-    protected $casts = ['email_sent' => 'boolean'];
+    protected $fillable = ['user_id','company_id','code','email_sent','expires_at'];
+    protected $casts = ['email_sent' => 'boolean','expires_at' => 'datetime'];
 
     public function user()
     {

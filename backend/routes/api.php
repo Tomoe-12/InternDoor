@@ -19,6 +19,7 @@ Route::prefix('auth')->group(function () {
 Route::prefix('users')->group(function () {
     Route::post('/', [UsersController::class, 'register']);
     Route::get('/verify-email', [UsersController::class, 'verifyEmail']);
+    Route::post('/resend-verification-code', [UsersController::class, 'resendVerificationCode']);
     Route::post('/forgot-password', [UsersController::class, 'forgotPassword']);
     Route::patch('/reset-password', [UsersController::class, 'resetPassword']);
 
