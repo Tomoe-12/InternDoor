@@ -13,6 +13,7 @@ interface AuthProps {
     | ((user: UserResponse) => string | undefined | null);
 }
 
+
 export const useAuthGuard = ({
   middleware,
   redirectIfAuthenticated,
@@ -38,12 +39,38 @@ export const useAuthGuard = ({
 
     try {
       const loginRes = await restClient.login(props);
-      // Persist token defensively in case interceptors don't run
-      if (typeof window !== "undefined" && (loginRes as any)?.token) {
-        localStorage.setItem("auth_token", (loginRes as any).token);
+      const token = (loginRes as any)?.token;
+      const userFromLogin = (loginRes as any)?.user as UserResponse | undefined;
+
+      console.log("Login response:", { loginRes, token, userFromLogin });
+
+      if (typeof window !== "undefined" && token) {
+        localStorage.setItem("auth_token", token);
       }
-      await mutate();
+
+      if (userFromLogin) {
+        // Normalize role to uppercase string to match frontend Role enums
+        try {
+          if (userFromLogin.role && typeof userFromLogin.role === "string") {
+            (userFromLogin as any).role = (userFromLogin.role as string).toUpperCase();
+          }
+        } catch (e) {
+          // ignore normalization errors
+        }
+
+        console.log("User from login after normalization:", userFromLogin);
+
+        // Prime SWR cache immediately so callers have user data for redirects
+        await mutate(userFromLogin, { revalidate: false });
+        // Revalidate in background to sync with /api/auth/me
+        mutate().catch(() => undefined);
+        return userFromLogin;
+      }
+
+      const userData = await mutate();
+      return userData;
     } catch (err: any) {
+      console.error("Login error:", err);
       const errors = err?.response?.data as HttpErrorResponse | undefined;
       onError(errors);
       throw err;

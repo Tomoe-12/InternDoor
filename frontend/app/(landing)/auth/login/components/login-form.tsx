@@ -226,7 +226,7 @@
 import type React from "react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -265,6 +265,7 @@ const roles: RoleOption[] = [
 ];
 
 export function LoginForm() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [selectedRole, setSelectedRole] = useState<UserRole>("student");
   const [email, setEmail] = useState("");
@@ -276,8 +277,11 @@ export function LoginForm() {
   >(null);
   const { login } = useAuthGuard({
     middleware: "guest",
-    redirectIfAuthenticated: (user) =>
-      user.role === Role.ADMIN ? "/admin" : "/profile",
+    redirectIfAuthenticated: (user) => {
+      if (user.role === Role.ADMIN) return "/admin";
+      if (user.role === Role.COMPANY) return "/company/dashboard";
+      return "/profile";
+    },
   });
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
@@ -299,31 +303,51 @@ export function LoginForm() {
     setIsLoading(true);
 
     try {
-      const response = await httpClient.post("/api/auth/login", {
-        email: email.trim(),
-        password,
+      const userData = await login({
+        onError: (errors) => {
+          const errorMessage =
+            (errors as any)?.message || (errors as any)?.generalErrors?.[0];
+          if (errorMessage) toast.error(errorMessage);
+        },
+        props: { email: email.trim(), password },
       });
+      
+      toast.success("Login successful! Redirecting...");
 
-      if (response.data.token) {
-        // Store the token
-        localStorage.setItem("token", response.data.token);
-        toast.success("Login successful! Redirecting...");
-
-        // Check the user type and redirect accordingly
-        const user = response.data.user;
-        if (user?.role === "admin") {
-          window.location.href = "/admin";
-        } else if (selectedRole === "company") {
-          window.location.href = "/company/dashboard";
+      
+      // Redirect based on user role
+      if (userData) {
+        const role = userData.role;
+        if (role === Role.ADMIN) {
+          router.push("/admin");
+        } else if (role === Role.COMPANY) {
+          router.push("/company/dashboard");
         } else {
-          window.location.href = "/profile";
+          router.push("/profile");
         }
       }
     } catch (err: any) {
-      const serverError = err?.response?.data as HttpErrorResponse | undefined;
+      const status = err?.response?.status;
+      const data = err?.response?.data as any;
+      if (status === 403 && data?.reason) {
+        if (data.reason === "verification_pending") {
+          toast.error("Please verify your email to continue.");
+        } else if (
+          data.reason === "verification_expired" ||
+          data.reason === "verification_sent"
+        ) {
+          toast.error(
+            "Your verification code was expired. We sent a new verification email."
+          );
+        } else {
+          toast.error(data?.message ?? "Login blocked. Please verify your email.");
+        }
+        return;
+      }
+
+      const serverError = data as HttpErrorResponse | undefined;
       const errorMessage =
-        serverError?.message ||
-        serverError?.generalErrors?.[0] ||
+        serverError?.message || serverError?.generalErrors?.[0] ||
         "Login failed. Please try again.";
       toast.error(errorMessage);
     } finally {

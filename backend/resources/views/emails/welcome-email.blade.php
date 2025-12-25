@@ -2,7 +2,7 @@
 <html>
 <body>
   <h2>Welcome to {{ $applicationName }}</h2>
-  <p>Hello {{ $user->full_name ?? $user->email }},</p>
+	<p>Hello {{ isset($user) ? ($user->full_name ?? $user->email) : (isset($company) ? ($company->company_name ?? $company->company_email) : 'there') }},</p>
   <p>Please verify your email by clicking the link below:</p>
   <p><a href="{{ $verificationLink }}">Verify Email</a></p>
 </body>
@@ -133,9 +133,10 @@
 														<tr>
 															<td class="pad" style="padding-bottom:10px;padding-top:20px;">
 																<div style="color:#333333;direction:ltr;font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;letter-spacing:0px;line-height:150%;text-align:left;mso-line-height-alt:24px;">
-																	<p style="margin: 0; margin-bottom: 16px;">Hello {{ $user->full_name ?? $user->email }},</p>
+																	<p style="margin: 0; margin-bottom: 16px;">Hello {{ isset($user) ? ($user->full_name ?? $user->email) : (isset($company) ? ($company->company_name ?? $company->company_email) : 'there') }},</p>
 																	<p style="margin: 0; margin-bottom: 16px;">Welcome to <strong>{{ $applicationName }}</strong>! We're excited to help you start your career journey. Before you can get started, we need to verify your email address to ensure your account is secure.</p>
-																	<p style="margin: 0;">Please click the button below to verify your email address:</p>
+																	<p style="margin: 0; margin-bottom: 16px;">Please click the button below to verify your email address:</p>
+																	<p style="margin: 0; margin-bottom: 16px; color: #FF6B6B; font-weight: 600;">⏰ Note: This verification link expires in 1 hour. Please verify your email promptly.</p>
 																</div>
 															</td>
 														</tr>
