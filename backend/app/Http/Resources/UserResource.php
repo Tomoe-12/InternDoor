@@ -16,6 +16,7 @@ class UserResource extends JsonResource
             $first = $parts[0] ?? null; $last = $parts[1] ?? null;
         }
         $authorities = ['ROLE_'.($this->role ?? 'USER')];
+        $profileComplete = (bool) ($this->profile_complete ?? false);
         return [
             'id' => $this->id,
             'role' => $this->role,
@@ -28,6 +29,7 @@ class UserResource extends JsonResource
                 'connectedAt' => $ca->connected_at,
             ])->values(),
             'authorities' => $authorities,
+            'profileComplete' => $profileComplete,
         ];
     }
 }

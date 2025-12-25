@@ -12,10 +12,15 @@ class User extends Authenticatable implements JWTSubject
     use HasFactory;
 
     protected $fillable = [
-        'email','password','full_name','profile_image_url','role','verified'
+        'email','password','full_name','profile_image_url','role','verified','profile_complete'
     ];
 
     protected $hidden = ['password','remember_token'];
+
+    protected $casts = [
+        'profile_complete' => 'boolean',
+        'verified' => 'boolean',
+    ];
 
     public function connectedAccounts()
     {

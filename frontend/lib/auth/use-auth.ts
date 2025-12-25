@@ -42,8 +42,6 @@ export const useAuthGuard = ({
       const token = (loginRes as any)?.token;
       const userFromLogin = (loginRes as any)?.user as UserResponse | undefined;
 
-      console.log("Login response:", { loginRes, token, userFromLogin });
-
       if (typeof window !== "undefined" && token) {
         localStorage.setItem("auth_token", token);
       }
@@ -58,8 +56,6 @@ export const useAuthGuard = ({
           // ignore normalization errors
         }
 
-        console.log("User from login after normalization:", userFromLogin);
-
         // Prime SWR cache immediately so callers have user data for redirects
         await mutate(userFromLogin, { revalidate: false });
         // Revalidate in background to sync with /api/auth/me
@@ -70,7 +66,6 @@ export const useAuthGuard = ({
       const userData = await mutate();
       return userData;
     } catch (err: any) {
-      console.error("Login error:", err);
       const errors = err?.response?.data as HttpErrorResponse | undefined;
       onError(errors);
       throw err;

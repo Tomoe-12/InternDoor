@@ -123,6 +123,7 @@ export interface UserResponse {
     profileImageUrl?: string;
     connectedAccounts: ConnectedAccountResponse[];
     authorities: string[];
+    profileComplete?: boolean;
 }
 
 export interface LoginRequest {

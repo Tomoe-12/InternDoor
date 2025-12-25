@@ -22,14 +22,16 @@ class Company extends Authenticatable implements JWTSubject
         'logo',
         'address',
         'description',
-        'service_area',
         'operating_hours',
         'linkedin_profile',
+        'profile_complete',
         'verified',
     ];
 
     protected $casts = [
+        'profile_complete' => 'boolean',
         'verified' => 'boolean',
+        'operating_hours' => 'array',
     ];
 
     protected $hidden = ['password'];

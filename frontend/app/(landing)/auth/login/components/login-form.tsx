@@ -321,7 +321,8 @@ export function LoginForm() {
         if (role === Role.ADMIN) {
           router.push("/admin");
         } else if (role === Role.COMPANY) {
-          router.push("/company/dashboard");
+          const needsSetup = userData.profileComplete === false;
+          router.push(needsSetup ? "/company/onboarding" : "/company/dashboard");
         } else {
           router.push("/profile");
         }
