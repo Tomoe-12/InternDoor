@@ -48,6 +48,7 @@ Route::prefix('notifications')->group(function () {
 // Companies
 Route::prefix('companies')->group(function () {
     Route::post('/', [CompaniesController::class, 'store']);
+    Route::patch('/profile', [CompaniesController::class, 'updateProfile']);
 });
 
 // Debug: echo headers to verify Authorization is received (temporary)

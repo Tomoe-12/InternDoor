@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 import { Building2, Briefcase, Store, Linkedin, ArrowRight, ArrowLeft, Check } from "lucide-react"
+import type { LucideIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -20,13 +21,21 @@ import { OperationHours } from "@/components/operation-hours"
 import { Separator } from "@/components/ui/separator"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
+import httpClient from "@/lib/httpClient"
+import { useRouter } from "next/navigation"
+import { useUploadThing } from "@/lib/uploadthing"
+import { useAuthGuard } from "@/lib/auth/use-auth"
 
 // Form schema
 const formSchema = z.object({
   industry: z.string().min(1, "Please select an industry"),
   organizationSize: z.string().min(1, "Please select organization size"),
   organizationType: z.string().min(1, "Please select organization type"),
-  logo: z.instanceof(File).nullable().optional(),
+  // Avoid runtime crashes if File is undefined during SSR or bundling
+  logo: z
+    .custom<File>((val) => typeof window !== "undefined" && val instanceof File, {
+      message: "Please upload a company logo",
+    }),
   address: z.string().min(10, "Please enter a complete address"),
   shopDescription: z.enum(["online", "physical", "both"], {
     required_error: "Please select your business model",
@@ -45,7 +54,8 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>
 
-const STEPS = [
+type StepId = 1 | 2 | 3
+const STEPS: ReadonlyArray<{ id: StepId; title: string; description: string; icon: LucideIcon }> = [
   {
     id: 1,
     title: "Company Information",
@@ -67,8 +77,19 @@ const STEPS = [
 ] as const
 
 export default function CompanyDetailsForm() {
-  const [currentStep, setCurrentStep] = React.useState(1)
+  const [currentStep, setCurrentStep] = React.useState<StepId>(1)
   const [isSubmitting, setIsSubmitting] = React.useState(false)
+  const [submitIntent, setSubmitIntent] = React.useState(false)
+  const router = useRouter()
+  const { startUpload, isUploading } = useUploadThing("companyLogo")
+  const { user, mutate } = useAuthGuard({ middleware: "auth" })
+
+  // If profile is already complete, keep user on dashboard
+  React.useEffect(() => {
+    if (user && (user as any)?.profileComplete) {
+      router.replace("/company/dashboard")
+    }
+  }, [user, router])
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -77,29 +98,74 @@ export default function CompanyDetailsForm() {
       industry: "",
       organizationSize: "",
       organizationType: "",
-      logo: null,
+      logo: undefined as unknown as File, // will be set by FileUpload
       address: "",
-      shopDescription: "" as any,
-      operationHours: {},
+      shopDescription: undefined,
+      operationHours: undefined,
       linkedinUrl: "",
     },
   })
 
   const progress = (currentStep / STEPS.length) * 100
+  // Safely resolve current step to avoid undefined indexing (and assert non-null)
+  const stepIndex = Math.min(Math.max(currentStep - 1, 0), STEPS.length - 1)
+  const step = STEPS[stepIndex]!
+
+  const shopDescription = form.watch("shopDescription")
+
+  // Keep address in sync when selecting Online Only
+  React.useEffect(() => {
+    if (shopDescription === "online") {
+      form.setValue("address", "Online Only", { shouldValidate: true, shouldDirty: true })
+    } else if (form.getValues("address") === "Online Only") {
+      form.setValue("address", "", { shouldValidate: false, shouldDirty: true })
+    }
+  }, [shopDescription, form])
 
   const onSubmit = async (data: FormValues) => {
+    // Double-guard: only submit on the final step and only when user explicitly clicked submit
+    if (currentStep < STEPS.length || !submitIntent) {
+      return
+    }
+
     setIsSubmitting(true)
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500))
+    try {
+      let logoUrl = ""
+      if (data.logo) {
+        const uploadRes = await startUpload([data.logo])
+        logoUrl = uploadRes?.[0]?.url ?? ""
+        if (!logoUrl) {
+          throw new Error("Logo upload failed. Please try again.")
+        }
+      }
 
-    console.log("[v0] Form data submitted:", {
-      ...data,
-      logo: data.logo ? `File: ${data.logo.name}` : null,
-    })
+      // Upload logo if provided (placeholder: assume backend accepts string path) — extend to real upload if needed
+      const payload = {
+        industry: data.industry,
+        organization_size: data.organizationSize,
+        organization_type: data.organizationType,
+        logo: logoUrl,
+        address: data.address,
+        description: data.shopDescription,
+        operating_hours: JSON.stringify(data.operationHours ?? {}),
+        linkedin_profile: data.linkedinUrl ?? "",
+      }
 
-    toast.success("Company details saved successfully!")
-    setIsSubmitting(false)
+      await httpClient.patch("/api/companies/profile", payload)
+
+      // Refresh auth user so profileComplete flag updates and layout stops redirecting
+      await mutate?.()
+
+      toast.success("Company details saved successfully!")
+      router.push("/company/dashboard")
+    } catch (err: any) {
+      const msg = err?.response?.data?.message ?? "Failed to save company details"
+      toast.error(msg)
+    } finally {
+      setIsSubmitting(false)
+      setSubmitIntent(false)
+    }
   }
 
   const nextStep = async () => {
@@ -109,15 +175,21 @@ export default function CompanyDetailsForm() {
       fieldsToValidate = ["industry", "organizationSize", "organizationType"]
     } else if (currentStep === 2) {
       fieldsToValidate = ["address", "shopDescription"]
+      // No extra fields required for Online Only beyond address and business model
     }
 
     // Only trigger validation for the current step's fields
-    const isValid = await form.trigger(fieldsToValidate)
+    let isValid = false
+    try {
+      isValid = await form.trigger(fieldsToValidate)
+    } catch (e) {
+      isValid = false
+    }
 
     console.log("[v0] Step validation:", { currentStep, fieldsToValidate, isValid, errors: form.formState.errors })
 
     if (isValid && currentStep < STEPS.length) {
-      setCurrentStep(currentStep + 1)
+      setCurrentStep((currentStep + 1) as StepId)
     } else {
       // Show error messages for invalid fields
       console.log("[v0] Validation failed:", form.formState.errors)
@@ -126,7 +198,7 @@ export default function CompanyDetailsForm() {
 
   const prevStep = () => {
     if (currentStep > 1) {
-      setCurrentStep(currentStep - 1)
+      setCurrentStep((currentStep - 1) as StepId)
     }
   }
 
@@ -191,16 +263,35 @@ export default function CompanyDetailsForm() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              {React.createElement(STEPS[currentStep - 1].icon, {
+              {React.createElement(step.icon, {
                 className: "size-5",
               })}
-              {STEPS[currentStep - 1].title}
+              {step.title}
             </CardTitle>
-            <CardDescription>{STEPS[currentStep - 1].description}</CardDescription>
+            <CardDescription>{step.description}</CardDescription>
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <form
+                onKeyDown={(e) => {
+                  // Prevent implicit submits via Enter on any step; force explicit button click
+                  if (e.key === "Enter") {
+                    e.preventDefault()
+                    if (currentStep < STEPS.length) {
+                      void nextStep()
+                    }
+                  }
+                }}
+                onSubmit={(e) => {
+                  if (currentStep < STEPS.length) {
+                    e.preventDefault()
+                    void nextStep()
+                    return
+                  }
+                  form.handleSubmit(onSubmit)(e)
+                }}
+                className="space-y-6"
+              >
                 {/* Step 1: Company Information */}
                 {currentStep === 1 && (
                   <div className="space-y-6">
@@ -302,6 +393,7 @@ export default function CompanyDetailsForm() {
                             <Textarea
                               placeholder="Enter your complete business address"
                               className="min-h-24 resize-none"
+                              disabled={shopDescription === "online"}
                               {...field}
                             />
                           </FormControl>
@@ -318,9 +410,9 @@ export default function CompanyDetailsForm() {
                         <FormItem>
                           <FormLabel>Business Model</FormLabel>
                           <FormControl>
-                            <RadioGroup
+                              <RadioGroup
                               onValueChange={field.onChange}
-                              value={field.value}
+                              value={field.value ?? undefined}
                               className="grid grid-cols-1 gap-4 sm:grid-cols-3"
                             >
                               <div>
@@ -360,6 +452,8 @@ export default function CompanyDetailsForm() {
                         </FormItem>
                       )}
                     />
+
+                    {/* Service Area removed per request */}
 
                     <FormField
                       control={form.control}
@@ -448,11 +542,16 @@ export default function CompanyDetailsForm() {
                       <ArrowRight className="ml-2 size-4" />
                     </Button>
                   ) : (
-                    <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto">
-                      {isSubmitting ? (
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting || isUploading}
+                      className="w-full sm:w-auto"
+                      onClick={() => setSubmitIntent(true)}
+                    >
+                      {isSubmitting || isUploading ? (
                         <>
                           <span className="mr-2 size-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                          Submitting...
+                          {isUploading ? "Uploading..." : "Submitting..."}
                         </>
                       ) : (
                         <>

@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Company;
 use App\Models\User;
 use App\Models\VerificationCode;
+use App\Http\Resources\CompanyResource;
 use App\Traits\GeneratesSecureCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class CompaniesController extends Controller
 {
@@ -95,6 +97,7 @@ class CompaniesController extends Controller
         $company->company_email = $validated['company_email'];
         $company->password = Hash::make($validated['password']);
         $company->verified = false;
+        $company->profile_complete = false; // set to 0 immediately after register
         $company->save();
 
         $verificationCode = $this->generateSecureCode();
@@ -121,4 +124,52 @@ class CompaniesController extends Controller
         ], 201);
     }
 
+    /** Update company profile (onboarding) and set profile_complete */
+    public function updateProfile(Request $request)
+    {
+        // Authenticate via JWT and ensure subject is a company
+        $bearer = $request->bearerToken();
+        if (!$bearer) {
+            return response()->json(['error' => 'Unauthorized', 'message' => 'Missing bearer token'], 401);
+        }
+
+        try {
+            $payload = JWTAuth::setToken($bearer)->getPayload();
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Unauthorized', 'message' => 'Invalid token'], 401);
+        }
+
+        $type = $payload->get('type');
+        $subjectId = $payload->get('sub');
+        if ($type !== 'company') {
+            return response()->json(['error' => 'Forbidden', 'message' => 'Only companies can update this profile'], 403);
+        }
+
+        $company = Company::find($subjectId);
+        if (!$company) {
+            return response()->json(['error' => 'Unauthorized', 'message' => 'Company not found'], 401);
+        }
+
+        $validated = $request->validate([
+            'industry' => ['required', 'string', 'max:255'],
+            'organization_size' => ['required', 'string', 'max:255'],
+            'organization_type' => ['required', 'string', 'max:255'],
+            'logo' => ['required', 'string', 'max:1024'],
+            'address' => ['required', 'string', 'max:1024'],
+            'description' => ['required', 'string'],
+            'operating_hours' => ['required', 'json'],
+            'linkedin_profile' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        // Update fields
+        foreach ($validated as $key => $value) {
+            $company->{$key} = $value;
+        }
+
+        // Mark profile as complete after onboarding submission
+        $company->profile_complete = true;
+        $company->save();
+
+        return response()->json(new CompanyResource($company));
+    }
 }
