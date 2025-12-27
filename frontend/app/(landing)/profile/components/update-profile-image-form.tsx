@@ -14,7 +14,7 @@ export default function UpdateProfileImageForm() {
     const formData = new FormData();
     formData.append("file", file);
 
-    httpClient.patch(`/api/users/${user?.id}/profile-picture`, formData, {
+    httpClient.patch(`/api/students/${user?.id}/profile-picture`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
-use App\Models\User;
+use App\Models\Student;
 use App\Models\Company;
 use App\Models\VerificationCode;
 use App\Http\Resources\CompanyResource;
@@ -25,7 +25,7 @@ class AuthController extends Controller
             'password' => ['required']
         ]);
 
-        $account = User::where('email', $validated['email'])->first();
+        $account = Student::where('email', $validated['email'])->first();
 
         if (!$account) {
             $account = Company::where('company_email', $validated['email'])->first();
@@ -39,7 +39,7 @@ class AuthController extends Controller
 
         // Check if account is verified
         if (!$account->verified) {
-            $idColumn = $account instanceof Company ? 'company_id' : 'user_id';
+            $idColumn = $account instanceof Company ? 'company_id' : 'student_id';
             $latestCode = VerificationCode::where($idColumn, $account->id)
                 ->orderBy('created_at', 'desc')
                 ->first();
@@ -49,7 +49,7 @@ class AuthController extends Controller
                 return response()->json([
                     'message' => 'Verify your email',
                     'reason' => 'verification_pending',
-                    'verificationLink' => config('app.url').'/api/users/verify-email?token='.$latestCode->code,
+                    'verificationLink' => config('app.url').'/api/students/verify-email?token='.$latestCode->code,
                     'expiresAt' => $latestCode->expires_at,
                 ], 403);
             }
@@ -68,7 +68,7 @@ class AuthController extends Controller
             if ($account instanceof Company) {
                 Mail::send('emails.welcome-email', [
                     'company' => $account,
-                    'verificationLink' => config('app.url').'/api/users/verify-email?token='.$newCode->code,
+                    'verificationLink' => config('app.url').'/api/students/verify-email?token='.$newCode->code,
                     'applicationName' => config('app.name'),
                     'expiresAt' => $newCode->expires_at,
                 ], function($m) use ($account) {
@@ -77,7 +77,7 @@ class AuthController extends Controller
             } else {
                 Mail::send('emails.welcome-email', [
                     'user' => $account,
-                    'verificationLink' => config('app.url').'/api/users/verify-email?token='.$newCode->code,
+                    'verificationLink' => config('app.url').'/api/students/verify-email?token='.$newCode->code,
                     'applicationName' => config('app.name'),
                     'expiresAt' => $newCode->expires_at,
                 ], function($m) use ($account) {
@@ -95,7 +95,7 @@ class AuthController extends Controller
 
         $token = JWTAuth::fromUser($account);
         
-        // Return user/company data along with token
+        // Return student/company data along with token
         if ($account instanceof Company) {
             return response()->json([
                 'token' => $token,
@@ -130,7 +130,7 @@ class AuthController extends Controller
                 return response()->json(new CompanyResource($company));
             }
 
-            // Default: authenticate as User
+            // Default: authenticate as Student
             $user = JWTAuth::setToken($bearer)->authenticate();
             return response()->json(new UserResource($user));
         } catch (\Exception $e) {

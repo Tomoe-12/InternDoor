@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\UserResource;
 use App\Models\PasswordResetToken;
 use App\Models\UploadedFile;
-use App\Models\User;
+use App\Models\Student;
 use App\Models\VerificationCode;
 use App\Models\Company;
 use App\Traits\GeneratesSecureCode;
@@ -42,7 +42,7 @@ class UsersController extends Controller
         }
 
         // Check if email already exists
-        $existingUser = User::where('email', $validated['email'])->first();
+        $existingUser = Student::where('email', $validated['email'])->first();
         if ($existingUser) {
             if ($existingUser->verified) {
                 // Email exists and IS verified
@@ -52,7 +52,7 @@ class UsersController extends Controller
                 ], 400);
             } else {
                 // Email exists but NOT verified
-                $latestCode = VerificationCode::where('user_id', $existingUser->id)
+                $latestCode = VerificationCode::where('student_id', $existingUser->id)
                     ->orderBy('created_at', 'desc')
                     ->first();
 
@@ -61,18 +61,18 @@ class UsersController extends Controller
                     return response()->json([
                         'message' => 'Account already exists. Verify your email first.',
                         'reason' => 'verification_pending',
-                        'verificationLink' => config('app.url').'/api/users/verify-email?token='.$latestCode->code,
+                        'verificationLink' => config('app.url').'/api/students/verify-email?token='.$latestCode->code,
                         'expiresAt' => $latestCode->expires_at,
                         'email' => $existingUser->email,
                     ], 400);
                 }
 
                 // Token expired or missing: delete old, issue new, send email, then reject
-                VerificationCode::where('user_id', $existingUser->id)->delete();
+                VerificationCode::where('student_id', $existingUser->id)->delete();
 
                 $newCodeStr = $this->generateSecureCode();
                 $newCode = VerificationCode::create([
-                    'user_id' => $existingUser->id,
+                    'student_id' => $existingUser->id,
                     'code' => $newCodeStr,
                     'email_sent' => false,
                     'expires_at' => now()->addHours(1),
@@ -80,7 +80,7 @@ class UsersController extends Controller
 
                 Mail::send('emails.welcome-email', [
                     'user' => $existingUser,
-                    'verificationLink' => config('app.url').'/api/users/verify-email?token='.$newCode->code,
+                    'verificationLink' => config('app.url').'/api/students/verify-email?token='.$newCode->code,
                     'applicationName' => config('app.name'),
                     'expiresAt' => $newCode->expires_at,
                 ], function($m) use ($existingUser) {
@@ -99,17 +99,17 @@ class UsersController extends Controller
         $fullName = isset($validated['fullName'])
             ? (trim($validated['fullName']) ?: null)
             : (trim(($validated['firstName'] ?? '').' '.($validated['lastName'] ?? '')) ?: null);
-        $user = User::create([
+        $user = Student::create([
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
             'full_name' => $fullName,
-            'role' => 'USER',
+            'role' => 'STUDENT',
             'verified' => false,
         ]);
 
         $verificationCode = $this->generateSecureCode();
         $code = VerificationCode::create([
-            'user_id' => $user->id,
+            'student_id' => $user->id,
             'code' => $verificationCode,
             'email_sent' => false,
             'expires_at' => now()->addHours(1),
@@ -118,7 +118,7 @@ class UsersController extends Controller
         // Send welcome email (via Mailpit in local)
         Mail::send('emails.welcome-email', [
             'user' => $user,
-            'verificationLink' => config('app.url').'/api/users/verify-email?token='.$code->code,
+            'verificationLink' => config('app.url').'/api/students/verify-email?token='.$code->code,
             'applicationName' => config('app.name'),
             'expiresAt' => $code->expires_at,
         ], function($m) use ($user) {
@@ -157,7 +157,7 @@ class UsersController extends Controller
         $validated = $request->validate([
             'email' => ['required','email']
         ]);
-        $user = User::where('email', $validated['email'])->first();
+        $user = Student::where('email', $validated['email'])->first();
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
         }
@@ -190,9 +190,24 @@ class UsersController extends Controller
         if (!$token) return response()->json(['message' => 'Password reset token not found'], 404);
         if ($token->isExpired()) return response()->json(['message' => 'Password reset token is expired'], 400);
 
-        $user = $token->user;
-        $user->password = Hash::make($validated['password']);
-        $user->save();
+        if ($token->student) {
+            $user = $token->student;
+            $user->password = Hash::make($validated['password']);
+            $user->save();
+        } elseif ($token->company) {
+            $company = $token->company;
+            $company->password = Hash::make($validated['password']);
+            $company->save();
+        } else {
+            // Legacy fallback
+            if ($token->user) {
+                $legacy = $token->user;
+                $legacy->password = Hash::make($validated['password']);
+                $legacy->save();
+            } else {
+                return response()->json(['message' => 'Invalid token owner'], 400);
+            }
+        }
         return response()->noContent();
     }
 
@@ -238,7 +253,7 @@ class UsersController extends Controller
         $file = $request->file('file');
 
         $ext = $file->getClientOriginalExtension();
-        $path = 'user:'.$user->id.'/profile-picture/'.Str::uuid().'.'.$ext;
+        $path = 'student:'.$user->id.'/profile-picture/'.Str::uuid().'.'.$ext;
 
         // If AWS configured, upload to S3; else store locally
         if (config('filesystems.disks.s3.key')) {
@@ -251,7 +266,7 @@ class UsersController extends Controller
 
         $user->profile_image_url = $url; $user->save();
         UploadedFile::create([
-            'user_id' => $user->id,
+            'student_id' => $user->id,
             'url' => $url,
             'size' => $file->getSize(),
             'original_file_name' => $file->getClientOriginalName(),
@@ -278,12 +293,12 @@ class UsersController extends Controller
         }
 
         // Delete old verification codes for this user
-        VerificationCode::where('user_id', $user->id)->delete();
+        VerificationCode::where('student_id', $user->id)->delete();
 
         // Create new verification code
         $verificationCode = $this->generateSecureCode();
         $code = VerificationCode::create([
-            'user_id' => $user->id,
+            'student_id' => $user->id,
             'code' => $verificationCode,
             'email_sent' => false,
             'expires_at' => now()->addHours(1),
@@ -292,7 +307,7 @@ class UsersController extends Controller
         // Send email
         Mail::send('emails.welcome-email', [
             'user' => $user,
-            'verificationLink' => config('app.url').'/api/users/verify-email?token='.$code->code,
+            'verificationLink' => config('app.url').'/api/students/verify-email?token='.$code->code,
             'applicationName' => config('app.name'),
             'expiresAt' => $code->expires_at,
         ], function($m) use ($user) {

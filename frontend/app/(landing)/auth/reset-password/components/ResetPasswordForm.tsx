@@ -33,7 +33,7 @@ export function ResetPasswordForm() {
 
   function onSubmit(data: Schema) {
     httpClient
-      .patch("/api/users/reset-password", data)
+      .patch("/api/students/reset-password", data)
       .then(() => {
         setSuccess(true);
       })
