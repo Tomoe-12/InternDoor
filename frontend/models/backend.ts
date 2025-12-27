@@ -428,11 +428,11 @@ export class RestApplicationClient {
     }
 
     /**
-     * HTTP GET /api/admin/users
+     * HTTP GET /api/admin/students
      * Java method: com.example.backend.admin.controller.AdminUsersController.admin_getUsers
      */
     admin_getUsers(queryParams?: { page?: number; }): RestResponse<PagedResponse<UserResponse>> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`api/admin/users`, queryParams: queryParams });
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/admin/students`, queryParams: queryParams });
     }
 
     /**
@@ -516,59 +516,59 @@ export class RestApplicationClient {
     }
 
     /**
-     * HTTP POST /api/users
+     * HTTP POST /api/students
      * Java method: com.example.backend.users.controller.UsersController.createUser
      */
     createUser(request: CreateUserRequest): RestResponse<UserResponse> {
-        return this.httpClient.request({ method: "POST", url: uriEncoding`api/users`, data: request });
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/students`, data: request });
     }
 
     /**
-     * HTTP POST /api/users/forgot-password
+     * HTTP POST /api/students/forgot-password
      * Java method: com.example.backend.users.controller.UsersController.forgotPassword
      */
     forgotPassword(req: ForgotPasswordRequest): RestResponse<void> {
-        return this.httpClient.request({ method: "POST", url: uriEncoding`api/users/forgot-password`, data: req });
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/students/forgot-password`, data: req });
     }
 
     /**
-     * HTTP PATCH /api/users/password
+     * HTTP PATCH /api/students/password
      * Java method: com.example.backend.users.controller.UsersController.updatePassword
      */
     updatePassword(requestDTO: UpdateUserPasswordRequest): RestResponse<UserResponse> {
-        return this.httpClient.request({ method: "PATCH", url: uriEncoding`api/users/password`, data: requestDTO });
+        return this.httpClient.request({ method: "PATCH", url: uriEncoding`api/students/password`, data: requestDTO });
     }
 
     /**
-     * HTTP PATCH /api/users/reset-password
+     * HTTP PATCH /api/students/reset-password
      * Java method: com.example.backend.users.controller.UsersController.resetPassword
      */
     resetPassword(requestDTO: UpdateUserPasswordRequest): RestResponse<void> {
-        return this.httpClient.request({ method: "PATCH", url: uriEncoding`api/users/reset-password`, data: requestDTO });
+        return this.httpClient.request({ method: "PATCH", url: uriEncoding`api/students/reset-password`, data: requestDTO });
     }
 
     /**
-     * HTTP GET /api/users/verify-email
+     * HTTP GET /api/students/verify-email
      * Java method: com.example.backend.users.controller.UsersController.verifyEmail
      */
     verifyEmail(queryParams: { token: string; }): RestResponse<RedirectView> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`api/users/verify-email`, queryParams: queryParams });
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/students/verify-email`, queryParams: queryParams });
     }
 
     /**
-     * HTTP PUT /api/users/{id}
+     * HTTP PUT /api/students/{id}
      * Java method: com.example.backend.users.controller.UsersController.updateUser
      */
     updateUser(id: string, request: UpdateUserRequest): RestResponse<UserResponse> {
-        return this.httpClient.request({ method: "PUT", url: uriEncoding`api/users/${id}`, data: request });
+        return this.httpClient.request({ method: "PUT", url: uriEncoding`api/students/${id}`, data: request });
     }
 
     /**
-     * HTTP PATCH /api/users/{id}/profile-picture
+     * HTTP PATCH /api/students/{id}/profile-picture
      * Java method: com.example.backend.users.controller.UsersController.updateProfilePicture
      */
     updateProfilePicture(id: number, queryParams: { file: MultipartFile; }): RestResponse<UserResponse> {
-        return this.httpClient.request({ method: "PATCH", url: uriEncoding`api/users/${id}/profile-picture`, queryParams: queryParams });
+        return this.httpClient.request({ method: "PATCH", url: uriEncoding`api/students/${id}/profile-picture`, queryParams: queryParams });
     }
 }
 

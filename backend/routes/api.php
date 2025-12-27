@@ -15,8 +15,8 @@ Route::prefix('auth')->group(function () {
     Route::get('/csrf', [AuthController::class, 'csrf']); // placeholder for compatibility
 });
 
-// Users
-Route::prefix('users')->group(function () {
+// Students (new preferred prefix)
+Route::prefix('students')->group(function () {
     Route::post('/', [UsersController::class, 'register']);
     Route::get('/verify-email', [UsersController::class, 'verifyEmail']);
     Route::post('/resend-verification-code', [UsersController::class, 'resendVerificationCode']);
@@ -30,9 +30,18 @@ Route::prefix('users')->group(function () {
     });
 });
 
+// Deprecation: redirect all /users* to /students* with 308
+Route::any('users', function(\Illuminate\Http\Request $request) {
+    return redirect('/api/students', 308);
+});
+Route::any('users/{any}', function(\Illuminate\Http\Request $request, $any) {
+    return redirect('/api/students/'.$any, 308);
+})->where('any', '.*');
+
 // Admin
 Route::prefix('admin')->middleware(['jwt.auth', 'can:admin-only'])->group(function () {
-    Route::get('/users', [AdminUsersController::class, 'index']);
+    Route::get('/users', [AdminUsersController::class, 'index']); // legacy
+    Route::get('/students', [AdminUsersController::class, 'index']); // preferred
 });
 
 // Notifications
@@ -49,6 +58,12 @@ Route::prefix('notifications')->group(function () {
 Route::prefix('companies')->group(function () {
     Route::post('/', [CompaniesController::class, 'store']);
     Route::patch('/profile', [CompaniesController::class, 'updateProfile']);
+    Route::post('/forgot-password', [CompaniesController::class, 'forgotPassword']);
+    Route::patch('/reset-password', [CompaniesController::class, 'resetPassword']);
+
+    Route::middleware('jwt.auth')->group(function () {
+        Route::patch('/password', [CompaniesController::class, 'updatePassword']);
+    });
 });
 
 // Debug: echo headers to verify Authorization is received (temporary)

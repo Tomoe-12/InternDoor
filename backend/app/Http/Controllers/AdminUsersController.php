@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
-use App\Models\User;
+use App\Models\Student;
 use Illuminate\Http\Request;
 
 class AdminUsersController extends Controller
@@ -13,7 +13,7 @@ class AdminUsersController extends Controller
         $page = (int) ($request->query('page', 0));
         // Laravel pages are 1-based; Spring sample used 0-based
         $pageNum = $page + 1;
-        $paginator = User::orderBy('id', 'asc')->paginate(10, ['*'], 'page', $pageNum);
+        $paginator = Student::orderBy('id', 'asc')->paginate(10, ['*'], 'page', $pageNum);
         return response()->json([
             'page' => $paginator->currentPage() - 1,
             'size' => $paginator->perPage(),

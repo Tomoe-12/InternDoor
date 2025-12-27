@@ -3,14 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
-use App\Models\User;
+use App\Models\Student;
 use App\Models\VerificationCode;
 use App\Http\Resources\CompanyResource;
 use App\Traits\GeneratesSecureCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Models\PasswordResetToken;
 
 class CompaniesController extends Controller
 {
@@ -29,7 +31,7 @@ class CompaniesController extends Controller
         ]);
 
         // Cross-table uniqueness: prevent using same email in users table
-        $userEmailExists = User::where('email', $validated['company_email'])->exists();
+        $userEmailExists = Student::where('email', $validated['company_email'])->exists();
         if ($userEmailExists) {
             return response()->json([
                 'message' => 'Email is already used by a user account',
@@ -57,7 +59,7 @@ class CompaniesController extends Controller
                     return response()->json([
                         'message' => 'Account already exists. Verify your email first.',
                         'reason' => 'verification_pending',
-                        'verificationLink' => config('app.url').'/api/users/verify-email?token='.$latestCode->code,
+                        'verificationLink' => config('app.url').'/api/students/verify-email?token='.$latestCode->code,
                         'expiresAt' => $latestCode->expires_at,
                         'email' => $existingCompany->company_email,
                     ], 400);
@@ -75,7 +77,7 @@ class CompaniesController extends Controller
                 ]);
 
                 Mail::raw(
-                    'Welcome! Please verify your company account by visiting: '.config('app.url').'/api/users/verify-email?token='.$newCode->code."\n\nThis link will expire in 1 hour.",
+                    'Welcome! Please verify your company account by visiting: '.config('app.url').'/api/students/verify-email?token='.$newCode->code."\n\nThis link will expire in 1 hour.",
                     function ($m) use ($existingCompany) {
                         $m->to($existingCompany->company_email)->subject('Verify your company account');
                     }
@@ -110,7 +112,7 @@ class CompaniesController extends Controller
 
         Mail::send('emails.welcome-email', [
             'company' => $company,
-            'verificationLink' => config('app.url').'/api/users/verify-email?token='.$code->code,
+            'verificationLink' => config('app.url').'/api/students/verify-email?token='.$code->code,
             'applicationName' => config('app.name'),
             'expiresAt' => $code->expires_at,
         ], function($m) use ($company) {
@@ -168,6 +170,103 @@ class CompaniesController extends Controller
 
         // Mark profile as complete after onboarding submission
         $company->profile_complete = true;
+        $company->save();
+
+        return response()->json(new CompanyResource($company));
+    }
+
+    /** Initiate password reset for a company by email */
+    public function forgotPassword(Request $request)
+    {
+        $validated = $request->validate([
+            'email' => ['required','email']
+        ]);
+
+        $company = Company::where('company_email', $validated['email'])->first();
+        if (!$company) {
+            return response()->json(['message' => 'Company not found'], 404);
+        }
+
+        $token = PasswordResetToken::create([
+            'company_id' => $company->id,
+            'token' => (string) random_int(100000, 999999),
+            'email_sent' => false,
+        ]);
+
+        Mail::send('emails.password-reset', [
+            'company' => $company,
+            'link' => env('APP_URL', config('app.url')).'/auth/reset-password?token='.$token->token,
+        ], function($m) use ($company) {
+            $m->to($company->company_email)->subject('Password reset requested');
+        });
+        $token->email_sent = true; $token->expires_at = now()->addMinutes(10); $token->save();
+
+        return response()->noContent();
+    }
+
+    /** Reset a company's password using a reset token */
+    public function resetPassword(Request $request)
+    {
+        $validated = $request->validate([
+            'password' => ['required','min:8','regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/'],
+            'confirmPassword' => ['same:password'],
+            'passwordResetToken' => ['required']
+        ]);
+
+        $token = PasswordResetToken::where('token', $validated['passwordResetToken'])->first();
+        if (!$token) return response()->json(['message' => 'Password reset token not found'], 404);
+        if ($token->isExpired()) return response()->json(['message' => 'Password reset token is expired'], 400);
+
+        if ($token->company) {
+            $company = $token->company;
+            $company->password = Hash::make($validated['password']);
+            $company->save();
+        } elseif ($token->student) {
+            // Allow token to be used by student too if misrouted; no-op here
+            return response()->json(['message' => 'Token is not for a company account'], 400);
+        } else {
+            return response()->json(['message' => 'Invalid token owner'], 400);
+        }
+
+        return response()->noContent();
+    }
+
+    /** Update password for authenticated company */
+    public function updatePassword(Request $request)
+    {
+        $validated = $request->validate([
+            'oldPassword' => ['nullable','string'],
+            'password' => ['required','min:8','regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/'],
+            'confirmPassword' => ['same:password']
+        ]);
+
+        $bearer = $request->bearerToken();
+        if (!$bearer) {
+            return response()->json(['error' => 'Unauthorized', 'message' => 'Missing bearer token'], 401);
+        }
+
+        try {
+            $payload = JWTAuth::setToken($bearer)->getPayload();
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Unauthorized', 'message' => 'Invalid token'], 401);
+        }
+
+        $type = $payload->get('type');
+        $subjectId = $payload->get('sub');
+        if ($type !== 'company') {
+            return response()->json(['error' => 'Forbidden', 'message' => 'Only companies can update this password'], 403);
+        }
+
+        $company = Company::find($subjectId);
+        if (!$company) {
+            return response()->json(['error' => 'Unauthorized', 'message' => 'Company not found'], 401);
+        }
+
+        if ($company->password && (!Hash::check($validated['oldPassword'] ?? '', $company->password))) {
+            return response()->json(['message' => 'Wrong password'], 400);
+        }
+
+        $company->password = Hash::make($validated['password']);
         $company->save();
 
         return response()->json(new CompanyResource($company));

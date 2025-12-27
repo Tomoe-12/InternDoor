@@ -15,7 +15,7 @@ Route::get('/test-email', function () {
     
     return view('emails.welcome-email', [
         'user' => $user,
-        'verificationLink' => 'http://localhost:8000/api/users/verify-email?token=123456',
+        'verificationLink' => 'http://localhost:8000/api/students/verify-email?token=123456',
         'applicationName' => config('app.name')
     ]);
 });

@@ -7,8 +7,8 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class Company extends Authenticatable implements JWTSubject
 {
-    // Migration used singular table name 'company'
-    protected $table = 'company';
+    // Use pluralized table after rename
+    protected $table = 'companies';
 
     protected $fillable = [
         'company_name',

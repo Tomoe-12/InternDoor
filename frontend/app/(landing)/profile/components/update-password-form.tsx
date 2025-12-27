@@ -48,7 +48,7 @@ export default function UpdatePasswordForm() {
 
     try {
       setIsSubmitting(true);
-      await httpClient.patch("/api/users/password", result.data);
+      await httpClient.patch("/api/students/password", result.data);
       toast.success("Password updated successfully");
       mutate();
       setFormState({ oldPassword: "", password: "", confirmPassword: "" });

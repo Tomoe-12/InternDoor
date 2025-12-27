@@ -11,7 +11,6 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // Call the backend API to verify the email
     const backendUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:8000";
     const response = await fetch(
       `${backendUrl}/api/students/verify-email?token=${token}`,
@@ -21,12 +20,10 @@ export async function GET(request: NextRequest) {
     );
 
     if (response.ok) {
-      // Redirect to login page with success message
       return NextResponse.redirect(
         new URL("/auth/login?verified=true", request.url)
       );
     } else {
-      // Redirect to login page with error
       return NextResponse.redirect(
         new URL("/auth/login?error=Verification failed", request.url)
       );
