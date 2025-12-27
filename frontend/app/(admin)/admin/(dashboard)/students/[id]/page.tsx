@@ -9,16 +9,17 @@ import { ArrowLeft, Edit, Save, X, UserCog, GraduationCap, BriefcaseIcon, Shield
 import Link from "next/link"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { StudentApplications } from "@/components/Admin/student-applications"
-import { useState } from "react"
+import { use, useState } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Badge } from "@/components/ui/badge"
 
-export default function UserProfilePage({ params }: { params: { id: string } }) {
+export default function UserProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const [isEditingProfile, setIsEditingProfile] = useState(false)
   const [isEditingAcademic, setIsEditingAcademic] = useState(false)
 
-  const user = users.find((u) => u.id === params.id!) || users[0]
+  const resolvedParams = use(params)
+  const user = users.find((u) => u.id === resolvedParams.id) || users[0]
 
   const handleExportGPA = () => {
     const csvContent = [
@@ -377,7 +378,7 @@ export default function UserProfilePage({ params }: { params: { id: string } }) 
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <StudentApplications userId={params.id} />
+              <StudentApplications userId={resolvedParams.id} />
             </CardContent>
           </Card>
         </TabsContent>
