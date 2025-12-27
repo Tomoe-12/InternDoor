@@ -356,7 +356,7 @@ export function UserRegisterForm() {
         <div className="flex items-center lg:items-start justify-center h-full p-6 lg:p-12 bg-background">
           <div className="w-full max-w-md space-y-6 ">
             {/* Mobile Logo */}
-            <div className="lg:hidden text-center mb-8">
+            <div className="lg:hidden text-center mb-6">
               <Link href="/" className="inline-flex items-center gap-2 text-2xl font-bold text-primary">
                 <DoorOpen className="h-7 w-7" />
                 InternDoor
