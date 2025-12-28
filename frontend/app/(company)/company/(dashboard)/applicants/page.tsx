@@ -7,8 +7,14 @@ import { Input } from "@/components/ui/input"
 import { Search, Filter, MoreVertical, Mail, GraduationCap, Calendar, ChevronRight, Briefcase } from "lucide-react"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Suspense } from "react"
+import { useRouter } from "next/navigation"
 
 export default function ApplicantsPage() {
+  const router = useRouter()
+
+  const handleClick = () => {
+    router.push('/company/applicants/1')
+  }
   return (
     <Suspense fallback={null}>
       <div className="flex flex-col gap-6 pb-8">
@@ -118,7 +124,7 @@ export default function ApplicantsPage() {
                     <Button variant="outline" size="icon">
                       <Mail className="h-4 w-4" />
                     </Button>
-                    <Button variant="outline" className="gap-2 bg-transparent">
+                    <Button onClick={()=>handleClick()} variant="outline" className="gap-2 bg-transparent">
                       View Profile <ChevronRight className="h-4 w-4" />
                     </Button>
                     <Button variant="ghost" size="icon">

@@ -1,26 +1,22 @@
 import type React from "react"
-import type { Metadata } from "next"
-import { Inter } from "next/font/google"
-import { SidebarProvider } from "@/components/Admin/sidebar-provider"
+import { Sidebar } from "@/components/company/sidebar"
+import { Header } from "@/components/Admin/header"
+import { SidebarProvider } from "@/components/sidebar-provider"
 
-const inter = Inter({ subsets: ["latin"] })
-
-export const metadata: Metadata = {
-  title: "InternDoor Admin Dashboard",
-  description: "Admin dashboard for InternDoor - connecting students with companies",
-    generator: 'v0.app'
-}
-
-export default function RootLayout({
+export default function DashboardLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode
-}>) {
+}) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <SidebarProvider>{children}</SidebarProvider>
-      </body>
-    </html>
+    <SidebarProvider>
+      <div className="min-h-screen bg-background">
+        <Sidebar />
+        <div className="lg:pl-72">
+          <Header />
+          <main className="p-4 md:p-6 lg:p-8">{children}</main>
+        </div>
+      </div>
+    </SidebarProvider>
   )
 }

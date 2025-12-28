@@ -23,15 +23,15 @@ export default function UsersPage() {
   const [universityFilter, setUniversityFilter] = useState<string>("all")
   const itemsPerPage = 10
 
-  const filteredUsers = users.filter((user) => {
+  const filteredUsers = students.filter((student) => {
     const matchesSearch =
-      user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.surname.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.university.toLowerCase().includes(searchQuery.toLowerCase())
+      student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      student.surname.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      student.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      student.university.toLowerCase().includes(searchQuery.toLowerCase())
 
-    const matchesStatus = statusFilter === "all" || user.status === statusFilter
-    const matchesUniversity = universityFilter === "all" || user.university === universityFilter
+    const matchesStatus = statusFilter === "all" || student.status === statusFilter
+    const matchesUniversity = universityFilter === "all" || student.university === universityFilter
 
     return matchesSearch && matchesStatus && matchesUniversity
   })
@@ -56,7 +56,7 @@ export default function UsersPage() {
     a.click()
   }
 
-  const universities = Array.from(new Set(users.map((u) => u.university)))
+  const universities = Array.from(new Set(students.map((u) => u.university)))
 
   return (
     <div className="flex flex-col gap-4">
@@ -152,30 +152,30 @@ export default function UsersPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {paginatedUsers.map((user) => (
-                  <TableRow key={user.id}>
+                {paginatedUsers.map((student) => (
+                  <TableRow key={student.id}>
                     <TableCell className="font-medium">
-                      {user.name} {user.surname}
+                      {student.name} {student.surname}
                     </TableCell>
-                    <TableCell>{user.email}</TableCell>
-                    <TableCell>{user.university}</TableCell>
-                    <TableCell>{user.phone}</TableCell>
+                    <TableCell>{student.email}</TableCell>
+                    <TableCell>{student.university}</TableCell>
+                    <TableCell>{student.phone}</TableCell>
                     <TableCell>
                       <div
                         className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-                          user.status === "Active"
+                          student.status === "Active"
                             ? "bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-300"
                             : "bg-yellow-50 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-300"
                         }`}
                       >
-                        {user.status}
+                        {student.status}
                       </div>
                     </TableCell>
                     <TableCell className="text-right">
                       <Button variant="ghost" size="icon" asChild>
-                        <Link href={`/admin/students/${user.id}`}>
+                        <Link href={`/admin/students/${student.id}`}>
                           <UserCog className="h-4 w-4" />
-                          <span className="sr-only">View user</span>
+                          <span className="sr-only">View student</span>
                         </Link>
                       </Button>
                     </TableCell>
@@ -221,7 +221,7 @@ export default function UsersPage() {
   )
 }
 
-const users = [
+const students = [
   {
     id: "1",
     name: "Sarah",

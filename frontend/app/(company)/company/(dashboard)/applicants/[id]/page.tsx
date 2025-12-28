@@ -1,19 +1,7 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ArrowLeft, Edit, Save, X, UserCog, GraduationCap, BriefcaseIcon, Shield, Download } from "lucide-react"
-import Link from "next/link"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { StudentApplications } from "@/components/Admin/student-applications"
-import { use, useState } from "react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { Badge } from "@/components/ui/badge"
 import StudentDetails from "@/components/studentDetails"
+import { use, useState } from "react"
 
 export default function UserProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const [isEditingProfile, setIsEditingProfile] = useState(false)
@@ -23,7 +11,7 @@ export default function UserProfilePage({ params }: { params: Promise<{ id: stri
   const student = students.find((u) => u.id === resolvedParams.id) || students[0]
 
   return (
-    <StudentDetails student={student!} id={resolvedParams.id}  />
+    <StudentDetails student={student!} id={resolvedParams.id} />
   )
 }
 
