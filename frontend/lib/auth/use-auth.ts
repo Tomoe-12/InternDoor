@@ -86,7 +86,10 @@ export const useAuthGuard = ({
       localStorage.removeItem('auth_token')
     }
 
-    window.location.pathname = "/auth/login";
+    // Redirect with a flag to display a logout success toast on the login page
+    if (typeof window !== 'undefined') {
+      window.location.href = "/auth/login?logout=success";
+    }
   };
 
   useEffect(() => {
