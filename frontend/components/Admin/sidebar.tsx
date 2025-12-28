@@ -141,7 +141,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useSidebar } from "./sidebar-provider"
+import { useSidebar } from "../sidebar-provider"
 import { cn } from "@/lib/utils"
 import { LayoutDashboard, Users, Building2, BarChart3, Settings, HelpCircle, LogOut, Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"

@@ -1,7 +1,7 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 
-export function StudentApplications({ userId }: { userId: string }) {
+export function StudentApplications({ studentId }: { studentId: string }) {
   return (
     <div className="rounded-md border">
       <Table>

@@ -1,6 +1,6 @@
 "use client"
 
-import { useSidebar } from "@/components/Admin/sidebar-provider"
+import { useSidebar } from "@/components/sidebar-provider"
 import { Bell, Search, User, Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"

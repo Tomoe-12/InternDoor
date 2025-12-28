@@ -1,7 +1,7 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
-import { SidebarProvider } from "@/components/Admin/sidebar-provider"
+// Note: Sidebar is mounted in the (dashboard) nested layout.
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -17,10 +17,6 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <SidebarProvider>{children}</SidebarProvider>
-      </body>
-    </html>
+    <div className={inter.className}>{children}</div>
   )
 }
