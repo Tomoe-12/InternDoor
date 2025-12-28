@@ -1,235 +1,23 @@
-// "use client"
-
-// import type React from "react"
-
-// import { useState } from "react"
-// import { Button } from "@/components/ui/button"
-// import { Input } from "@/components/ui/input"
-// import { Label } from "@/components/ui/label"
-// import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-// import { Building2, GraduationCap, Eye, EyeOff } from "lucide-react"
-// import { cn } from "@/lib/utils"
-// import { FcGoogle } from "react-icons/fc";
-
-// type UserRole = "company" | "student"
-
-// interface RoleOption {
-//   id: UserRole
-//   label: string
-//   icon: React.ReactNode
-//   description: string
-// }
-
-// const roles: RoleOption[] = [
-//   {
-//     id: "student",
-//     label: "Student",
-//     icon: <GraduationCap className="h-5 w-5" />,
-//     description: "Find internship opportunities",
-//   },
-//   {
-//     id: "company",
-//     label: "Company",
-//     icon: <Building2 className="h-5 w-5" />,
-//     description: "Post internships & find talent",
-//   },
-// ]
-
-// export function LoginForm() {
-//   const [selectedRole, setSelectedRole] = useState<UserRole>("student")
-//   const [email, setEmail] = useState("")
-//   const [password, setPassword] = useState("")
-//   const [showPassword, setShowPassword] = useState(false)
-//   const [isLoading, setIsLoading] = useState(false)
-//   const [isOAuthLoading, setIsOAuthLoading] = useState<"google" | "github" | null>(null)
-
-//   const handleSubmit = async (e: React.FormEvent) => {
-//     e.preventDefault()
-//     setIsLoading(true)
-
-//     // TODO: Implement actual authentication logic
-//     console.log("Login attempt:", { email, password, role: selectedRole })
-
-//     // Simulate API call
-//     await new Promise((resolve) => setTimeout(resolve, 1500))
-//     setIsLoading(false)
-//   }
-
-//   const handleOAuthLogin = async (provider: "google" | "github") => {
-//     setIsOAuthLoading(provider)
-
-//     // TODO: Implement actual OAuth logic
-//     console.log("OAuth login attempt:", { provider, role: selectedRole })
-
-//     // Simulate API call
-//     await new Promise((resolve) => setTimeout(resolve, 1500))
-//     setIsOAuthLoading(null)
-//   }
-
-//   return (
-//     <Card className="w-full max-w-md shadow-lg">
-//       <CardHeader className="text-center space-y-1">
-//         <CardTitle className="text-2xl font-bold text-balance">Welcome Back</CardTitle>
-//         <CardDescription className="text-pretty">Sign in to your InternDoor account</CardDescription>
-//       </CardHeader>
-//       <CardContent className="space-y-6">
-//         {/* Role Selection */}
-//         <div className="space-y-3">
-//           <Label className="text-sm font-medium">I am a</Label>
-//           <div className="grid grid-cols-2 gap-2">
-//             {roles.map((role) => (
-//               <button
-//                 key={role.id}
-//                 type="button"
-//                 onClick={() => setSelectedRole(role.id)}
-//                 className={cn(
-//                   "flex flex-col items-center gap-1.5 rounded-lg border-2 p-3 transition-all hover:border-primary/50",
-//                   selectedRole === role.id ? "border-primary bg-primary/5" : "border-border bg-background",
-//                 )}
-//               >
-//                 <div
-//                   className={cn(
-//                     "rounded-full p-2 transition-colors",
-//                     selectedRole === role.id ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground",
-//                   )}
-//                 >
-//                   {role.icon}
-//                 </div>
-//                 <span
-//                   className={cn(
-//                     "text-xs font-medium",
-//                     selectedRole === role.id ? "text-primary" : "text-muted-foreground",
-//                   )}
-//                 >
-//                   {role.label}
-//                 </span>
-//               </button>
-//             ))}
-//           </div>
-//         </div>
-
-//         <form onSubmit={handleSubmit} className="space-y-4">
-//           <div className="space-y-2">
-//             <Label htmlFor="email">Email</Label>
-//             <Input
-//               id="email"
-//               type="email"
-//               placeholder="you@example.com"
-//               value={email}
-//               onChange={(e) => setEmail(e.target.value)}
-//               required
-//               disabled={isLoading || isOAuthLoading !== null}
-//             />
-//           </div>
-
-//           <div className="space-y-2">
-//             <div className="flex items-center justify-between">
-//               <Label htmlFor="password">Password</Label>
-//               <a href="#" className="text-xs text-muted-foreground hover:text-primary transition-colors">
-//                 Forgot password?
-//               </a>
-//             </div>
-//             <div className="relative">
-//               <Input
-//                 id="password"
-//                 type={showPassword ? "text" : "password"}
-//                 placeholder="Enter your password"
-//                 value={password}
-//                 onChange={(e) => setPassword(e.target.value)}
-//                 required
-//                 disabled={isLoading || isOAuthLoading !== null}
-//                 className="pr-10"
-//               />
-//               <button
-//                 type="button"
-//                 onClick={() => setShowPassword(!showPassword)}
-//                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-//               >
-//                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-//                 <span className="sr-only">{showPassword ? "Hide password" : "Show password"}</span>
-//               </button>
-//             </div>
-//           </div>
-
-//           <Button type="submit" className="w-full" disabled={isLoading || isOAuthLoading !== null}>
-//             {isLoading ? "Signing in..." : "Sign In"}
-//           </Button>
-//         </form>
-
-//         <div className="space-y-3">
-//           <div className="relative">
-//             <div className="absolute inset-0 flex items-center">
-//               <span className="w-full border-t" />
-//             </div>
-//             <div className="relative flex justify-center text-xs uppercase">
-//               <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
-//             </div>
-//           </div>
-
-//           <div className="grid grid-cols-2 gap-3">
-//             <Button
-//               variant="outline"
-//               type="button"
-//               disabled={isOAuthLoading !== null || isLoading}
-//               onClick={() => handleOAuthLogin("google")}
-//               className="gap-2"
-//             >
-//               {isOAuthLoading === "google" ? (
-//                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-//               ) : (
-//                 <FcGoogle className="h-4 w-4" />
-//               )}
-//               Google
-//             </Button>
-//             <Button
-//               variant="outline"
-//               type="button"
-//               disabled={isOAuthLoading !== null || isLoading}
-//               onClick={() => handleOAuthLogin("github")}
-//               className="gap-2"
-//             >
-//               {isOAuthLoading === "github" ? (
-//                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-//               ) : (
-//                 <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
-//                   <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-//                 </svg>
-//               )}
-//               GitHub
-//             </Button>
-//           </div>
-//         </div>
-
-//         {/* Sign Up Link */}
-//         <div className="text-center text-sm text-muted-foreground">
-//           Don&apos;t have an account?{" "}
-//           <a href="#" className="font-medium text-primary hover:underline">
-//             Sign up
-//           </a>
-//         </div>
-//       </CardContent>
-//     </Card>
-//   )
-// }
-
-// // Default export required by Next.js app router pages
-// export default function LoginPage() {
-//   return (
-//     <div className="flex items-center justify-center h-full p-4">
-//       <LoginForm />
-//     </div>
-//   )
-// }
-
 "use client";
 
 import type React from "react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Building2, GraduationCap, Eye, EyeOff, DoorOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { FcGoogle } from "react-icons/fc";
@@ -238,9 +26,10 @@ import ModeToggle from "@/components/ModeToggle";
 import { useAuthGuard } from "@/lib/auth/use-auth";
 import { HttpErrorResponse } from "@/models/http/HttpErrorResponse";
 import { Role } from "@/models/user/UserResponse";
-import httpClient from "@/lib/httpClient";
+import { loginSchema } from "@/types/login-schema";
 
 type UserRole = "company" | "student";
+type LoginFormValues = z.infer<typeof loginSchema>;
 
 interface RoleOption {
   id: UserRole;
@@ -268,10 +57,7 @@ export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [selectedRole, setSelectedRole] = useState<UserRole>("student");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [isOAuthLoading, setIsOAuthLoading] = useState<
     "google" | "github" | null
   >(null);
@@ -284,24 +70,34 @@ export function LoginForm() {
     },
   });
 
+  const form = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const isSubmitting = form.formState.isSubmitting;
+
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
   // Check for verification success or error
   useEffect(() => {
     const verified = searchParams.get("verified");
     const error = searchParams.get("error");
+    const logout = searchParams.get("logout");
 
     if (verified === "true") {
       toast.success("Email verified successfully! You can now log in.");
     } else if (error) {
       toast.error(error);
+    } else if (logout === "success") {
+      toast.success("You have been logged out.");
     }
   }, [searchParams]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
+  const onSubmit = async (values: LoginFormValues) => {
     try {
       const userData = await login({
         onError: (errors) => {
@@ -309,12 +105,11 @@ export function LoginForm() {
             (errors as any)?.message || (errors as any)?.generalErrors?.[0];
           if (errorMessage) toast.error(errorMessage);
         },
-        props: { email: email.trim(), password },
+        props: { email: values.email.trim(), password: values.password },
       });
-      
+
       toast.success("Login successful! Redirecting...");
 
-      
       // Redirect based on user role
       if (userData) {
         const role = userData.role;
@@ -322,7 +117,9 @@ export function LoginForm() {
           router.push("/admin");
         } else if (role === Role.COMPANY) {
           const needsSetup = userData.profileComplete === false;
-          router.push(needsSetup ? "/company/onboarding" : "/company/dashboard");
+          router.push(
+            needsSetup ? "/company/onboarding" : "/company/dashboard"
+          );
         } else {
           router.push("/profile");
         }
@@ -341,18 +138,21 @@ export function LoginForm() {
             "Your verification code was expired. We sent a new verification email."
           );
         } else {
-          toast.error(data?.message ?? "Login blocked. Please verify your email.");
+          toast.error(
+            data?.message ?? "Login blocked. Please verify your email."
+          );
         }
         return;
       }
 
       const serverError = data as HttpErrorResponse | undefined;
       const errorMessage =
-        serverError?.message || serverError?.generalErrors?.[0] ||
+        serverError?.message ||
+        serverError?.generalErrors?.[0] ||
         "Login failed. Please try again.";
       toast.error(errorMessage);
     } finally {
-      setIsLoading(false);
+      // react-hook-form manages isSubmitting; no manual state needed here
     }
   };
 
@@ -487,120 +287,143 @@ export function LoginForm() {
               </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-medium">
-                  Email address
-                </Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  disabled={isLoading || isOAuthLoading !== null}
-                  className="h-11"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="password" className="text-sm font-medium">
-                    Password
-                  </Label>
-                  <Link
-                    href="/auth/forgot-password"
-                    className="text-xs text-primary hover:text-primary/80 transition-colors font-medium"
-                  >
-                    Forgot password?
-                  </Link>
-                </div>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    disabled={isLoading || isOAuthLoading !== null}
-                    className="pr-10 h-11"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
-                    <span className="sr-only">
-                      {showPassword ? "Hide password" : "Show password"}
-                    </span>
-                  </button>
-                </div>
-              </div>
-
-              <Button
-                type="submit"
-                className="w-full h-11 font-medium"
-                disabled={isLoading || isOAuthLoading !== null}
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-4"
               >
-                {isLoading ? "Signing in..." : "Sign in"}
-              </Button>
-            </form>
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium">
+                        Email address
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="email"
+                          placeholder="you@example.com"
+                          autoComplete="email"
+                          disabled={isSubmitting || isOAuthLoading !== null}
+                          className="h-11"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="flex items-center justify-between">
+                        <FormLabel className="text-sm font-medium">
+                          Password
+                        </FormLabel>
+                        <Link
+                          href="/auth/forgot-password"
+                          className="text-xs text-primary hover:text-primary/80 transition-colors font-medium"
+                        >
+                          Forgot password?
+                        </Link>
+                      </div>
+                      <FormControl>
+                        <div className="relative">
+                          <Input
+                            type={showPassword ? "text" : "password"}
+                            placeholder="Enter your password"
+                            autoComplete="current-password"
+                            disabled={isSubmitting || isOAuthLoading !== null}
+                            className="pr-10 h-11"
+                            {...field}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                          >
+                            {showPassword ? (
+                              <EyeOff className="h-4 w-4" />
+                            ) : (
+                              <Eye className="h-4 w-4" />
+                            )}
+                            <span className="sr-only">
+                              {showPassword ? "Hide password" : "Show password"}
+                            </span>
+                          </button>
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <Button
+                  type="submit"
+                  className="w-full h-11 font-medium"
+                  disabled={isSubmitting || isOAuthLoading !== null}
+                >
+                  {isSubmitting ? "Signing in..." : "Sign in"}
+                </Button>
+              </form>
+            </Form>
 
             <div className="space-y-4">
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-border" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-3 text-muted-foreground font-medium">
-                    Or continue with
-                  </span>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <Button
-                  variant="outline"
-                  type="button"
-                  disabled={isOAuthLoading !== null || isLoading}
-                  onClick={() => handleOAuthLogin("google")}
-                  className="gap-2 h-11"
-                >
-                  {isOAuthLoading === "google" ? (
-                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                  ) : (
-                    <FcGoogle className="h-4 w-4" />
-                  )}
-                  Google
-                </Button>
-                <Button
-                  variant="outline"
-                  type="button"
-                  disabled={isOAuthLoading !== null || isLoading}
-                  onClick={() => handleOAuthLogin("github")}
-                  className="gap-2 h-11"
-                >
-                  {isOAuthLoading === "github" ? (
-                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                  ) : (
-                    <svg
-                      className="h-4 w-4"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
+              {selectedRole === "company" && (
+                <>
+                  <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                      <span className="w-full border-t border-border" />
+                    </div>
+                    <div className="relative flex justify-center text-xs uppercase">
+                      <span className="bg-background px-3 text-muted-foreground font-medium">
+                        Or continue with
+                      </span>
+                    </div>
+                  </div>
+                  {/* <div className="grid grid-cols-2 gap-3"> */}
+                    <div className="grid grid-cols-1 gap-3">
+                    <Button
+                      variant="outline"
+                      type="button"
+                      disabled={isOAuthLoading !== null || isSubmitting}
+                      onClick={() => handleOAuthLogin("google")}
+                      className="gap-2 h-11"
                     >
-                      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                    </svg>
-                  )}
-                  GitHub
-                </Button>
-              </div>
+                      {isOAuthLoading === "google" ? (
+                        <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                      ) : (
+                        <FcGoogle className="h-4 w-4" />
+                      )}
+                      Google
+                    </Button>
+                    {/* <Button
+                      variant="outline"
+                      type="button"
+                      disabled={isOAuthLoading !== null || isLoading}
+                      onClick={() => handleOAuthLogin("github")}
+                      className="gap-2 h-11"
+                    >
+                      {isOAuthLoading === "github" ? (
+                        <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                      ) : (
+                        <svg
+                          className="h-4 w-4"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                        >
+                          <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                        </svg>
+                      )}
+                      GitHub
+                    </Button> */}
+                  </div>
+                </>
+              )}
             </div>
 
             <div className="text-center text-sm text-muted-foreground">

@@ -12,8 +12,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useAuthGuard } from "@/lib/auth/use-auth"
 
 export function Header() {
+  const {  logout } = useAuthGuard({ middleware: "auth" });
   const { toggle } = useSidebar()
 
   return (
@@ -55,7 +57,7 @@ export function Header() {
             <DropdownMenuItem>Profile</DropdownMenuItem>
             <DropdownMenuItem>Settings</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+            <DropdownMenuItem onClick={()=>logout()}>Logout</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
