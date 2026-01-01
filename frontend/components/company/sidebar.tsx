@@ -14,6 +14,7 @@ import {
   Menu,
   UserCircle,
   Shield,
+  GraduationCap,
   MessageSquare,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -129,6 +130,7 @@ export function Sidebar() {
 const navItems = [
   { name: "Dashboard", href: "/company/dashboard", icon: LayoutDashboard },
   { name: "Job Postings", href: "/company/jobs", icon: Building2, badge: "3" },
+   { name: "Universities", href: "/universities", icon: GraduationCap },
   { name: "Applicants", href: "/company/applicants", icon: Users, badge: "12" },
 ]
 
