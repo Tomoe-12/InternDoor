@@ -7,11 +7,15 @@ import { ArrowLeft, School, MapPin, Users, Globe, Mail, Phone, ExternalLink } fr
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { useRouter } from "next/navigation"
+import { use } from "react"
 
-export default function UniversityDetailPage({ params }: { params: { id: string } }) {
+export default function UniversityDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const {id} = use(params)
+  const router = useRouter()
   // Mock data fetching based on ID
   const uni = {
-    id: params.id,
+    id: id,
     name: "Massachusetts Institute of Technology",
     location: "Cambridge, MA",
     studentsCount: 11520,
@@ -60,9 +64,12 @@ export default function UniversityDetailPage({ params }: { params: { id: string 
     <div className="flex flex-col gap-8 pb-8">
       <div className="flex items-start gap-4">
         <Button variant="ghost" size="icon" asChild className="mt-1">
-          <Link href="/universities">
+          {/* <Link href="universities">
             <ArrowLeft className="h-5 w-5" />
-          </Link>
+          </Link> */}
+          <Button variant="ghost" size="icon" onClick={() => router.back()}>
+                    <ArrowLeft className="h-5 w-5" />
+                  </Button>
         </Button>
         <div className="flex-1">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -127,7 +134,7 @@ export default function UniversityDetailPage({ params }: { params: { id: string 
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Enrolled Students</CardTitle>
               <Button variant="ghost" size="sm" asChild>
-                <Link href={`/universities/${params.id}/students`} className="flex items-center gap-1">
+                <Link href={`${id}/students`} className="flex items-center gap-1">
                   View all students <ExternalLink className="h-3 w-3" />
                 </Link>
               </Button>

@@ -116,7 +116,7 @@ function UniversitiesContent() {
         className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" : "flex flex-col gap-4"}
       >
         {filteredUnis.map((uni) => (
-          <Link key={uni.id} href={`/universities/${uni.id}`}>
+          <Link key={uni.id} href={`universities/${uni.id}`}>
             <Card className="hover:border-primary/50 transition-colors cursor-pointer group h-full">
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">

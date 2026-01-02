@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useRouter } from "next/navigation"
 import { use } from "react"
 
-export default function UniversityStudentProfilePage({ params }: { params: { id: string; studentId: string } }) {
+export default function UniversityStudentProfilePage({ params }: { params: Promise<{ id: string; studentId: string }> }) {
   const {id, studentId} = use(params)
   const router = useRouter()
   
@@ -23,7 +23,7 @@ export default function UniversityStudentProfilePage({ params }: { params: { id:
     email: "sarah.j@mit.edu",
     phone: "+1 (555) 123-4567",
     location: "Cambridge, MA",
-    universityId: params.id,
+    universityId: id,
     universityName: "Massachusetts Institute of Technology",
     major: "Computer Science",
     year: "Junior",

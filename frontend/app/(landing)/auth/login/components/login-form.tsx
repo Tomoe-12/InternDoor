@@ -22,7 +22,7 @@ import { Building2, GraduationCap, Eye, EyeOff, DoorOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { FcGoogle } from "react-icons/fc";
 import { toast } from "sonner";
-import ModeToggle from "@/components/ModeToggle";
+import { ModeToggle } from "@/components";
 import { useAuthGuard } from "@/lib/auth/use-auth";
 import { HttpErrorResponse } from "@/models/http/HttpErrorResponse";
 import { Role } from "@/models/user/UserResponse";

@@ -6,8 +6,7 @@ import UpdatePasswordForm from "./components/update-password-form";
 import { useAuthGuard } from "@/lib/auth/use-auth";
 import { FaFacebook, FaGithub, FaGoogle } from "react-icons/fa";
 import { format } from "date-fns";
-import Loading from "@/components/loading";
-import Container from "@/components/Container";
+import { Loading, Container } from "@/components";
 import UpdateProfileImageForm from "./components/update-profile-image-form";
 import { cn } from "@/lib/utils";
 

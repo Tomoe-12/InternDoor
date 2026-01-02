@@ -1,7 +1,6 @@
 "use client";
 
-import ErrorFeedback from "@/components/error-feedback";
-import SuccessFeedback from "@/components/success-feedback";
+import { ErrorFeedback, SuccessFeedback } from "@/components";
 import httpClient from "@/lib/httpClient";
 import { HttpErrorResponse } from "@/models/http/HttpErrorResponse";
 import { Button, TextInput } from "@mantine/core";

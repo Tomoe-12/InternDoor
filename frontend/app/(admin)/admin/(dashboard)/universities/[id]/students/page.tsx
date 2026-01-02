@@ -121,7 +121,7 @@ function StudentsContent({ params }: { params: Promise<{ id: string }> }) {
   )
 }
 
-export default function UniversityStudentsPage({ params }: { params: { id: string } }) {
+export default function UniversityStudentsPage({ params }: { params: Promise<{ id: string; studentId: string }> }) {
   return (
     <Suspense fallback={null}>
       <StudentsContent params={params} />
