@@ -17,9 +17,6 @@ export { default as SuccessFeedback } from "./common/success-feedback"
 // Admin Components
 export * from "./Admin"
 
-// UI Components
-export * from "./ui"
-
 // Navigation
 export { default as Navbar } from "./navbar"
 export { default as UserNav } from "./user-nav"
@@ -27,6 +24,6 @@ export { default as ModeToggle } from "./ModeToggle"
 
 // Other
 export { default as FileUpload } from "./FileUpload"
-export { default as StudentDetails } from "./studentDetails"
+export { default as StudentDetails } from "./common/studentDetails"
 export { default as OperationHours } from "./operation-hours"
 export * as Icons from "./icons"

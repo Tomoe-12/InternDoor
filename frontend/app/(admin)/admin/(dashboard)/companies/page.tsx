@@ -179,7 +179,7 @@ export default function CompaniesPage() {
                     </TableCell>
                     <TableCell className="text-right">
                       <Button variant="ghost" size="icon" asChild>
-                        <Link href={`/admin/companies/${company.id}`}>
+                        <Link href={`companies/${company.id}`}>
                           <Building2 className="h-4 w-4" />
                           <span className="sr-only">View company</span>
                         </Link>

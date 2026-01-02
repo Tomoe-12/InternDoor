@@ -91,8 +91,6 @@ const StudentDetails = ({ student, id }: { student: Student; id: string }) => {
   const router = useRouter();
   const { user } = useAuthGuard({ middleware: "auth" });
 
-  console.log("userdata", user?.role);
-
   const handleExportGPA = () => {
     const csvContent = [
       [

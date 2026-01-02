@@ -6,7 +6,7 @@ import * as z from "zod";
 import { toast } from "sonner";
 import { useAuthGuard } from "@/lib/auth/use-auth";
 import { HttpErrorResponse } from "@/models/http/HttpErrorResponse";
-import { ErrorFeedback } from "@/components";
+import ErrorFeedback from "@/components/common/error-feedback";
 import Link from "next/link";
 import { FaGithub, FaGoogle} from "react-icons/fa";
 import { Button, TextInput } from "@mantine/core";

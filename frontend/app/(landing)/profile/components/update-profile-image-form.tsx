@@ -1,6 +1,6 @@
 "use client";
 
-import { FileUpload } from "@/components";
+import FileUpload from "@/components/FileUpload";
 import { Label } from "@/components/ui/label";
 import { useAuthGuard } from "@/lib/auth/use-auth";
 import httpClient from "@/lib/httpClient";
