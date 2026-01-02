@@ -3,8 +3,7 @@
 import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Users, TrendingUp, Building2, Plus } from "lucide-react"
-import { DashboardChart } from "@/components/Admin/dashboard-chart"
-import { RecentActivity } from "@/components/Admin/recent-activity"
+import { DashboardChart, RecentActivity } from "@/components/Admin"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,

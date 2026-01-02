@@ -8,12 +8,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ArrowLeft, Edit, Save, X, UserCog, GraduationCap, BriefcaseIcon, Shield, Download } from "lucide-react"
 import Link from "next/link"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { StudentApplications } from "@/components/Admin/student-applications"
+import { StudentApplications } from "@/components/Admin"
 import { use, useState } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Badge } from "@/components/ui/badge"
-import StudentDetails from "@/components/studentDetails"
+import { StudentDetails } from "@/components"
 
 export default function UserProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const [isEditingProfile, setIsEditingProfile] = useState(false)

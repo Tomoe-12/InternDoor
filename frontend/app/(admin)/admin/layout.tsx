@@ -1,8 +1,8 @@
 "use client";
 
-import Loading from "@/components/loading";
-import PermissionGuard from "@/components/permission-guard";
-import RoleGuard from "@/components/role-guard";
+import Loading from "@/components/common/loading";
+import PermissionGuard from "@/components/auth/permission-guard";
+import RoleGuard from "@/components/auth/role-guard";
 import { useAuthGuard } from "@/lib/auth/use-auth";
 import { Role } from "@/models/user/UserResponse";
 import React from "react";

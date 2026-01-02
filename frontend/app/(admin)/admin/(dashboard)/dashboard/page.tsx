@@ -193,8 +193,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Users, Building2, BriefcaseIcon, TrendingUp } from "lucide-react"
-import { DashboardChart } from "@/components/Admin/dashboard-chart"
-import { RecentActivity } from "@/components/Admin/recent-activity"
+import { DashboardChart, RecentActivity } from "@/components/Admin"
 
 export default function DashboardPage() {
   return (

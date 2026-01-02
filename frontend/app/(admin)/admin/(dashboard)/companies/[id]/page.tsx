@@ -21,7 +21,7 @@ import {
 import Link from "next/link"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { CompanyPositions } from "@/components/Admin/company-positions"
+import { CompanyPositions } from "@/components/Admin"
 import { useState } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 

@@ -9,8 +9,10 @@ import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Suspense } from "react" // Added Suspense import
+import { useRouter } from "next/navigation"
 
 function StudentsContent({ params }: { params: { id: string } }) {
+  const router = useRouter()
   // Mock data for the specific university
   const universityName = "Massachusetts Institute of Technology"
   const students = [
@@ -45,10 +47,8 @@ function StudentsContent({ params }: { params: { id: string } }) {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" asChild>
-          <Link href={`/universities/${params.id}`}>
+        <Button variant="ghost" size="icon" asChild onClick={()=>router.back()}>
             <ArrowLeft className="h-5 w-5" />
-          </Link>
         </Button>
         <div>
           <h1 className="text-2xl font-bold tracking-tight">All Students</h1>

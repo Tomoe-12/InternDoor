@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useSidebar } from "../sidebar-provider"
+import { useSidebar } from "../providers"
 import { cn } from "@/lib/utils"
 import { LayoutDashboard, Users, Building2, BarChart3, Settings, GraduationCap,HelpCircle, LogOut, Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"

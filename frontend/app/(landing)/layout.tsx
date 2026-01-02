@@ -1,7 +1,6 @@
 "use client";
 
-import Logo from "@/components/logo";
-import Navbar from "@/components/navbar";
+import { Logo, Navbar } from "@/components";
 import { useSubscribeToPushNotifications } from "@/lib/hooks/useSubscribeToPushNotifications";
 import React, { useEffect } from "react";
 import { usePathname } from "next/navigation";
