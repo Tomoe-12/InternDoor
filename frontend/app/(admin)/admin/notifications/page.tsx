@@ -1,6 +1,6 @@
 "use client";
 
-import { Container } from "@/components";
+import Container from "@/components/common/container";
 import { restClient } from "@/lib/httpClient";
 import { Button, TextInput, Title } from "@mantine/core";
 import React, { useEffect } from "react";

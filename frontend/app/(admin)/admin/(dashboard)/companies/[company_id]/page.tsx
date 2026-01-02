@@ -22,13 +22,14 @@ import Link from "next/link"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { CompanyPositions } from "@/components/Admin"
-import { useState } from "react"
+import { use, useState } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
-export default function CompanyProfilePage({ params }: { params: { id: string } }) {
+export default function CompanyProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const [isEditingProfile, setIsEditingProfile] = useState(false)
+  const {id} = use(params)
 
-  const company = companies.find((c) => c.id === params.id) || companies[0]
+  const company = companies.find((c) => c.id === id) || companies[0]
 
   return (
     <div className="flex flex-col gap-6 pb-8">
@@ -214,7 +215,7 @@ export default function CompanyProfilePage({ params }: { params: { id: string } 
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <CompanyPositions companyId={params.id} />
+              <CompanyPositions companyId={id} />
             </CardContent>
           </Card>
         </TabsContent>

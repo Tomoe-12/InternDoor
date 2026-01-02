@@ -19,7 +19,7 @@ import { Building2, GraduationCap, Eye, EyeOff, DoorOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { toast } from "sonner";
-import { ModeToggle } from "@/components";
+import ModeToggle from "@/components/ModeToggle";
 import { FcGoogle } from "react-icons/fc";
 import httpClient, { restClient } from "@/lib/httpClient";
 import type { HttpErrorResponse } from "@/models/http/HttpErrorResponse";

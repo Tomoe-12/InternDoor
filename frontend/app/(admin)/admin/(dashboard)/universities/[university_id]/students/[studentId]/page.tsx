@@ -1,21 +1,20 @@
 "use client"
 
+import StudentDetails from "@/components/common/studentDetails";
 import { use } from "react"
-import StudentDetails from "@/components/common/studentDetails"
 
-export default function UserProfilePage({ params }: { params: Promise<{ id: string }> }) {
-
-  const resolvedParams = use(params)
-  const student = students.find((u) => u.id === resolvedParams.id) || students[0]
-
+export default function UniversityStudentProfilePage({ params }: { params: Promise<{ id: string; studentId: string }> }) {
+  const {id, studentId} = use(params)
+  const student = students.find((u) =>u.id === id) || students[0]
+  
   return (
-    <StudentDetails student={student!} id={resolvedParams.id}  />
+    <StudentDetails student={student!} id={studentId} />
   )
 }
 
-const students = [
+  const students = [
   {
-    id: "1",
+    id : '1',
     name: "Sarah",
     surname: "Johnson",
     email: "sarah.johnson@student.edu",

@@ -1,7 +1,9 @@
 "use client";
 
 import React from "react";
-import { Logo, ModeToggle, UserNav } from "./index";
+import Logo from "./common/logo";
+import ModeToggle from "./ModeToggle";
+import { UserNav } from "./user-nav";
 import { useAuthGuard } from "@/lib/auth/use-auth";
 
 import { useState, useEffect } from "react";
