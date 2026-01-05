@@ -1,12 +1,12 @@
-
-import type React from "react"
-import { Sidebar, Header } from "@/components/Admin"
-import { SidebarProvider } from "@/components/providers"
+import type React from "react";
+import { Sidebar } from "@/components/Admin";
+import { SidebarProvider } from "@/components/providers";
+import { Header } from "@/components/common";
 
 export default function DashboardLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <SidebarProvider>
@@ -18,6 +18,5 @@ export default function DashboardLayout({
         </div>
       </div>
     </SidebarProvider>
-  )
+  );
 }
-

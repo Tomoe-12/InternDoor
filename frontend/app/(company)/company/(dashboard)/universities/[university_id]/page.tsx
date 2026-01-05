@@ -1,7 +1,7 @@
 "use client";
 
 import { use } from "react";
-import UniversityDetails from "@/components/common/universityDetails";
+import {UniversityDetails} from "@/components/common/";
 
 export default function UniversityDetailPage({
   params,

@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { useEffect } from "react"
 import { useSidebar } from "../providers"
 import { cn } from "@/lib/utils"
 import {
@@ -22,6 +23,16 @@ import { Button } from "@/components/ui/button"
 export function Sidebar() {
   const pathname = usePathname()
   const { isOpen, toggle } = useSidebar()
+
+  const closeIfMobile = () => {
+    if (!isOpen) return
+    const isDesktop = typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches
+    if (!isDesktop) toggle()
+  }
+
+  useEffect(() => {
+    closeIfMobile()
+  }, [pathname])
 
   return (
     <>
@@ -51,6 +62,7 @@ export function Sidebar() {
                 <Link
                   key={index}
                   href={item.href}
+                  onClick={closeIfMobile}
                   className={cn(
                     "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
                     pathname === item.href ? "bg-accent text-accent-foreground" : "text-muted-foreground",
@@ -75,6 +87,7 @@ export function Sidebar() {
                     <div className="space-y-1">
                       <Link
                         href={item.href}
+                        onClick={closeIfMobile}
                         className={cn(
                           "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
                           pathname === item.href ? "bg-accent text-accent-foreground" : "text-muted-foreground",
@@ -88,6 +101,7 @@ export function Sidebar() {
                           <Link
                             key={subIndex}
                             href={subItem.href}
+                            onClick={closeIfMobile}
                             className={cn(
                               "flex items-center gap-3 rounded-md px-3 py-1.5 text-sm hover:bg-accent hover:text-accent-foreground",
                               pathname === subItem.href ? "bg-accent text-accent-foreground" : "text-muted-foreground",
@@ -105,6 +119,7 @@ export function Sidebar() {
                   ) : (
                     <Link
                       href={item.href}
+                      onClick={closeIfMobile}
                       className={cn(
                         "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
                         pathname === item.href ? "bg-accent text-accent-foreground" : "text-muted-foreground",

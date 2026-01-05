@@ -1,6 +1,6 @@
 "use client"
 
-import UniversityDetails from "@/components/common/universityDetails"
+import {UniversityDetails} from "@/components/common/"
 import { use } from "react"
 
 

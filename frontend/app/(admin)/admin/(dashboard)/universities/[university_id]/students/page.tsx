@@ -2,7 +2,7 @@
 
 import { Suspense, use } from "react"; // Added Suspense import
 import { useRouter } from "next/navigation";
-import UniverstiyAllStudents from "@/components/common/university_all_students";
+import {UniversityAllStudents} from "@/components/common/";
 
 export default function StudentsContent({
   params,
@@ -15,5 +15,5 @@ export default function StudentsContent({
   const universityName = "Massachusetts Institute of Technology";
 
 
-  return <UniverstiyAllStudents university_id={university_id} university_name={universityName} />;
+  return <UniversityAllStudents university_id={university_id} university_name={universityName} />;
 }
