@@ -16,7 +16,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
 
-const UniverstiyAllStudents = ({
+const UniversityAllStudents = ({
   university_id,
   university_name,
 }: {
@@ -142,4 +142,4 @@ const UniverstiyAllStudents = ({
   );
 };
 
-export default UniverstiyAllStudents;
+export default UniversityAllStudents;

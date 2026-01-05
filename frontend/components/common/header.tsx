@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import { useSidebar } from "../providers"
-import { Bell, Search, User, Menu } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { useSidebar } from "../providers";
+import { Bell, Search, User, Menu } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,17 +11,21 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { useAuthGuard } from "@/lib/auth/use-auth"
-
-export function Header() {
-  const {  logout } = useAuthGuard({ middleware: "auth" });
-  const { toggle } = useSidebar()
+} from "@/components/ui/dropdown-menu";
+import { useAuthGuard } from "@/lib/auth/use-auth";
+const Header = () => {
+  const { logout } = useAuthGuard({ middleware: "auth" });
+  const { toggle } = useSidebar();
 
   return (
     <header className="sticky top-0 z-40 border-b bg-background">
       <div className="flex h-14 items-center px-4 gap-4">
-        <Button variant="ghost" size="icon" className="lg:hidden" onClick={toggle}>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="lg:hidden"
+          onClick={toggle}
+        >
           <Menu className="h-5 w-5" />
           <span className="sr-only">Toggle sidebar</span>
         </Button>
@@ -46,7 +50,11 @@ export function Header() {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 rounded-full"
+            >
               <User className="h-4 w-4" />
               <span className="sr-only">User menu</span>
             </Button>
@@ -57,10 +65,12 @@ export function Header() {
             <DropdownMenuItem>Profile</DropdownMenuItem>
             <DropdownMenuItem>Settings</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={()=>logout()}>Logout</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => logout()}>Logout</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
     </header>
-  )
-}
+  );
+};
+
+export default Header;

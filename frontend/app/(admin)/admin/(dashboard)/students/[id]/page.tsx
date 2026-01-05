@@ -1,7 +1,7 @@
 "use client"
 
 import { use } from "react"
-import StudentDetails from "@/components/common/studentDetails"
+import {StudentDetails} from "@/components/common/"
 
 export default function UserProfilePage({ params }: { params: Promise<{ id: string }> }) {
 

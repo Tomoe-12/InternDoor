@@ -1,7 +1,7 @@
 "use client"
 
 import { Suspense } from "react" // added Suspense import
-import AllUniversity from "@/components/common/allUniversity"
+import {AllUniversity} from "@/components/common/"
 
 
 function UniversitiesContent() {

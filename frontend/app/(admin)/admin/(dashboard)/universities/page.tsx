@@ -1,12 +1,10 @@
-"use client"
+"use client";
 
-import {  Suspense } from "react" 
-import AllUniversity from "@/components/common/allUniversity"
+import { Suspense } from "react";
+import { AllUniversity } from "@/components/common";
 
 function UniversitiesContent() {
-  return (
-    <AllUniversity/>
-  )
+  return <AllUniversity />;
 }
 
 export default function UniversitiesPage() {
@@ -14,5 +12,5 @@ export default function UniversitiesPage() {
     <Suspense fallback={null}>
       <UniversitiesContent />
     </Suspense>
-  )
+  );
 }
