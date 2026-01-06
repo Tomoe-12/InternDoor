@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import { useSidebar } from "../providers";
 import { Bell, Search, User, Menu } from "lucide-react";

@@ -34,3 +34,17 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+## Supabase + Drizzle Setup
+
+- Add env vars in [.env.local](.env.local) using [.env.local.example](.env.local.example):
+	- `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+	- `SUPABASE_DB_URL` (Postgres connection string, SSL required)
+- Install dependencies:
+	- `npm install drizzle-orm drizzle-kit pg @supabase/supabase-js dotenv`
+- Drizzle config lives in [drizzle.config.ts](drizzle.config.ts); schema files in [db/schema](db/schema).
+- Useful scripts:
+	- `npm run db:generate` – generate SQL from schema
+	- `npm run db:push` – push schema to Supabase
+	- `npm run db:studio` – open Drizzle Studio
+- Test DB connectivity: start dev server and hit [app/api/db-test/route.ts](app/api/db-test/route.ts).

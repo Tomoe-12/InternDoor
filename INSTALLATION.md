@@ -1,203 +1,32 @@
-# 📚 Complete Installation Guide
+# Installation (Next.js + Supabase)
 
-## Prerequisites Check
+The Laravel/PHP backend is retired. Only the Next.js + Supabase app is needed.
 
-Before you start, make sure you have:
+## Prerequisites
+- Node.js 18+
+- npm
 
-- ✅ Windows 10 or Windows 11
-- ✅ At least 2GB free disk space
-- ✅ Administrator access (for XAMPP installation)
-- ✅ Internet connection
-
-## Step 1: Download and Install XAMPP
-
-### Download XAMPP
-1. Go to: https://www.apachefriends.org/
-2. Download the **Windows** version
-3. Click the **XAMPP version 8.2 or higher** (PHP 8.2+)
-
-### Install XAMPP
-1. Run the installer (e.g., `xampp-windows-x64-8.2.12-VS16-installer.exe`)
-2. Click "Next" through the installation wizard
-3. Install location: Keep default (`C:\xampp`)
-4. Choose components:
-   - ✅ Apache
-   - ✅ MySQL (optional, we use SQLite)
-   - ✅ PHP
-   - ✅ phpMyAdmin (optional)
-5. Click "Finish"
-
-### Test XAMPP
-1. Open XAMPP Control Panel
-2. Click "Start" next to **Apache**
-3. Open browser: http://localhost
-4. You should see the XAMPP dashboard ✅
-
-## Step 2: Download and Install Composer
-
-### Download Composer
-1. Go to: https://getcomposer.org/download/
-2. Click **"Composer-Setup.exe"** (Windows Installer)
-
-### Install Composer
-1. Run the installer
-2. Click "Next" through the wizard
-3. When asked for PHP location, select:
-   - `C:\xampp\php\php.exe`
-4. Click "Install"
-
-### Test Composer
-1. Open Command Prompt (`cmd`)
-2. Type: `composer --version`
-3. You should see: `Composer version 2.x.x...` ✅
-
-## Step 3: Install Laravel Backend
-
-### Navigate to Backend Folder
-1. Open Command Prompt or PowerShell
-2. Type:
-   ```bash
-   cd C:\Project\spring-boot-nextjs-starter-kit\backend
-   ```
-
-### Run Setup Script
-1. Type:
-   ```bash
-   setup.bat
-   ```
-2. The script will:
-   - ✅ Install all PHP dependencies
-   - ✅ Generate configuration files
-   - ✅ Create SQLite database
-   - ✅ Run migrations
-
-3. If setup completes successfully, you'll see:
-   ```
-   ========================================
-   Setup Complete!
-   ========================================
-   ```
-
-### If setup.bat doesn't work manually:
-
+## Setup
 ```bash
-# Install dependencies
-composer install
-
-# Copy environment file
-copy .env.example .env
-
-# Generate app key
-php artisan key:generate
-
-# Generate JWT secret
-php artisan jwt:secret --force
-
-# Create database and run migrations
-php artisan migrate --force
+cd frontend
+npm install
+cp .env.local.example .env.local  # fill Supabase + Resend keys
+npm run dev
 ```
 
-## Step 4: Start the Development Server
+## Database
+- Drizzle + Supabase Postgres
+- Scripts: `npm run db:generate`, `npm run db:push`, `npm run db:studio`
 
-### Option A: Built-in PHP Server (Recommended)
-```bash
-php artisan serve
-```
+## Email
+- Resend for transactional email
+- Set `RESEND_API_KEY` and `RESEND_FROM_EMAIL` in `.env.local`
 
-Output should show:
-```
-Laravel development server started on: http://localhost:8000
-```
+## Auth
+- Enable providers in Supabase console (Email, Google, etc.)
 
-Visit: **http://localhost:8000** ✅
-
-### Option B: Using XAMPP Apache (Alternative)
-
-If you prefer to use XAMPP's Apache server:
-
-1. Copy the `backend` folder to `C:\xampp\htdocs\laravel-api`
-2. Open XAMPP Control Panel
-3. Click "Start" next to Apache
-4. In Command Prompt, navigate to the folder:
-   ```bash
-   cd C:\xampp\htdocs\laravel-api
-   ```
-5. Run migrations:
-   ```bash
-   php artisan migrate --force
-   ```
-6. Access at: **http://localhost/laravel-api** ✅
-
-## Step 5: Test the API
-
-### Using Postman (Recommended)
-
-1. Download Postman from: https://www.postman.com/downloads/
-2. Install and open Postman
-
-### Test 1: Register User
-```
-Method: POST
-URL: http://localhost:8000/api/users
-Body (JSON):
-{
-  "email": "test@example.com",
-  "password": "Password123",
-  "full_name": "Test User"
-}
-```
-Expected Response: `201 Created` ✅
-
-### Test 2: Login
-```
-Method: POST
-URL: http://localhost:8000/api/auth/login
-Body (JSON):
-{
-  "email": "test@example.com",
-  "password": "Password123"
-}
-```
-Expected Response: 
-```json
-{
-  "token": "eyJ0eXAiOiJKV1QiLCJhbGc..."
-}
-```
-✅ Copy this token
-
-### Test 3: Get Current User (Protected Route)
-```
-Method: GET
-URL: http://localhost:8000/api/auth/me
-Headers:
-  Authorization: Bearer <paste_token_here>
-```
-Expected Response: User data ✅
-
-## Step 6: Browse the Database
-
-### Using TablePlus (Recommended)
-
-1. Download from: https://tableplus.com/
-2. Install and open TablePlus
-3. Click "+" to create new connection
-4. Select **SQLite**
-5. File path: `C:\Project\spring-boot-nextjs-starter-kit\backend\database\database.sqlite`
-6. Click "Connect"
-7. Browse tables:
-   - `users` - Registered users
-   - `verification_codes` - Email verification
-   - `password_reset_tokens` - Password reset tokens
-   - `notifications` - System notifications
-   - etc.
-
-## Troubleshooting
-
-### Error: "php is not recognized"
-**Solution:**
-- XAMPP might not be in your PATH
-- Use full path: `C:\xampp\php\php.exe artisan serve`
+## Legacy backend
+- `backend/` is archived; no setup required.
 - Or add `C:\xampp\php` to Windows PATH
 
 ### Error: "composer is not recognized"
