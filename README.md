@@ -1,18 +1,45 @@
-## Getting started
+## Next.js + Supabase Starter
 
-- Clone the repository
-- cd infra folder
-- Run ```docker compose up -d``` from the infra directory. This will start up the database, mailpit and caddy
-- Start the backend, it should already be configured to work with values in docker compose for db connection
-- Run npm install and start the frontend
-- Provide your own keys for s3 and github, the ones you see in application.properties are deleted
+This repo now runs **frontend-only** with Next.js 15, Supabase (Postgres + Auth), Drizzle ORM, and Resend for email. The old Laravel backend is retired.
 
-## Generating typescript types from your backend automatically
+### Features
+- Supabase Postgres schema managed via Drizzle
+- API routes in `app/api/*` (students, companies, verification, password reset, connected accounts, transactional email)
+- Supabase Auth ready (enable providers in console)
+- Resend for transactional emails
 
-There is a maven plugin included and configured in the backend code which allows you to automatically generate typescript types and http client with all the rest endpoint methods.
-To generate the types there is a convenient script in the frontend package:
+### Quick Start
+```bash
+cd frontend
+npm install
+npm run dev
+# visit http://localhost:3000
+```
 
-`npm run update-types`
+### Environment
+Create `frontend/.env.local` (already templated) with:
+- `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_DB_URL` (use connection pooler)
+- `RESEND_API_KEY`, `RESEND_FROM_EMAIL`
 
-This will generate the types and copy them to your frontend package. You should do this whenever you change your DTO's entities or controllers.
-Types will be generated only for types that you annotate with @Client, you can change this in the plugin configuration.
+### Database
+- Schemas: `frontend/db/schema/*`
+- Config: `frontend/drizzle.config.ts`
+- Scripts: `npm run db:generate`, `npm run db:push`, `npm run db:studio`
+
+### API Routes (Node runtime)
+- `GET/POST /api/students`
+- `GET/POST /api/companies`
+- `POST /api/verification-codes`
+- `POST/PUT /api/verification-email`
+- `POST/PUT /api/password-reset`
+- `GET/POST/DELETE /api/connected-accounts`
+- `POST /api/send-email`
+
+### Auth & Email
+- Enable providers in Supabase Console → Auth → Providers
+- Transactional email via `/api/send-email` (Resend)
+
+### Notes
+- The `backend/` directory is legacy; no build/CI targets it.
+- Dependabot now tracks `frontend` npm and GitHub Actions only.
