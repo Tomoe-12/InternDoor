@@ -30,7 +30,7 @@ All routes use `runtime = 'nodejs'` for server-side database access:
 - **Email Service**: `POST /api/send-email` (for transactional emails)
 
 ### Environment Configuration
-- `frontend/.env.local` includes Supabase keys and DB connection
+- `.env.local` includes Supabase keys and DB connection
 - Email: Resend API key ready (fill in `RESEND_API_KEY`)
 
 ## Next Steps
@@ -42,12 +42,11 @@ All routes use `runtime = 'nodejs'` for server-side database access:
 
 ### 2. Get Resend API Key (for transactional emails)
 - Sign up at [resend.com](https://resend.com)
-- Get API key and add to `frontend/.env.local`
+- Get API key and add to `.env.local`
 - Update `RESEND_FROM_EMAIL` with your sender domain
 
 ### 3. Test Locally
 ```powershell
-cd frontend
 npm install
 npm run dev
 ```
@@ -56,7 +55,7 @@ Visit `http://localhost:3000` and test API routes:
 - `http://localhost:3000/api/companies`
 
 ### 4. Connect Frontend Auth (if using Supabase Auth)
-Update `frontend/lib/supabase.ts` to use Supabase's built-in auth:
+Update `lib/supabase.ts` to use Supabase's built-in auth:
 ```typescript
 import { createClient } from '@supabase/supabase-js';
 
@@ -92,23 +91,22 @@ Once all APIs are migrated to Next.js:
 
 ## File Structure
 ```
-frontend/
-  app/api/
-    students/
-    companies/
-    verification-codes/
-    verification-email/
-    password-reset/
-    connected-accounts/
-    send-email/
-    db-test/
-  db/
-    client.ts           (Drizzle client)
-    schema/             (14 tables)
-  lib/
-    supabase.ts         (Supabase client)
-  drizzle/              (migrations)
-  drizzle.config.ts
+app/api/
+  students/
+  companies/
+  verification-codes/
+  verification-email/
+  password-reset/
+  connected-accounts/
+  send-email/
+  db-test/
+db/
+  client.ts           (Drizzle client)
+  schema/             (14 tables)
+lib/
+  supabase.ts         (Supabase client)
+drizzle/              (migrations)
+drizzle.config.ts
 ```
 
 ## Troubleshooting
