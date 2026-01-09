@@ -4,6 +4,7 @@ import { companies } from "@/db/schema/companies";
 import { eq, count, sql } from "drizzle-orm";
 import { hashPassword } from "@/server/lib/password";
 import { logger } from "@/server/lib/logger";
+import { BaseService } from "./shared/base.service";
 import type {
   CreateStudentInput,
   UpdateStudentInput,
@@ -58,28 +59,16 @@ export class StudentService {
    * Get a student by email
    */
   static async getStudentByEmail(email: string) {
-    const normalized = email.trim().toLowerCase();
-    const result = await db
-      .select()
-      .from(students)
-      .where(sql`lower(${students.email}) = ${normalized}`)
-      .limit(1);
-    return result[0] ?? null;
+    return await BaseService.getByEmail(students, students.email, email);
   }
 
   /**
    * Check if email exists in companies table
    */
   static async emailExistsInCompanies(email: string) {
-    console.log("email form student", email);
-
-    const normalized = email.trim().toLowerCase();
-    const rows = await db
-      .select()
-      .from(companies)
-      .where(sql`lower(${companies.companyEmail}) = ${normalized}`)
-      .limit(1);
-    return rows.length > 0;
+    const exists = await BaseService.emailExists(companies, companies.companyEmail, email);
+    console.log("email from student", email, "exists in companies:", exists);
+    return exists;
   }
 
   /**
@@ -113,12 +102,11 @@ export class StudentService {
     // Also prevent using an email already used by a company
     const usedByCompany = await this.emailExistsInCompanies(normalizedEmail);
     if (usedByCompany) {
-      // logger.warn(
-      //   { email: normalizedEmail },
-      //   "Student creation failed: email already in used !"
-      // );
+      logger.warn(
+        { email: normalizedEmail },
+        "Student creation failed: email already in used !"
+      );
       return { error: "This email is already in used !" };
-      // throw new Error("This email is already used by a company account");
     }
 
     // Hash password
@@ -173,25 +161,13 @@ export class StudentService {
    * Update a student
    */
   static async updateStudent(input: UpdateStudentInput) {
-    const { id, ...updates } = input;
-
-    const result = await db
-      .update(students)
-      .set({
-        ...updates,
-        updatedAt: new Date(),
-      })
-      .where(eq(students.id, id))
-      .returning();
-
-    return result[0] ?? null;
+    return await BaseService.update(students, input, students.id);
   }
 
   /**
    * Delete a student
    */
   static async deleteStudent(id: number) {
-    await db.delete(students).where(eq(students.id, id));
-    return { success: true };
+    return await BaseService.delete(students, students.id, id);
   }
 }

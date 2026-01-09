@@ -5,6 +5,7 @@ import { eq, count, sql } from "drizzle-orm";
 import { hashPassword } from "@/server/lib/password";
 import { sendCompanyWelcomeEmail } from "@/server/lib/email";
 import { logger } from "@/server/lib/logger";
+import { BaseService } from "./shared/base.service";
 import type {
   CreateCompanyInput,
   UpdateCompanyInput,
@@ -59,26 +60,14 @@ export class CompanyService {
    * Get a company by email
    */
   static async getCompanyByEmail(email: string) {
-    const normalized = email.trim().toLowerCase();
-    const result = await db
-      .select()
-      .from(companies)
-      .where(sql`lower(${companies.companyEmail}) = ${normalized}`)
-      .limit(1);
-    return result[0] ?? null;
+    return await BaseService.getByEmail(companies, companies.companyEmail, email);
   }
 
   /**
    * Check if email exists in students table
    */
   static async emailExistsInStudents(email: string) {
-    const normalized = email.trim().toLowerCase();
-    const rows = await db
-      .select()
-      .from(students)
-      .where(sql`lower(${students.email}) = ${normalized}`)
-      .limit(1);
-    return rows.length > 0;
+    return await BaseService.emailExists(students, students.email, email);
   }
 
   /**
@@ -203,25 +192,13 @@ export class CompanyService {
    * Update a company
    */
   static async updateCompany(input: UpdateCompanyInput) {
-    const { id, ...updates } = input;
-
-    const result = await db
-      .update(companies)
-      .set({
-        ...updates,
-        updatedAt: new Date(),
-      })
-      .where(eq(companies.id, id))
-      .returning();
-
-    return result[0] ?? null;
+    return await BaseService.update(companies, input, companies.id);
   }
 
   /**
    * Delete a company
    */
   static async deleteCompany(id: number) {
-    await db.delete(companies).where(eq(companies.id, id));
-    return { success: true };
+    return await BaseService.delete(companies, companies.id, id);
   }
 }
