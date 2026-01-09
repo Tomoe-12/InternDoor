@@ -8,7 +8,6 @@ The Laravel/PHP backend is retired. Only the Next.js + Supabase app is needed.
 
 ## Setup
 ```bash
-cd frontend
 npm install
 cp .env.local.example .env.local  # fill Supabase + Resend keys
 npm run dev
@@ -118,7 +117,7 @@ AWS_BUCKET=
 
 ### For Next.js Frontend
 
-1. Update `frontend/.env.local`:
+1. Update `.env.local`:
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:8000/api
 ```
@@ -154,7 +153,7 @@ cd C:\Project\spring-boot-nextjs-starter-kit\backend
 php artisan serve
 
 # 3. In another terminal, start Next.js frontend
-cd C:\Project\spring-boot-nextjs-starter-kit\frontend
+cd C:\Project\spring-boot-nextjs-starter-kit
 npm run dev
 
 # 4. Open browser:
