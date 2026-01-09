@@ -31,8 +31,14 @@ export const getStudentByIdAction = actionClient
 export const createStudentAction = actionClient
   .schema(createStudentSchema)
   .action(async ({ parsedInput }) => {
-    const student = await StudentService.createStudent(parsedInput);
-    return student;
+    const result = await StudentService.createStudent(parsedInput);
+    
+    // Check if service returned an error
+    if (result && 'error' in result) {
+      throw new Error(result.error);
+    }
+    
+    return result;
   });
 
 /**

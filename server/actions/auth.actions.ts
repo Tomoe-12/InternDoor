@@ -92,10 +92,14 @@ export const resetPasswordAction = actionClient
 export const registerStudentAction = actionClient
   .schema(createStudentSchema)
   .action(async ({ parsedInput }) => {
-    try {
-      console.log('parsed input' , parsedInput);
-      
+    try {  
       const student = await StudentService.createStudent(parsedInput);
+      
+      // Check if service returned an error
+      if (student && 'error' in student) {
+        return { error: student.error };
+      }
+      
       return {
         success: "Student registered successfully. Please check your email to verify.",
         data: student,
