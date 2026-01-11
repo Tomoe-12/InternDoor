@@ -6,9 +6,12 @@ export const students = pgTable('students', {
   password: varchar('password', { length: 255 }),
   fullName: varchar('full_name', { length: 255 }),
   verified: boolean('verified').default(false).notNull(),
+  verificationToken: varchar('verification_token', { length: 255 }),
+  verificationTokenExpiry: timestamp('verification_token_expiry', { withTimezone: true }),
   profileImageUrl: varchar('profile_image_url', { length: 512 }),
   role: varchar('role', { length: 64 }).default('STUDENT').notNull(),
   university: varchar('university', { length: 255 }),
+  universityId: varchar('university_id', { length: 255 }), // For UNIVERSITY_ADMIN - tracks which university they manage
   status: varchar('status', { length: 64 }).default('Active').notNull(),
   overallGpa: numeric('overall_gpa', { precision: 3, scale: 2 }),
   yearOfStudy: varchar('year_of_study', { length: 64 }),

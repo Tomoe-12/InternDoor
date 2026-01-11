@@ -8,6 +8,7 @@ export interface UserResponse {
   connectedAccounts: ConnectedAccount[];
   authorities: string[];
   profileComplete?: boolean;
+  universityId?: string; // For UNIVERSITY_ADMIN role
 }
 
 interface ConnectedAccount {
@@ -18,5 +19,6 @@ interface ConnectedAccount {
 export enum Role {
   USER = "USER",
   COMPANY = "COMPANY",
-  ADMIN = "ADMIN"
+  ADMIN = "ADMIN",
+  UNIVERSITY_ADMIN = "UNIVERSITY_ADMIN"
 }

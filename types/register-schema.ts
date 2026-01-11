@@ -2,10 +2,10 @@ import { z } from "zod";
 
 export const registerSchema = z
   .object({
-    role: z.enum(["student", "company"], {
-      required_error: "Role is required",
-    }),
-    name: z.string().trim().optional(),
+    companyName: z
+      .string()
+      .trim()
+      .min(1, "Company name is required"),
     email: z
       .string()
       .min(1, "Email is required")
@@ -18,9 +18,11 @@ export const registerSchema = z
       .refine((val) => /[a-z]/.test(val), "Must contain at least 1 lowercase letter")
       .refine((val) => /\d/.test(val), "Must contain at least 1 number"),
     confirmPassword: z.string(),
-    companyName: z.string().trim().optional(),
     companyWebsite: z.string().trim().optional(),
-    phoneNumber: z.string().trim().optional(),
+    phoneNumber: z
+      .string()
+      .trim()
+      .min(1, "Phone number is required"),
   })
   .superRefine((data, ctx) => {
     if (data.password !== data.confirmPassword) {
@@ -31,45 +33,17 @@ export const registerSchema = z
       });
     }
 
-    if (data.role === "student") {
-      if (!data.name || !data.name.trim()) {
+    if (data.companyWebsite && data.companyWebsite.trim()) {
+      try {
+        // Using URL constructor for basic validation
+        // eslint-disable-next-line no-new
+        new URL(data.companyWebsite);
+      } catch {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          path: ["name"],
-          message: "Full name is required",
+          path: ["companyWebsite"],
+          message: "Enter a valid URL (e.g., https://example.com)",
         });
-      }
-    }
-
-    if (data.role === "company") {
-      if (!data.companyName || !data.companyName.trim()) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ["companyName"],
-          message: "Company name is required",
-        });
-      }
-
-      if (!data.phoneNumber || !data.phoneNumber.trim()) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ["phoneNumber"],
-          message: "Phone number is required",
-        });
-      }
-
-      if (data.companyWebsite && data.companyWebsite.trim()) {
-        try {
-          // Using URL constructor for basic validation
-          // eslint-disable-next-line no-new
-          new URL(data.companyWebsite);
-        } catch {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            path: ["companyWebsite"],
-            message: "Enter a valid URL (e.g., https://example.com)",
-          });
-        }
       }
     }
   });

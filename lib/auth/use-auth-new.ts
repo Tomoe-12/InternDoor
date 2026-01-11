@@ -55,7 +55,19 @@ export const useAuthGuard = ({ middleware, redirectIfAuthenticated }: AuthProps 
   };
 
   // Get user from login result or fetch it
-  const user = loginResult?.data?.user || userResult?.data;
+  const rawUser = loginResult?.data?.user || userResult?.data;
+  // Normalize role: uppercase and map SUPER_ADMIN -> ADMIN
+  const user = rawUser
+    ? {
+        ...rawUser,
+        role:
+          typeof rawUser.role === "string"
+            ? ((rawUser.role as string).toUpperCase() === "SUPER_ADMIN"
+                ? "ADMIN"
+                : (rawUser.role as string).toUpperCase())
+            : rawUser.role,
+      }
+    : undefined;
 
   // Handle redirects
   useEffect(() => {

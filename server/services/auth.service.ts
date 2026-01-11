@@ -18,6 +18,7 @@ export interface AuthResult {
     lastName?: string;
     fullName?: string;
     profileImageUrl?: string;
+    universityId?: string; // For UNIVERSITY_ADMIN role
   };
 }
 
@@ -65,7 +66,7 @@ export class AuthService {
     const jwtPayload: JWTPayload = {
       userId: user.id,
       email: userType === "student" ? (user as typeof students.$inferSelect).email : (user as typeof companies.$inferSelect).companyEmail,
-      role: user.role || (userType === "student" ? "STUDENT" : "COMPANY"),
+      role: userType === "student" ? (user as typeof students.$inferSelect).role : "COMPANY",
       type: userType,
     };
 
@@ -82,8 +83,9 @@ export class AuthService {
         type: userType,
         firstName: userType === "student" ? (user as typeof students.$inferSelect).fullName?.split(" ")[0] : undefined,
         lastName: userType === "student" ? (user as typeof students.$inferSelect).fullName?.split(" ").slice(1).join(" ") : undefined,
-        fullName: userType === "student" ? (user as typeof students.$inferSelect).fullName : (user as typeof companies.$inferSelect).companyName,
-        profileImageUrl: userType === "student" ? (user as typeof students.$inferSelect).profileImageUrl : (user as typeof companies.$inferSelect).logo,
+        fullName: userType === "student" ? (user as typeof students.$inferSelect).fullName || undefined : (user as typeof companies.$inferSelect).companyName,
+        profileImageUrl: userType === "student" ? (user as typeof students.$inferSelect).profileImageUrl || undefined : undefined,
+        universityId: userType === "student" ? (user as typeof students.$inferSelect).universityId || undefined : undefined,
       },
     };
   }
@@ -107,6 +109,7 @@ export class AuthService {
         fullName: user.fullName,
         profileImageUrl: user.profileImageUrl,
         type: "student" as const,
+        universityId: user.universityId || undefined,
       };
     } else {
       const [user] = await db.select().from(companies).where(eq(companies.id, payload.userId)).limit(1);
@@ -116,7 +119,7 @@ export class AuthService {
         email: user.companyEmail,
         role: "COMPANY",
         fullName: user.companyName,
-        profileImageUrl: user.logo,
+        profileImageUrl: undefined,
         type: "company" as const,
       };
     }

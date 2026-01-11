@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { UserRegisterForm } from "./components/register-form";
+import { CompanyRegisterForm } from "./components/register-form";
 import { useAuthGuard } from "@/lib/auth/use-auth";
 import { Role } from "@/models/user/UserResponse";
 
@@ -11,6 +11,7 @@ export default function RegisterPage() {
     middleware: "guest",
     redirectIfAuthenticated: (user) => {
       if (user.role === Role.ADMIN) return "/admin";
+      if (user.role === Role.UNIVERSITY_ADMIN) return "/admin/universities";
       if (user.role === Role.COMPANY) {
         const needsSetup = user.profileComplete === false;
         return needsSetup ? "/company/onboarding" : "/company/dashboard";
@@ -21,7 +22,7 @@ export default function RegisterPage() {
 
   return (
     <div>
-      <UserRegisterForm />
+      <CompanyRegisterForm />
     </div>
   );
 }
