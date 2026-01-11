@@ -5,7 +5,6 @@ import { eq, count, sql } from "drizzle-orm";
 import { hashPassword } from "@/server/lib/password";
 import { logger } from "@/server/lib/logger";
 import { BaseService } from "./shared/base.service";
-import { EmailVerificationService } from "@/server/services/email-verification.service";
 import type {
   CreateStudentInput,
   UpdateStudentInput,

@@ -12,9 +12,7 @@ import { createStudentSchema } from "@/server/schemas/student.schema";
 import { createCompanySchema } from "@/server/schemas/company.schema";
 import { VerificationService } from "@/server/services/verification.service";
 import { PasswordResetService } from "@/server/services/password-reset.service";
-import { AuthService } from "@/server/services/auth.service";
-import { StudentService } from "@/server/services/student.service";
-import { CompanyService } from "@/server/services/company.service";
+import { SupabaseAuthService } from "@/server/services/supabase-auth.service";
 
 /**
  * Login action
@@ -92,20 +90,12 @@ export const resetPasswordAction = actionClient
 export const registerStudentAction = actionClient
   .schema(createStudentSchema)
   .action(async ({ parsedInput }) => {
-    try {  
-      const student = await StudentService.createStudent(parsedInput);
-      
-      // Check if service returned an error
-      if (student && 'error' in student) {
-        return { error: student.error };
-      }
-      
-      return {
-        success: "Student registered successfully. Please check your email to verify.",
-        data: student,
-      };
+    try {
+      const result = await SupabaseAuthService.registerStudent(parsedInput);
+      return result;
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Failed to create student";
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to register student";
       return { error: errorMessage };
     }
   });
@@ -117,13 +107,11 @@ export const registerCompanyAction = actionClient
   .schema(createCompanySchema)
   .action(async ({ parsedInput }) => {
     try {
-      const company = await CompanyService.createCompany(parsedInput);
-      return {
-        success: "Company registered successfully. You can now sign in.",
-        data: company,
-      };
+      const result = await SupabaseAuthService.registerCompany(parsedInput);
+      return result;
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Failed to create company";
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to register company";
       return { error: errorMessage };
     }
   });
