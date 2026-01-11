@@ -6,7 +6,6 @@ import { hashPassword } from "@/server/lib/password";
 import { sendCompanyWelcomeEmail } from "@/server/lib/email";
 import { logger } from "@/server/lib/logger";
 import { BaseService } from "./shared/base.service";
-import { EmailVerificationService } from "@/server/services/email-verification.service";
 import type {
   CreateCompanyInput,
   UpdateCompanyInput,
