@@ -58,7 +58,7 @@ export class BaseService {
     const result = await db
       .select()
       .from(table)
-      .where(sql`lower(${emailField}) = ${normalized}`)
+      .where(eq(emailField, normalized))
       .limit(1);
     return result[0] ?? null;
   }
@@ -75,7 +75,7 @@ export class BaseService {
     const rows = await db
       .select()
       .from(table)
-      .where(sql`lower(${emailField}) = ${normalized}`)
+      .where(eq(emailField, normalized))
       .limit(1);
     return rows.length > 0;
   }

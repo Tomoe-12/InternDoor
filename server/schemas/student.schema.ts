@@ -8,7 +8,8 @@ export const createStudentSchema = z.object({
   password: z.string().min(8, "Password must be at least 8 characters"),
   passwordConfirmation: z.string(),
   fullName: z.string(),
-  role: z.enum(["STUDENT", "USER", "ADMIN"]).default("STUDENT"),
+  role: z.enum(["STUDENT", "USER", "ADMIN", "UNIVERSITY_ADMIN"]).default("STUDENT"),
+  universityId: z.string().optional(), // Required for UNIVERSITY_ADMIN role
   status: z.string().default("Active"),
 }).refine((data) => data.password === data.passwordConfirmation, {
   message: "Passwords do not match",

@@ -108,6 +108,32 @@ export function LoginForm() {
         props: { email: values.email.trim(), password: values.password },
       });
 
+      // Check if email verification is required
+      if ((userData as any)?.requiresEmailVerification) {
+        // Email not verified
+        const verificationStatus = (userData as any)?.verificationStatus;
+        const verificationMessage = (userData as any)?.verificationMessage;
+
+        if (verificationStatus === "expired") {
+          // STATE 1: Token expired, auto-resent
+          toast.info("✉️ Email Resent!", {
+            description:
+              verificationMessage ||
+              "Your verification link expired. We've resent it to your email. Please check your inbox.",
+            duration: 5000,
+          });
+        } else if (verificationStatus === "pending") {
+          // STATE 2: Token still valid
+          toast.warning("⏳ Please Verify Your Email", {
+            description:
+              verificationMessage ||
+              "Please verify your email before logging in.",
+            duration: 5000,
+          });
+        }
+        return;
+      }
+
       toast.success("Login successful! Redirecting...");
 
       // Redirect based on user role
@@ -115,6 +141,9 @@ export function LoginForm() {
         const role = userData.role;
         if (role === Role.ADMIN) {
           router.push("/admin");
+        } else if (role === Role.UNIVERSITY_ADMIN) {
+          // University admins go to their university's admin dashboard
+          router.push("/admin/universities");
         } else if (role === Role.COMPANY) {
           const needsSetup = userData.profileComplete === false;
           router.push(
@@ -127,6 +156,32 @@ export function LoginForm() {
     } catch (err: any) {
       const status = err?.response?.status;
       const data = err?.response?.data as any;
+
+      // Handle email verification errors
+      if (status === 403 && data?.requiresEmailVerification) {
+        const verificationStatus = data?.verificationStatus;
+        const verificationMessage = data?.verificationMessage;
+
+        if (verificationStatus === "expired") {
+          // STATE 1: Token expired, auto-resent
+          toast.info("✉️ Email Resent!", {
+            description:
+              verificationMessage ||
+              "Your verification link expired. We've resent it to your email. Please check your inbox.",
+            duration: 5000,
+          });
+        } else if (verificationStatus === "pending") {
+          // STATE 2: Token still valid
+          toast.warning("⏳ Please Verify Your Email", {
+            description:
+              verificationMessage ||
+              "Please verify your email before logging in.",
+            duration: 5000,
+          });
+        }
+        return;
+      }
+
       if (status === 403 && data?.reason) {
         if (data.reason === "verification_pending") {
           toast.error("Please verify your email to continue.");
@@ -386,7 +441,7 @@ export function LoginForm() {
                     </div>
                   </div>
                   {/* <div className="grid grid-cols-2 gap-3"> */}
-                    <div className="grid grid-cols-1 gap-3">
+                  <div className="grid grid-cols-1 gap-3">
                     <Button
                       variant="outline"
                       type="button"
@@ -426,15 +481,17 @@ export function LoginForm() {
               )}
             </div>
 
-            <div className="text-center text-sm text-muted-foreground">
-              Don&apos;t have an account?{" "}
-              <Link
-                href="/auth/register"
-                className="font-semibold text-primary hover:text-primary/80 transition-colors"
-              >
-                Create account
-              </Link>
-            </div>
+            {selectedRole === "company" && (
+              <div className="text-center text-sm text-muted-foreground">
+                Need a company account?{" "}
+                <Link
+                  href="/auth/register"
+                  className="font-semibold text-primary hover:text-primary/80 transition-colors"
+                >
+                  Create one
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>

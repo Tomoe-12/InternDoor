@@ -18,8 +18,8 @@ export default function DashboardLayout({
 
   return (
     <div className="min-h-screen">
-      <PermissionGuard rolesAllowed={[Role.ADMIN]} />
-      <RoleGuard rolesAllowed={[Role.ADMIN]}>{children}</RoleGuard>
+      <PermissionGuard rolesAllowed={[Role.ADMIN, Role.UNIVERSITY_ADMIN]} />
+      <RoleGuard rolesAllowed={[Role.ADMIN, Role.UNIVERSITY_ADMIN]}>{children}</RoleGuard>
     </div>
   );
 }

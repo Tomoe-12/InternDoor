@@ -1,5 +1,5 @@
 export { Sidebar } from "./sidebar"
-export { Header } from "../common/header"
+export { default as Header } from "../common/header"
 export { DashboardChart } from "./dashboard-chart"
 export { StudentApplications } from "./student-applications"
 export { RecentActivity } from "./recent-activity"

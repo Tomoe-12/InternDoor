@@ -5,6 +5,7 @@ import { eq, count, sql } from "drizzle-orm";
 import { hashPassword } from "@/server/lib/password";
 import { logger } from "@/server/lib/logger";
 import { BaseService } from "./shared/base.service";
+import { EmailVerificationService } from "@/server/services/email-verification.service";
 import type {
   CreateStudentInput,
   UpdateStudentInput,
@@ -137,7 +138,17 @@ export class StudentService {
         { email: normalizedEmail, id: result[0]?.id },
         "Student created successfully"
       );
-      return { success: "Student created successfully" };
+
+      // Send verification email
+      try {
+        await EmailVerificationService.sendVerificationEmail(normalizedEmail, "student");
+        logger.info({ email: normalizedEmail }, "Verification email sent");
+      } catch (emailError) {
+        logger.error({ email: normalizedEmail, emailError }, "Failed to send verification email");
+        // Don't fail the registration if email send fails, just log it
+      }
+
+      return { success: "Student created successfully. Check your email to verify." };
     } catch (dbError: any) {
       logger.error(
         { email: normalizedEmail, error: dbError },

@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 
 import {
   Card,
@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useAuthGuard } from "@/lib/auth/use-auth";
+import { isSuperAdmin, isUniversityAdmin } from "@/lib/auth/role-utils";
 
 const universities = [
   {
@@ -79,11 +80,29 @@ const AllUniversity = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const { user } = useAuthGuard({ middleware: "auth" });
 
-  const filteredUnis = universities.filter(
-    (uni) =>
-      uni.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      uni.location.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Filter universities based on user role
+  const visibleUniversities = useMemo(() => {
+    // Super admin sees ALL universities
+    if (isSuperAdmin(user)) {
+      return universities;
+    }
+    
+    // University admin sees ONLY their university
+    if (isUniversityAdmin(user) && user?.universityId) {
+      return universities.filter(uni => uni.id === user.universityId);
+    }
+    
+    return [];
+  }, [user]);
+
+  // Apply search filter on visible universities
+  const filteredUnis = useMemo(() => {
+    return visibleUniversities.filter(
+      (uni) =>
+        uni.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        uni.location.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [visibleUniversities, searchQuery]);
 
   return (
     <div className="flex flex-col gap-6">
@@ -93,10 +112,13 @@ const AllUniversity = () => {
             Universities
           </h1>
           <p className="text-muted-foreground">
-            Manage affiliated higher education institutions
+            {isSuperAdmin(user) 
+              ? "Manage affiliated higher education institutions"
+              : "Manage your university"}
           </p>
         </div>
-        {user?.role === "ADMIN" && (
+        {/* Only super admin can add new universities */}
+        {isSuperAdmin(user) && (
           <Button className="w-full sm:w-auto">
             <Plus className="h-4 w-4 mr-2" />
             Add University

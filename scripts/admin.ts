@@ -1,6 +1,7 @@
 import { supabase } from '../lib/supabase';
 import { db } from '../db/client';
 import { profiles } from '../db/schema/profiles';
+import { hashPassword } from '../server/lib/password';
 import { Pool } from 'pg';
 import * as dotenv from 'dotenv';
 
@@ -18,6 +19,9 @@ const pool = new Pool({
 async function createAdminUser() {
   try {
     console.log('Creating admin user...');
+
+    // Import supabase client after env is loaded
+    const { supabase } = await import('../lib/supabase');
 
     // 1. Create auth user in Supabase
     const { data: authUser, error: authError } = await supabase.auth.signUp({
@@ -67,23 +71,29 @@ async function createAdminStudent() {
         email,
         password,
         full_name,
-        name,
-        surname,
         verified,
         role,
         status,
         created_at,
         updated_at
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW(), NOW())
+      ) VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW())
+      ON CONFLICT (email) DO UPDATE SET
+        password = EXCLUDED.password,
+        full_name = EXCLUDED.full_name,
+        verified = EXCLUDED.verified,
+        role = EXCLUDED.role,
+        status = EXCLUDED.status,
+        updated_at = NOW()
       RETURNING *;
     `;
 
+    // Hash the password to match AuthService.verifyPassword
+    const hashed = await hashPassword('Password123');
+
     const result = await pool.query(query, [
       'admin@example.com',
-      'Password123',
+      hashed,
       'Admin User',
-      'Admin',
-      'User',
       true,
       'ADMIN',
       'Active'

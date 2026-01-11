@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     logger.error({ error: error instanceof Error ? error.message : "Unknown error" }, "Failed to get current user");
 
-    if (error instanceof Error && error.message.includes("Invalid") || error.message.includes("expired")) {
+    if (error instanceof Error && (error.message.includes("Invalid") || error.message.includes("expired"))) {
       return NextResponse.json({ error: error.message }, { status: 401 });
     }
 

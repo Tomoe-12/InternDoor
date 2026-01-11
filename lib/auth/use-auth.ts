@@ -24,9 +24,18 @@ export const useAuthGuard = ({
     data: user,
     error,
     mutate,
-  } = useSWR("/api/auth/me", () =>
-    httpClient.get<UserResponse>("/api/auth/me").then((res) => res.data)
-  );
+  } = useSWR("/api/auth/me", async () => {
+    // Use direct fetch to Next.js API route and include JWT from localStorage
+    const token = typeof window !== "undefined" ? localStorage.getItem("auth_token") : null;
+    const res = await fetch("/api/auth/me", {
+      method: "GET",
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+    });
+    if (!res.ok) {
+      throw new Error("Unauthorized");
+    }
+    return (await res.json()) as UserResponse;
+  });
 
   const login = async ({
     onError,
@@ -38,23 +47,30 @@ export const useAuthGuard = ({
     onError(undefined);
 
     try {
-      const loginRes = await restClient.login(props);
-      const token = (loginRes as any)?.token;
-      const userFromLogin = (loginRes as any)?.user as UserResponse | undefined;
+      // Call Next.js API route directly to avoid BASE_URL coupling
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(props),
+      });
 
-      if (typeof window !== "undefined" && token) {
-        localStorage.setItem("auth_token", token);
-      }
+      const data = await res.json().catch(() => ({}));
 
-      if (userFromLogin) {
-        // Normalize role to uppercase string to match frontend Role enums
+      if (res.ok && data?.token && data?.user) {
+        const token = data.token as string;
+        const userFromLogin = data.user as UserResponse;
+
+        if (typeof window !== "undefined" && token) {
+          localStorage.setItem("auth_token", token);
+        }
+
+        // Normalize role to uppercase string and map SUPER_ADMIN -> ADMIN
         try {
           if (userFromLogin.role && typeof userFromLogin.role === "string") {
-            (userFromLogin as any).role = (userFromLogin.role as string).toUpperCase();
+            const normalized = (userFromLogin.role as string).toUpperCase();
+            (userFromLogin as any).role = normalized === "SUPER_ADMIN" ? "ADMIN" : normalized;
           }
-        } catch (e) {
-          // ignore normalization errors
-        }
+        } catch {}
 
         // Prime SWR cache immediately so callers have user data for redirects
         await mutate(userFromLogin, { revalidate: false });
@@ -63,8 +79,17 @@ export const useAuthGuard = ({
         return userFromLogin;
       }
 
-      const userData = await mutate();
-      return userData;
+      // Handle email verification required responses (403)
+      if (res.status === 403 && data?.requiresEmailVerification) {
+        return data;
+      }
+
+      // Other errors: pass message to onError
+      const errors: HttpErrorResponse | undefined = {
+        message: (data?.error as string) || (data?.message as string) || "Login failed",
+      } as any;
+      onError(errors);
+      throw new Error(errors.message || "Login failed");
     } catch (err: any) {
       const errors = err?.response?.data as HttpErrorResponse | undefined;
       onError(errors);
@@ -77,18 +102,23 @@ export const useAuthGuard = ({
   // };
 
   const logout = async () => {
-    if (!error) {
-      await restClient.logout().then(() => mutate());
-    }
-
-    // Clear the stored token
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('auth_token')
-    }
-
-    // Redirect with a flag to display a logout success toast on the login page
-    if (typeof window !== 'undefined') {
-      window.location.href = "/auth/login?logout=success";
+    try {
+      const token = typeof window !== "undefined" ? localStorage.getItem("auth_token") : null;
+      await fetch("/api/auth/logout", {
+        method: "POST",
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      }).catch(() => undefined);
+    } finally {
+      // Clear the stored token
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("auth_token");
+      }
+      // Refresh user state
+      await mutate(undefined, { revalidate: true }).catch(() => undefined);
+      // Redirect with a flag to display a logout success toast on the login page
+      if (typeof window !== "undefined") {
+        window.location.href = "/auth/login?logout=success";
+      }
     }
   };
 

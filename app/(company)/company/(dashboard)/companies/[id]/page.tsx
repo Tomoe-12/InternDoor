@@ -21,14 +21,19 @@ import {
 import Link from "next/link"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { CompanyPositions } from "@/components/company/company-positions"
-import { useState } from "react"
+import { CompanyPositions } from "@/components/Admin/company-positions"
+import { useState, use } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
-export default function CompanyProfilePage({ params }: { params: { id: string } }) {
+export default function CompanyProfilePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params)
   const [isEditingProfile, setIsEditingProfile] = useState(false)
 
-  const company = companies.find((c) => c.id === params.id) || companies[0]
+  const company = companies.find((c) => c.id === id) || companies[0]
+  
+  if (!company) {
+    return <div>Company not found</div>
+  }
 
   return (
     <div className="flex flex-col gap-6 pb-8">
@@ -214,7 +219,7 @@ export default function CompanyProfilePage({ params }: { params: { id: string } 
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <CompanyPositions companyId={params.id} />
+              <CompanyPositions companyId={id} />
             </CardContent>
           </Card>
         </TabsContent>

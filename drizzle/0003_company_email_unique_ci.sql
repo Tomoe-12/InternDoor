@@ -1,2 +1,0 @@
--- Deprecated: handled via schema and drizzle push-generated migration.
--- Intentionally left no-op to avoid conflicts.

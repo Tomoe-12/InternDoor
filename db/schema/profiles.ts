@@ -6,6 +6,7 @@ export const profiles = pgTable('profiles', {
   fullName: text('full_name'),
   avatarUrl: text('avatar_url'),
   role: text('role').default('student'),
+  universityId: text('university_id'), // For UNIVERSITY_ADMIN role - links to their university
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
 });

@@ -6,6 +6,7 @@ import { hashPassword } from "@/server/lib/password";
 import { sendCompanyWelcomeEmail } from "@/server/lib/email";
 import { logger } from "@/server/lib/logger";
 import { BaseService } from "./shared/base.service";
+import { EmailVerificationService } from "@/server/services/email-verification.service";
 import type {
   CreateCompanyInput,
   UpdateCompanyInput,
@@ -152,35 +153,14 @@ export class CompanyService {
       throw new Error("Failed to create company in database");
     }
 
-    // Send welcome email
+    // Send verification email
     try {
-      logger.info(
-        { companyEmail: normalizedEmail },
-        "Attempting to send welcome email"
-      );
-      const emailResult = await sendCompanyWelcomeEmail(
-        normalizedEmail,
-        companyName
-      );
-      logger.info(
-        { companyEmail: normalizedEmail, emailResult },
-        "Email send result received"
-      );
-      if (emailResult.success) {
-        logger.info(
-          { companyEmail: normalizedEmail },
-          "Welcome email sent successfully"
-        );
-      } else {
-        logger.warn(
-          { companyEmail: normalizedEmail, error: emailResult.error },
-          "Failed to send welcome email"
-        );
-      }
+      await EmailVerificationService.sendVerificationEmail(normalizedEmail, "company");
+      logger.info({ companyEmail: normalizedEmail }, "Verification email sent");
     } catch (emailError) {
       logger.error(
         { companyEmail: normalizedEmail, error: emailError },
-        "Error sending welcome email"
+        "Error sending verification email"
       );
       // Don't throw - email failure shouldn't prevent account creation
     }

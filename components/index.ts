@@ -19,11 +19,11 @@ export * from "./Admin"
 
 // Navigation
 export { default as Navbar } from "./navbar"
-export { default as UserNav } from "./user-nav"
+export { UserNav } from "./user-nav"
 export { default as ModeToggle } from "./ModeToggle"
 
 // Other
-export { default as FileUpload } from "./FileUpload"
+export { FileUpload } from "./FileUpload"
 export { default as StudentDetails } from "./common/studentDetails"
-export { default as OperationHours } from "./operation-hours"
+export { OperationHours } from "./operation-hours"
 export * as Icons from "./icons"

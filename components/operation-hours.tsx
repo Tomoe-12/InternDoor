@@ -40,11 +40,14 @@ export function OperationHours({ value, onChange, disabled = false, className }:
   })
 
   const handleToggle = (day: string) => {
+    const dayHours = hours[day]
+    if (!dayHours) return
+    
     const newHours = {
       ...hours,
       [day]: {
-        ...hours[day],
-        isOpen: !hours[day].isOpen,
+        ...dayHours,
+        isOpen: !dayHours.isOpen,
       },
     }
     setHours(newHours)
