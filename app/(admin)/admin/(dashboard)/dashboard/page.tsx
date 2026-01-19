@@ -190,12 +190,15 @@
 //     </div>
 //   )
 // }
-
+"client"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Users, Building2, BriefcaseIcon, TrendingUp } from "lucide-react"
 import { DashboardChart, RecentActivity } from "@/components/Admin"
+import { supabase } from "@/lib/supabase";
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+const { data: { session } } = await supabase.auth.getSession();
+console.log("user",session?.access_token, session?.user);
   return (
     <div className="flex flex-col gap-4">
       <div>

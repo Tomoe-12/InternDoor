@@ -1,33 +1,48 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { useEffect } from "react"
-import { useSidebar } from "../providers"
-import { cn } from "@/lib/utils"
-import { LayoutDashboard, Users, Building2, BarChart3, Settings, GraduationCap,HelpCircle, LogOut, Menu } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { useAuthGuard } from "@/lib/auth/use-auth"
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect } from "react";
+import { useSidebar } from "../providers";
+import { cn } from "@/lib/utils";
+import {
+  LayoutDashboard,
+  Users,
+  Building2,
+  BarChart3,
+  Settings,
+  GraduationCap,
+  HelpCircle,
+  LogOut,
+  Menu,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useAuthGuard } from "@/lib/auth/use-auth";
 
 export function Sidebar() {
-  const pathname = usePathname()
-  const { isOpen, toggle } = useSidebar()
-  const { logout } = useAuthGuard()
+  const pathname = usePathname();
+  const { isOpen, toggle } = useSidebar();
+  const { logout } = useAuthGuard();
 
   const closeIfMobile = () => {
-    if (!isOpen) return
-    const isDesktop = typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches
-    if (!isDesktop) toggle()
-  }
+    if (!isOpen) return;
+    const isDesktop =
+      typeof window !== "undefined" &&
+      window.matchMedia("(min-width: 1024px)").matches;
+    if (!isDesktop) toggle();
+  };
 
   useEffect(() => {
-    closeIfMobile()
-  }, [pathname])
+    closeIfMobile();
+  }, [pathname]);
 
   return (
     <>
       <div
-        className={cn("fixed inset-0 z-50 bg-background/80 backdrop-blur-sm lg:hidden", isOpen ? "block" : "hidden")}
+        className={cn(
+          "fixed inset-0 z-50 bg-background/80 backdrop-blur-sm lg:hidden",
+          isOpen ? "block" : "hidden",
+        )}
         onClick={toggle}
       />
       <div
@@ -41,7 +56,12 @@ export function Sidebar() {
       >
         <div className="flex h-14 items-center border-b px-4">
           <span className="text-lg font-semibold">InternDoor</span>
-          <Button variant="ghost" size="icon" className="ml-auto lg:hidden" onClick={toggle}>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="ml-auto lg:hidden"
+            onClick={toggle}
+          >
             <Menu className="h-5 w-5" />
           </Button>
         </div>
@@ -55,7 +75,9 @@ export function Sidebar() {
                   onClick={closeIfMobile}
                   className={cn(
                     "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
-                    pathname === item.href ? "bg-accent text-accent-foreground" : "text-muted-foreground",
+                    pathname === item.href
+                      ? "bg-accent text-accent-foreground"
+                      : "text-muted-foreground",
                   )}
                 >
                   <item.icon className="h-5 w-5" />
@@ -80,7 +102,9 @@ export function Sidebar() {
                         onClick={closeIfMobile}
                         className={cn(
                           "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
-                          pathname === item.href ? "bg-accent text-accent-foreground" : "text-muted-foreground",
+                          pathname === item.href
+                            ? "bg-accent text-accent-foreground"
+                            : "text-muted-foreground",
                         )}
                       >
                         <item.icon className="h-5 w-5" />
@@ -94,52 +118,60 @@ export function Sidebar() {
                             onClick={closeIfMobile}
                             className={cn(
                               "flex items-center gap-3 rounded-md px-3 py-1.5 text-sm hover:bg-accent hover:text-accent-foreground",
-                              pathname === subItem.href ? "bg-accent text-accent-foreground" : "text-muted-foreground",
+                              pathname === subItem.href
+                                ? "bg-accent text-accent-foreground"
+                                : "text-muted-foreground",
                             )}
                           >
                             <span>{subItem.name}</span>
                             {subItem.description && (
-                              <span className="ml-auto text-xs text-muted-foreground">{subItem.description}</span>
+                              <span className="ml-auto text-xs text-muted-foreground">
+                                {subItem.description}
+                              </span>
                             )}
                           </Link>
                         ))}
                       </div>
                     </div>
+                  ) : item.action === "logout" ? (
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        closeIfMobile();
+                        logout();
+                      }}
+                      className={cn(
+                        "flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm font-medium hover:bg-accent hover:text-accent-foreground",
+                        "text-muted-foreground",
+                      )}
+                    >
+                      <item.icon className="h-5 w-5" />
+                      <span>{item.name}</span>
+                      {item.description && (
+                        <span className="ml-auto text-xs text-muted-foreground">
+                          {item.description}
+                        </span>
+                      )}
+                    </Button>
                   ) : (
-                    item.action === "logout" ? (
-                      <Button
-                        type="button"
-                        onClick={() => {
-                          closeIfMobile()
-                          logout()
-                        }}
-                        className={cn(
-                          "flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm font-medium hover:bg-accent hover:text-accent-foreground",
-                          "text-muted-foreground",
-                        )}
-                      >
-                        <item.icon className="h-5 w-5" />
-                        <span>{item.name}</span>
-                        {item.description && (
-                          <span className="ml-auto text-xs text-muted-foreground">{item.description}</span>
-                        )}
-                      </Button>
-                    ) : (
-                      <Link
-                        href={item.href}
-                        onClick={closeIfMobile}
-                        className={cn(
-                          "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
-                          pathname === item.href ? "bg-accent text-accent-foreground" : "text-muted-foreground",
-                        )}
-                      >
-                        <item.icon className="h-5 w-5" />
-                        <span>{item.name}</span>
-                        {item.description && (
-                          <span className="ml-auto text-xs text-muted-foreground">{item.description}</span>
-                        )}
-                      </Link>
-                    )
+                    <Link
+                      href={item.href}
+                      onClick={closeIfMobile}
+                      className={cn(
+                        "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
+                        pathname === item.href
+                          ? "bg-accent text-accent-foreground"
+                          : "text-muted-foreground",
+                      )}
+                    >
+                      <item.icon className="h-5 w-5" />
+                      <span>{item.name}</span>
+                      {item.description && (
+                        <span className="ml-auto text-xs text-muted-foreground">
+                          {item.description}
+                        </span>
+                      )}
+                    </Link>
                   )}
                 </div>
               ))}
@@ -148,16 +180,17 @@ export function Sidebar() {
         </div>
       </div>
     </>
-  )
+  );
 }
 
 const navItems = [
-  { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
-  { name: "Students", href: "/admin/students", icon: Users, badge: "8" },
-   { name: "Universities", href: "/admin/universities", icon: GraduationCap },
-  { name: "Companies", href: "/admin/companies", icon: Building2, badge: "5" },
-  { name: "Analytics", href: "/admin/analytics", icon: BarChart3 },
-]
+  { name: "Dashboard", href: "dashboard", icon: LayoutDashboard },
+  { name: "Admins", href: "admins", icon: Users, badge: "12" },
+  { name: "Students", href: "students", icon: Users, badge: "8" },
+  { name: "Universities", href: "universities", icon: GraduationCap },
+  { name: "Companies", href: "companies", icon: Building2, badge: "5" },
+  { name: "Analytics", href: "analytics", icon: BarChart3 },
+];
 
 const footerItems = [
   {
@@ -165,12 +198,34 @@ const footerItems = [
     href: "/admin/settings",
     icon: Settings,
     subItems: [
-      { name: "Profile", href: "/admin/settings/profile", description: "Update your details" },
-      { name: "Security", href: "/admin/settings/security", description: "Manage your password" },
-      { name: "Communication", href: "/admin/settings/communication", description: "Email and phone" },
-      { name: "Permissions", href: "/admin/settings/permissions", description: "Access control" },
+      {
+        name: "Profile",
+        href: "/admin/settings/profile",
+        description: "Update your details",
+      },
+      {
+        name: "Security",
+        href: "/admin/settings/security",
+        description: "Manage your password",
+      },
+      {
+        name: "Communication",
+        href: "/admin/settings/communication",
+        description: "Email and phone",
+      },
+      {
+        name: "Permissions",
+        href: "/admin/settings/permissions",
+        description: "Access control",
+      },
     ],
   },
   { name: "Help", href: "/help", icon: HelpCircle, description: "Get support" },
-  { name: "Logout", href: "/auth/logout", icon: LogOut, description: "Exit the app", action: "logout" },
-]
+  {
+    name: "Logout",
+    href: "/auth/logout",
+    icon: LogOut,
+    description: "Exit the app",
+    action: "logout",
+  },
+];

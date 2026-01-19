@@ -138,14 +138,8 @@ export class StudentService {
         "Student created successfully"
       );
 
-      // Send verification email
-      try {
-        await EmailVerificationService.sendVerificationEmail(normalizedEmail, "student");
-        logger.info({ email: normalizedEmail }, "Verification email sent");
-      } catch (emailError) {
-        logger.error({ email: normalizedEmail, emailError }, "Failed to send verification email");
-        // Don't fail the registration if email send fails, just log it
-      }
+      // Note: Email verification is now handled by Supabase Auth
+      // Supabase automatically sends verification emails when email provider is enabled
 
       return { success: "Student created successfully. Check your email to verify." };
     } catch (dbError: any) {

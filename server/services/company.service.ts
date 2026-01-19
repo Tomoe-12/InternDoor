@@ -152,17 +152,8 @@ export class CompanyService {
       throw new Error("Failed to create company in database");
     }
 
-    // Send verification email
-    try {
-      await EmailVerificationService.sendVerificationEmail(normalizedEmail, "company");
-      logger.info({ companyEmail: normalizedEmail }, "Verification email sent");
-    } catch (emailError) {
-      logger.error(
-        { companyEmail: normalizedEmail, error: emailError },
-        "Error sending verification email"
-      );
-      // Don't throw - email failure shouldn't prevent account creation
-    }
+    // Note: Email verification is now handled by Supabase Auth
+    // Supabase automatically sends verification emails when email provider is enabled
 
     return result[0];
   }

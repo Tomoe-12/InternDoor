@@ -6,7 +6,6 @@ import {
   emailVerificationConfirmSchema,
   passwordResetRequestSchema,
   passwordResetConfirmSchema,
-  loginSchema,
 } from "@/server/schemas/auth.schema";
 import { createStudentSchema } from "@/server/schemas/student.schema";
 import { createCompanySchema } from "@/server/schemas/company.schema";
@@ -15,23 +14,27 @@ import { PasswordResetService } from "@/server/services/password-reset.service";
 import { SupabaseAuthService } from "@/server/services/supabase-auth.service";
 
 /**
- * Login action
+ * DEPRECATED: Use useSupabaseAuth() hook for login instead
+ * Login is now handled entirely by Supabase Auth on the client
  */
 export const loginAction = actionClient
-  .schema(loginSchema)
-  .action(async ({ parsedInput }) => {
-    const result = await AuthService.login(parsedInput);
-    return result;
+  .schema(z.object({ email: z.string(), password: z.string() }))
+  .action(async () => {
+    throw new Error(
+      "loginAction is deprecated. Use useSupabaseAuth().login() instead."
+    );
   });
 
 /**
- * Get current user action
+ * DEPRECATED: Use supabase.auth.getUser() instead
+ * Get current user from Supabase Auth session
  */
 export const getCurrentUserAction = actionClient
   .schema(z.object({ token: z.string() }))
-  .action(async ({ parsedInput }) => {
-    const user = await AuthService.getCurrentUser(parsedInput.token);
-    return user;
+  .action(async () => {
+    throw new Error(
+      "getCurrentUserAction is deprecated. Use useSupabaseAuth() hook instead."
+    );
   });
 
 /**
