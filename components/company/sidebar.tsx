@@ -1,50 +1,30 @@
-"use client";
+"use client"
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect } from "react";
-import { useSidebar } from "../providers";
-import { cn } from "@/lib/utils";
-import {
-  LayoutDashboard,
-  Users,
-  Building2,
-  Settings,
-  HelpCircle,
-  LogOut,
-  Menu,
-  UserCircle,
-  Shield,
-  GraduationCap,
-  MessageSquare,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { useEffect } from "react"
+import { useSidebar } from "../providers"
+import { cn } from "@/lib/utils"
+import { LayoutDashboard, Users, Building2, Settings, HelpCircle, LogOut, Menu, UserCircle, Shield, GraduationCap, MessageSquare } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 export function Sidebar() {
-  const pathname = usePathname();
-  const { isOpen, toggle } = useSidebar();
+  const pathname = usePathname()
+  const { isOpen, toggle } = useSidebar()
 
   const closeIfMobile = () => {
-    if (!isOpen) return;
-    const isDesktop =
-      typeof window !== "undefined" &&
-      window.matchMedia("(min-width: 1024px)").matches;
-    if (!isDesktop) toggle();
-  };
+    if (!isOpen) return
+    const isDesktop = typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches
+    if (!isDesktop) toggle()
+  }
 
   useEffect(() => {
-    closeIfMobile();
-  }, [pathname]);
+    closeIfMobile()
+  }, [pathname])
 
   return (
     <>
-      <div
-        className={cn(
-          "fixed inset-0 z-50 bg-background/80 backdrop-blur-sm lg:hidden",
-          isOpen ? "block" : "hidden",
-        )}
-        onClick={toggle}
-      />
+      <div className={cn("fixed inset-0 z-50 bg-background/80 backdrop-blur-sm lg:hidden", isOpen ? "block" : "hidden")} onClick={toggle} />
       <div
         className={cn(
           "fixed inset-y-0 left-0 z-50 w-72 bg-background",
@@ -56,12 +36,7 @@ export function Sidebar() {
       >
         <div className="flex h-14 items-center border-b px-4">
           <span className="text-lg font-semibold">InternDoor</span>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="ml-auto lg:hidden"
-            onClick={toggle}
-          >
+          <Button variant="ghost" size="icon" className="ml-auto lg:hidden" onClick={toggle}>
             <Menu className="h-5 w-5" />
           </Button>
         </div>
@@ -75,9 +50,7 @@ export function Sidebar() {
                   onClick={closeIfMobile}
                   className={cn(
                     "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
-                    pathname === item.href
-                      ? "bg-accent text-accent-foreground"
-                      : "text-muted-foreground",
+                    pathname === item.href ? "bg-accent text-accent-foreground" : "text-muted-foreground",
                   )}
                 >
                   <item.icon className="h-5 w-5" />
@@ -102,9 +75,7 @@ export function Sidebar() {
                         onClick={closeIfMobile}
                         className={cn(
                           "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
-                          pathname === item.href
-                            ? "bg-accent text-accent-foreground"
-                            : "text-muted-foreground",
+                          pathname === item.href ? "bg-accent text-accent-foreground" : "text-muted-foreground",
                         )}
                       >
                         <item.icon className="h-5 w-5" />
@@ -118,17 +89,13 @@ export function Sidebar() {
                             onClick={closeIfMobile}
                             className={cn(
                               "flex items-center gap-3 rounded-md px-3 py-1.5 text-sm hover:bg-accent hover:text-accent-foreground",
-                              pathname === subItem.href
-                                ? "bg-accent text-accent-foreground"
-                                : "text-muted-foreground",
+                              pathname === subItem.href ? "bg-accent text-accent-foreground" : "text-muted-foreground",
                             )}
                           >
                             <subItem.icon className="h-5 w-5" />
                             <span>{subItem.name}</span>
                             {subItem.description && (
-                              <span className="ml-auto text-xs text-muted-foreground">
-                                {subItem.description}
-                              </span>
+                              <span className="ml-auto text-xs text-muted-foreground">{subItem.description}</span>
                             )}
                           </Link>
                         ))}
@@ -140,17 +107,13 @@ export function Sidebar() {
                       onClick={closeIfMobile}
                       className={cn(
                         "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
-                        pathname === item.href
-                          ? "bg-accent text-accent-foreground"
-                          : "text-muted-foreground",
+                        pathname === item.href ? "bg-accent text-accent-foreground" : "text-muted-foreground",
                       )}
                     >
                       <item.icon className="h-5 w-5" />
                       <span>{item.name}</span>
                       {item.description && (
-                        <span className="ml-auto text-xs text-muted-foreground">
-                          {item.description}
-                        </span>
+                        <span className="ml-auto text-xs text-muted-foreground">{item.description}</span>
                       )}
                     </Link>
                   )}
@@ -161,15 +124,15 @@ export function Sidebar() {
         </div>
       </div>
     </>
-  );
+  )
 }
 
 const navItems = [
-  { name: "Dashboard", href: "dashboard", icon: LayoutDashboard },
-  { name: "Job Postings", href: "jobs", icon: Building2, badge: "3" },
-  { name: "Universities", href: "universities", icon: GraduationCap },
-  { name: "Applicants", href: "applicants", icon: Users, badge: "12" },
-];
+  { name: "Dashboard", href: "/company/dashboard", icon: LayoutDashboard },
+  { name: "Job Postings", href: "/company/jobs", icon: Building2, badge: "3" },
+  { name: "Universities", href: "/company/universities", icon: GraduationCap },
+  { name: "Applicants", href: "/company/applicants", icon: Users, badge: "12" },
+]
 
 const footerItems = [
   {
@@ -177,31 +140,11 @@ const footerItems = [
     href: "/company/settings",
     icon: Settings,
     subItems: [
-      {
-        name: "Profile",
-        href: "/company/settings/profile",
-        icon: UserCircle,
-        description: "Update your details",
-      },
-      {
-        name: "Security",
-        href: "/company/settings/security",
-        icon: Shield,
-        description: "Manage your password",
-      },
-      {
-        name: "Communication",
-        href: "/company/settings/communication",
-        icon: MessageSquare,
-        description: "Email and phone",
-      },
+      { name: "Profile", href: "/company/settings/profile", icon: UserCircle, description: "Update your details" },
+      { name: "Security", href: "/company/settings/security", icon: Shield, description: "Manage your password" },
+      { name: "Communication", href: "/company/settings/communication", icon: MessageSquare, description: "Email and phone" },
     ],
   },
   { name: "Help", href: "/help", icon: HelpCircle, description: "Get support" },
-  {
-    name: "Logout",
-    href: "/logout",
-    icon: LogOut,
-    description: "Exit the app",
-  },
-];
+  { name: "Logout", href: "/logout", icon: LogOut, description: "Exit the app" },
+]
